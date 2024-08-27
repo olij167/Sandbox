@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6bee5eee47bef44bd666881da0adb2, type: 3}
+  m_Name: Hip Hop Dance
+  m_EditorClassIdentifier: 
+  itemName: Hip Hop
+  itemID: 4
+  itemIcon: {fileID: 21300000, guid: 07155eee76e98b04bb1cd2669ae9200a, type: 3}
+  emoteAnimation: {fileID: 7400000, guid: 9f4cdcc51f0ff374295c6a67e18ae690, type: 2}

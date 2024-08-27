@@ -1,0 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Item/Ability")]
+
+public class Ability : Item
+{
+    //Figure out how these dang thangs will work lol
+
+    // info regarding the abilities effect
+    public float energyCost;
+
+}

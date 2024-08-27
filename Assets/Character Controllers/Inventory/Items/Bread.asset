@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d31c182e4bed94cb8a5902bf65e333, type: 3}
+  m_Name: Bread
+  m_EditorClassIdentifier: 
+  itemName: Bread
+  itemID: 0
+  itemIcon: {fileID: 21300000, guid: 1a58749f555f75e48baa41893215b26e, type: 3}
+  itemDescription: 
+  prefab: {fileID: 2900054522843171022, guid: 11843cd39f0752345a31896d51693861, type: 3}
+  heldRotation: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
+  itemType: 4
+  itemValue: 2
+  weight: 0.5
+  canConsume: 1
+  isStackable: 1
+  maxNumCarried: 5
+  canActivate: 0
+  usesBatteries: 0
+  maxBatteryCharge: 0
+  healthEffect: 0
+  staminaEffect: 0
+  healthModifier: 10
+  staminaModifier: 10
+  oxygenModifier: 0
+  armourModifier: 0
+  damageModifier: 0
+  knockBackModifier: 0
+  attackSpeedModifier: 0
+  attackAnimationIndex: 0

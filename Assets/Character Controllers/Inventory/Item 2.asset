@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d31c182e4bed94cb8a5902bf65e333, type: 3}
+  m_Name: Item 2
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
+  itemName: 
+  itemIcon: {fileID: 0}
+  heldRotation: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
+  itemType: 0
+  itemValue: 0
+  weight: 0
+  canConsume: 0
+  isStackable: 0
+  maxNumCarried: 0
+  canActivate: 0
+  usesBatteries: 0
+  maxBatteryCharge: 0
+  armourModifier: 5
+  damageModifier: 5
