@@ -6,13 +6,14 @@ public class EnemyAttack : CharacterCombat
 {
     PlayerController player;
     //public CharacterCombat combat;
-
+    public ParticleSystem hitEffect;
 
     private void Start()
     {
         player = FindObjectOfType<PlayerController>();
         myStats = GetComponent<CharacterStats>();
         //combat = GetComponentInParent<CharacterCombat>();
+        hitEffect = GetComponentInChildren<ParticleSystem>();
 
     }
     public void SetAttackArea(Vector3 newScale)
@@ -34,7 +35,22 @@ public class EnemyAttack : CharacterCombat
             else
                 Attack(player.GetComponent<CharacterStats>(), GetComponent<EnemyStats>().passiveDamage.GetValue());
 
+            if (!hitEffect.isPlaying)
+                hitEffect.Play();
+
             //GetComponent<EnemyController>().animator.SetBool("isAttacking", true);
+        }
+        else if (other.gameObject.GetComponent<EnemyStats>())
+        {
+            Debug.Log(gameObject.name + " Hit another enemy");
+
+            if (GetComponent<EnemyController>().animator.GetBool("isAttacking"))
+                Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<EnemyStats>().attackDamage.GetValue());
+            else
+                Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<EnemyStats>().passiveDamage.GetValue());
+
+            if (!hitEffect.isPlaying)
+                hitEffect.Play();
         }
     }
 

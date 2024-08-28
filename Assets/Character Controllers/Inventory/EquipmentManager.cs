@@ -29,11 +29,11 @@ public class EquipmentManager : MonoBehaviour
         offHandSlot.OnItemDropped += EquipOffHandSlot;
     }
 
-    private void Update()
-    {
-        if (offHandSlot.inventoryItem == null && inventory.offHandItem != null)
-            inventory.EndOffHandInspection(offHandSlot);
-    }
+    //private void Update()
+    //{
+    //    if (offHandSlot.inventoryItem == null && inventory.offHandItem != null)
+    //        inventory.EndOffHandInspection(offHandSlot);
+    //}
 
     //private void AddModifiers(Item item)
     //{
@@ -94,7 +94,10 @@ public class EquipmentManager : MonoBehaviour
         Debug.Log(e.newItem.item.itemName + " dropped in Off Hand Slot");
         //Debug.Log(e.oldItem.item.itemName + " removed from Hand Slot");
 
-        inventory.HoldItemOffHand(e.newItem.item);
+        inventory.HoldItemOffHand(e.newItem);
+
+        if (e.newItem.physicalItem == null && inventory.offHandItem != null)
+            e.newItem.physicalItem = inventory.offHandItem;
 
         //AddModifiers(e.newItem.item);
         //RemoveModifiers(e.oldItem.item);

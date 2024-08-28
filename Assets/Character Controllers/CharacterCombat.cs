@@ -49,6 +49,8 @@ public class CharacterCombat : MonoBehaviour
 
             if (targetStats.GetComponent<Rigidbody>())
             StartCoroutine(DamageEffects(targetStats.GetComponent<Rigidbody>(), knockbackDelay));
+
+
             else if (targetStats.GetComponent<PlayerController>())
             {
                 PlayerController playerController = targetStats.GetComponent<PlayerController>();
@@ -97,7 +99,7 @@ public class CharacterCombat : MonoBehaviour
 
             targetRB.AddForce(dir * myStats.knockBack.GetValue());
 
-            //Debug.Log("Applying " + myStats.knockBack.GetValue() + " Knockback to " + targetStats.gameObject.name);
+            Debug.Log("Applying " + myStats.knockBack.GetValue() + " Knockback to " + targetRB.gameObject.name);
 
             yield return new WaitForSeconds(delay);
 

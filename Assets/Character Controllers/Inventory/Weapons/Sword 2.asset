@@ -17,7 +17,7 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 90e99a7fde056a4418b9fe16084adb5c, type: 3}
   itemDescription: Very sharp
   prefab: {fileID: 2522171815033881113, guid: 8175768f85af0b6469d666f2a6be36c7, type: 3}
-  heldRotation: {x: 0, y: 0, z: 0, w: 0}
+  heldRigWeight: 0
   itemType: 4
   itemValue: 30
   weight: 4
@@ -38,6 +38,5 @@ MonoBehaviour:
   armourModifier: 0
   attackDamageModifier: 20
   passiveDamageModifier: 8
-  knockBackModifier: 20
+  knockBackModifier: 150
   attackSpeedModifier: 1
-  attackAnimationIndex: 2

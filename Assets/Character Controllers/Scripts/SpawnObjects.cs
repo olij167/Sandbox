@@ -163,7 +163,7 @@ public class SpawnObjects : MonoBehaviour
         }
         else
         {
-            Debug.Log("Max Objects Reached");
+            //Debug.Log("Max Objects Reached");
             //return null;
         }
 

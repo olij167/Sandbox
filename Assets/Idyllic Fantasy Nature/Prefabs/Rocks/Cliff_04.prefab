@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4418585034713985153}
   - component: {fileID: 4418585034713985158}
   - component: {fileID: 4418585034713985159}
+  - component: {fileID: 7061466997884340351}
   m_Layer: 0
   m_Name: LOD2
   m_TagString: Untagged
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7061466997884340351
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418585034713985156}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 5.0334587, y: 2.5919101, z: 4.999491}
+  m_Center: {x: 0.07651496, y: 0.013253689, z: 0.08100009}
 --- !u!1 &4418585034771542431
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,9 +274,10 @@ GameObject:
   - component: {fileID: 4418585035187661893}
   - component: {fileID: 4418585035187661882}
   - component: {fileID: 8104457331230830035}
+  - component: {fileID: 6536010155092127652}
   m_Layer: 0
   m_Name: Cliff_04
-  m_TagString: Untagged
+  m_TagString: Climbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 122
@@ -326,3 +341,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7077419380029853421, guid: 2c2631da22d4e7147b3bdeb9c26aea69, type: 3}
+--- !u!65 &6536010155092127652
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418585035187661883}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.0334587, y: 2.25, z: 4.999491}
+  m_Center: {x: 0.07651496, y: 0.013253689, z: 0.08100009}

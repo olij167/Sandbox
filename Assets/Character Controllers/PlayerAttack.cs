@@ -37,7 +37,7 @@ public class PlayerAttack : CharacterCombat
             {
 
                 WeaponItem weapon = inventory.selectedPhysicalItem.GetComponent<WeaponItem>();
-                player.animator.SetInteger("RightAttack", weapon.attackAnimationIndex);
+                player.animator.SetInteger("RightIndex", weapon.attackAnimationIndex);
                 player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed);
 
 
@@ -52,17 +52,17 @@ public class PlayerAttack : CharacterCombat
 
                 inventory.rightHandPos.GetComponent<Collider>().enabled = false;
 
-                player.isAttackingRight = true;
+                player.isUsingRight = true;
             }
             else
             {
-                player.animator.SetInteger("RightAttack", 0);
+                player.animator.SetInteger("RightIndex", 0);
                 player.animator.SetFloat("RightAttackSpeed", 1);
 
                 inventory.rightHandPos.GetComponent<Collider>().enabled = true;
 
 
-                player.isAttackingRight = true;
+                player.isUsingRight = true;
             }
             //if (enemiesInRange.Count > 0)
             //{
@@ -82,15 +82,15 @@ public class PlayerAttack : CharacterCombat
         {
             if (inventory.offHandItem != null && inventory.offHandItem.GetComponent<WeaponItem>())
             {
-                //player.animator.SetInteger("LeftAttack", inventory.offHandItem.GetComponent<WeaponItem>().attackAnimationIndex);
+                //player.animator.SetInteger("LeftIndex", inventory.offHandItem.GetComponent<WeaponItem>().attackAnimationIndex);
                 //attackAnimationIndex = inventory.offHandSlot.inventoryItem.item.attackAnimationIndex + 1;
 
                 WeaponItem weapon = inventory.offHandItem.GetComponent<WeaponItem>();
-                player.animator.SetInteger("LeftAttack", weapon.attackAnimationIndex);
+                player.animator.SetInteger("LeftIndex", weapon.attackAnimationIndex);
                 player.animator.SetFloat("LeftAttackSpeed", weapon.attackSpeed);
 
 
-                if (weapon.attackAnimationCombo != null && weapon.attackAnimationCombo.Count > 0 && !player.isAttackingLeft)
+                if (weapon.attackAnimationCombo != null && weapon.attackAnimationCombo.Count > 0 && !player.isUsingLeft)
                 {
                     if (weapon.comboIndex + 1 < weapon.attackAnimationCombo.Count)
                         weapon.comboIndex++;
@@ -102,17 +102,17 @@ public class PlayerAttack : CharacterCombat
                 inventory.leftHandPos.GetComponent<Collider>().enabled = false;
 
 
-                player.isAttackingLeft = true;
+                player.isUsingLeft = true;
             }
             else
             {
-                player.animator.SetInteger("LeftAttack", 0);
+                player.animator.SetInteger("LeftIndex", 0);
                 player.animator.SetFloat("LeftAttackSpeed", 1);
 
                 inventory.leftHandPos.GetComponent<Collider>().enabled = true;
 
 
-                player.isAttackingLeft = true;
+                player.isUsingLeft = true;
             }
 
         }

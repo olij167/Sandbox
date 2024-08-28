@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -26,7 +27,8 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private GameObject inventoryWindowPanel;
     [SerializeField] private GameObject inventoryEquipmentPanel;
     public bool inventoryWindowOpen;
-    [SerializeField] private TextMeshProUGUI itemTextPrompts;
+    [SerializeField] private TextMeshProUGUI rightHandTextPrompts;
+    [SerializeField] private TextMeshProUGUI leftHandTextPrompts;
     [SerializeField] private TextPopUp textPopUp;
 
     public GameObject chestPanel;
@@ -46,8 +48,10 @@ public class PlayerInventory : MonoBehaviour
 
     [Header("Inputs")]
     [SerializeField] private KeyCode inventoryInput = KeyCode.I;
-    [SerializeField] private KeyCode dropItemInput = KeyCode.Z;
-    [SerializeField] private KeyCode throwItemInput = KeyCode.F;
+    [SerializeField] private KeyCode rightDropItemInput = KeyCode.Q;
+    [SerializeField] private KeyCode leftDropItemInput = KeyCode.X;
+    [SerializeField] private KeyCode rightThrowItemInput = KeyCode.T;
+    [SerializeField] private KeyCode lefttThrowItemInput = KeyCode.G;
     //[SerializeField] private KeyCode useItemInput = KeyCode.C;
     //Item use input in the "UseItem" script
 
@@ -140,20 +144,22 @@ public class PlayerInventory : MonoBehaviour
         }
 
         if (offHandSlot.inventoryItem == null && offHandItem != null)
-            EndOffHandInspection(offHandSlot);
+            EndOffHandInspection();
+        else if (offHandSlot.inventoryItem != null && offHandSlot.inventoryItem.physicalItem == null && offHandItem != null)
+            offHandSlot.inventoryItem.physicalItem = offHandItem;
 
         if (!player.isEmoting)
         {
-            if (selectedPhysicalItem != null)
+            if (selectedInventoryItem != null)
             {
-                rightArm.weight = holdingItemRigWeight;
+                rightArm.weight = selectedInventoryItem.item.heldRigWeight;
             }
             else
                 rightArm.weight = 0f;
 
-            if (offHandItem != null)
+            if (offHandSlot.inventoryItem != null)
             {
-                leftArm.weight = holdingItemRigWeight;
+                leftArm.weight = offHandSlot.inventoryItem.item.heldRigWeight;
             }
             else
             {
@@ -166,12 +172,12 @@ public class PlayerInventory : MonoBehaviour
             leftArm.weight = 0f;
         }
 
-        if (!player.isAttackingRight)
+        if (!player.isUsingRight)
         {
             rightHandPos.GetComponent<Collider>().enabled = false;
         }
 
-         if (!player.isAttackingLeft)
+        if (!player.isUsingLeft)
         {
             leftHandPos.GetComponent<Collider>().enabled = false;
         }
@@ -188,34 +194,38 @@ public class PlayerInventory : MonoBehaviour
             {
                 SetSelectedItemColour();
                 HoldItemMainHand();
-                itemTextPrompts.gameObject.SetActive(true);
+                rightHandTextPrompts.gameObject.SetActive(true);
                 if (selectedInventoryItem.item.canConsume)
                 {
-                    itemTextPrompts.text = "Drop [" + dropItemInput.ToString() + "]" + "\nConsume [LMB]" + "\n" /*+ selectedInventoryItem.item.itemName*/;
+                    rightHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "]" + "\nConsume [LMB] \nThrow [" + rightThrowItemInput + "]"/*+ selectedInventoryItem.item.itemName*/;
 
                     if (Input.GetButtonDown("Fire1"))
                     {
-                        ConsumeFood();
+                        ConsumeFood(true);
+                        player.animator.SetBool("isUsingRight", true);
+                        player.animator.SetInteger("RightIndex", -2);
                     }
                 }
-                else itemTextPrompts.text = "Drop [" + dropItemInput.ToString() + "]" + "\n" /*+ selectedInventoryItem.item.itemName*/;
+                else rightHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "] \nThrow [" + rightThrowItemInput + "]" /*+ selectedInventoryItem.item.itemName*/;
 
-                if (Input.GetKeyDown(dropItemInput))
+                if (Input.GetKeyDown(rightDropItemInput))
                 {
 
-                    DropItem(selectedInventoryItem);
+                    DropItem(selectedInventoryItem, true);
 
                 }
 
-                if (Input.GetKeyDown(throwItemInput) && canThrow)
+                if (Input.GetKeyDown(rightThrowItemInput) && canThrow)
                 {
-                    ThrowItem(selectedInventoryItem);
+                    ThrowItem(selectedInventoryItem, true);
+                    player.animator.SetBool("isUsingRight", true);
+                    player.animator.SetInteger("RightIndex", -1);
                 }
             }
             else
             {
-                itemTextPrompts.text = "";
-                itemTextPrompts.gameObject.SetActive(false);
+                rightHandTextPrompts.text = "";
+                rightHandTextPrompts.gameObject.SetActive(false);
 
 
                 if (selectedPhysicalItem != null)
@@ -229,8 +239,8 @@ public class PlayerInventory : MonoBehaviour
         }
         else
         {
-            itemTextPrompts.text = "";
-            itemTextPrompts.gameObject.SetActive(false);
+            rightHandTextPrompts.text = "";
+            rightHandTextPrompts.gameObject.SetActive(false);
 
             if (selectedPhysicalItem != null)
             {
@@ -238,6 +248,53 @@ public class PlayerInventory : MonoBehaviour
             }
             selectedInventoryItem = null;
             SetSelectedItemColour();
+        }
+
+        if (offHandSlot.inventoryItem != null)
+        {
+            //SetSelectedItemColour();
+            //HoldItemMainHand();
+            leftHandTextPrompts.gameObject.SetActive(true);
+            if (offHandSlot.inventoryItem.item.canConsume)
+            {
+                leftHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "]" + "\nConsume [RMB] \nThrow [" + lefttThrowItemInput + "]";/*+ selectedInventoryItem.item.itemName*/;
+
+                if (Input.GetButtonDown("Fire2"))
+                {
+                    ConsumeFood(false);
+                    player.animator.SetBool("isUsingLeft", true);
+                    player.animator.SetInteger("LeftIndex", -2);
+                }
+            }
+            else leftHandTextPrompts.text = "Drop [" + leftDropItemInput.ToString() + "] \nThrow [" + lefttThrowItemInput + "]" /*+ selectedInventoryItem.item.itemName*/;
+
+            if (Input.GetKeyDown(leftDropItemInput))
+            {
+
+                DropItem(offHandSlot.inventoryItem, false);
+
+            }
+
+            if (Input.GetKeyDown(lefttThrowItemInput) && canThrow)
+            {
+                ThrowItem(offHandSlot.inventoryItem, false);
+                player.animator.SetBool("isUsingLeft", true);
+                player.animator.SetInteger("LeftIndex", -1);
+            }
+        }
+        else
+        {
+            leftHandTextPrompts.text = "";
+            leftHandTextPrompts.gameObject.SetActive(false);
+
+
+            if (offHandItem != null)
+            {
+                EndItemInspection();
+            }
+            offHandItem = null;
+            //SetSelectedItemColour();
+
         }
 
         if (inventoryWindowOpen && !inventoryWindowPanel.activeSelf)
@@ -641,7 +698,7 @@ public class PlayerInventory : MonoBehaviour
         //selectedInventoryItem.GetComponentnsform);
     }
 
-    public void DropItem(InventoryUIItem item)
+    public void DropItem(InventoryUIItem item, bool mainHand)
     {
         if (item.isInUse || item.batteryCharge < item.item.maxBatteryCharge)
         {
@@ -657,24 +714,40 @@ public class PlayerInventory : MonoBehaviour
             item.physicalItem.GetComponent<Rigidbody>().isKinematic = false;
         }
 
-        selectedPhysicalItem.GetComponent<ItemInWorld>().enabled = true;
-        selectedPhysicalItem.GetComponent<Collider>().enabled = true;
+        item.physicalItem.GetComponent<ItemInWorld>().enabled = true;
+        item.physicalItem.GetComponent<Collider>().enabled = true;
 
-        RemoveItemFromInventory(item);
+        if (mainHand)
+        {
+            //selectedPhysicalItem.GetComponent<ItemInWorld>().enabled = true;
+            //selectedPhysicalItem.GetComponent<Collider>().enabled = true;
 
+            RemoveItemFromInventory(item);
+        }
+        else
+        {
+            //offHandItem.GetComponent<ItemInWorld>().enabled = true;
+            //offHandItem.GetComponent<Collider>().enabled = true;
+
+            //offHandSlot.inventoryItem.physicalItem.GetComponent<ItemInWorld>().enabled = true;
+            //offHandSlot.inventoryItem.physicalItem.GetComponent<Collider>().enabled = true;
+
+            RemoveEquipmentFromSlot(offHandSlot);
+            //EndOffHandInspection();
+        }
         //if (droppedItem.GetComponent<Breakable>())
         //{
         //    droppedItem.GetComponent<Breakable>().BreakObject();
         //}
     }
 
-    public void ThrowItem(InventoryUIItem item)
+    public void ThrowItem(InventoryUIItem item, bool mainHand)
     {
         canThrow = false;
 
         item.physicalItem.transform.parent = null;
 
-        if (selectedInventoryItem.isInUse || item.batteryCharge < item.item.maxBatteryCharge)
+        if (item.isInUse || item.batteryCharge < item.item.maxBatteryCharge)
         {
             InventoryUIItem copyInventoryItem = item.physicalItem.AddComponent<InventoryUIItem>();
             CopyItemVariables(item, copyInventoryItem);
@@ -685,13 +758,24 @@ public class PlayerInventory : MonoBehaviour
         item.physicalItem.GetComponent<Rigidbody>().useGravity = true;
         item.physicalItem.GetComponent<Rigidbody>().isKinematic = false;
 
-        selectedPhysicalItem.GetComponent<ItemInWorld>().enabled = true;
-        selectedPhysicalItem.GetComponent<Collider>().enabled = true;
+        item.physicalItem.GetComponent<ItemInWorld>().enabled = true;
+        item.physicalItem.GetComponent<Collider>().enabled = true;
+
 
         item.physicalItem.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
 
-        RemoveItemFromInventory(item);
-
+        if (mainHand)
+        {
+            
+            RemoveItemFromInventory(item);
+        }
+        else
+        {
+            //offHandSlot.inventoryItem.physicalItem.GetComponent<ItemInWorld>().enabled = true;
+            //offHandSlot.inventoryItem.physicalItem.GetComponent<Collider>().enabled = true;
+            RemoveEquipmentFromSlot( offHandSlot);
+            //EndOffHandInspection();
+        }
         Invoke(nameof(ResetThrow), throwCooldown);
     }
 
@@ -723,6 +807,8 @@ public class PlayerInventory : MonoBehaviour
                     Destroy(inventory[i].gameObject);
 
                     inventory[i] = null;
+                    selectedPhysicalItem = null;
+
                 }
                 else
                     if (i == selectedItemSlot)
@@ -737,6 +823,38 @@ public class PlayerInventory : MonoBehaviour
 
         GetInventoryWeight();
         GetInventoryValue();
+    }
+
+    public void RemoveEquipmentFromSlot(EquipmentSlot slot)
+    {
+        RemoveModifiers(slot.inventoryItem.item);
+
+        for (int i = 0; i < equipmentSlots.Length; i++)
+        {
+            if (equipmentSlots[i] == slot)
+            {
+                if (slot == offHandSlot) offHandItem = null;
+
+                equipmentSlots[i].inventoryItem.numCarried--;
+                equipmentSlots[i].inventoryItem.stackCountText.text = "[" + equipmentSlots[i].inventoryItem.numCarried + "]";
+
+                if (equipmentSlots[i].inventoryItem.numCarried <= 0f)
+                {
+                    //if (equipmentSlots[i].transform.childCount > 0)
+                    //{
+                    //    foreach (Transform child in equipmentSlots[i].transform)
+                    //    {
+                    //        Destroy(child.gameObject);
+                    //    }
+                    //    //SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipmentSlots[equipIndex]); //a = originally B
+
+                    //}
+                    Destroy(equipmentSlots[i].inventoryItem.gameObject);
+
+                    equipmentSlots[i].inventoryItem = null;
+                }
+            }
+        }
     }
 
     public float GetInventoryWeight()
@@ -886,23 +1004,28 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public void HoldItemOffHand(InventoryItem item)
+    public void HoldItemOffHand(InventoryUIItem item)
     {
         if (offHandItem != null)
         {
             Destroy(offHandItem);
         }
 
-        //if (item.isTwoHanded && selectedPhysicalItem != null)
-        //    EndItemInspection();
+        offHandSlot.inventoryItem = item;
 
-        offHandItem = Instantiate(item.prefab, leftHandPos.position, Quaternion.identity, leftHandPos);
+
+        offHandItem = Instantiate(offHandSlot.inventoryItem.item.prefab, leftHandPos.position, Quaternion.identity, leftHandPos);
         offHandItem.transform.LookAt(swordTarget);
 
-        //AddModifiers(offHandSlot.inventoryItem.item);
+
+        AddModifiers(item.item);
+
+        item.physicalItem = offHandItem;
 
         offHandItem.GetComponent<ItemInWorld>().enabled = false;
-        offHandItem.GetComponent<Collider>().enabled = false;
+
+        if (!offHandItem.GetComponent<Collider>().isTrigger)
+            offHandItem.GetComponent<Collider>().enabled = false;
 
         if (offHandItem.GetComponent<Rigidbody>() && offHandItem.GetComponent<Rigidbody>().useGravity != false)
         {
@@ -922,28 +1045,19 @@ public class PlayerInventory : MonoBehaviour
         selectedPhysicalItem = null;
     }
 
-    public void EndOffHandInspection(EquipmentSlot offHandSlot)
+    public void EndOffHandInspection()
     {
-        //EquipmentSlot offHandSlot = new EquipmentSlot();
-
-        //for (int i = 0; i < equipmentSlots.Length; i++)
-        //{
-        //    if (equipmentSlots[i].slotType == EquipmentSlotType.OffHand)
-        //    {
-        //        offHandSlot = equipmentSlots[i];
-        //        break;
-        //    }
-        //}
-        RemoveModifiers(offHandSlot.inventoryItem.item);
+        if (offHandSlot.inventoryItem != null)
+        {
+            RemoveModifiers(offHandSlot.inventoryItem.item);
+            offHandSlot.inventoryItem = null;
+        }
 
 
         if (offHandItem != null && offHandSlot.inventoryItem == null)
         {
-
             Destroy(offHandItem);
         }
-
-        offHandItem = null;
     }
 
     public void ResetHeldItem()
@@ -952,18 +1066,53 @@ public class PlayerInventory : MonoBehaviour
         HoldItemMainHand();
     }
 
-    public void ConsumeFood()
+    public void ConsumeFood(bool mainHand)
     {
-        if (selectedInventoryItem != null && selectedInventoryItem.item.canConsume)
+        if (mainHand)
         {
-            //Apply food effects
-            GameObject foodItem = selectedInventoryItem.physicalItem;
-            foodItem.GetComponent<ItemAction>().ItemFunction();
+            if (selectedInventoryItem != null && selectedInventoryItem.item.canConsume)
+            {
+                //Apply food effects
+                GameObject foodItem = selectedInventoryItem.physicalItem;
+                foodItem.GetComponent<ItemAction>().ItemFunction();
 
-            RemoveItemFromInventory(selectedInventoryItem);
+                //AnimatorClipInfo[] clipInfo = player.animator.GetCurrentAnimatorClipInfo(1);
+                //AnimatorStateInfo animState = player.animator.GetCurrentAnimatorStateInfo(1);
 
-            if (foodItem != null) Destroy(foodItem);
+
+                StartCoroutine(DestroyFoodAfterConsumption(1f, foodItem, mainHand));
+
+                //RemoveItemFromInventory(selectedInventoryItem);
+
+                //if (foodItem != null) Destroy(foodItem);
+
+            }
         }
+        else
+        {
+            if (offHandItem != null && offHandSlot.inventoryItem.item.canConsume)
+            {
+                //Apply food effects
+                GameObject foodItem = offHandSlot.inventoryItem.physicalItem;
+                foodItem.GetComponent<ItemAction>().ItemFunction();
+
+                StartCoroutine(DestroyFoodAfterConsumption(1f, foodItem, mainHand));
+
+            }
+        }
+    }
+
+    public IEnumerator DestroyFoodAfterConsumption(float delay, GameObject foodItem, bool mainHand)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (mainHand)
+            RemoveItemFromInventory(selectedInventoryItem);
+        else
+            RemoveEquipmentFromSlot(offHandSlot);
+
+        if (foodItem != null) Destroy(foodItem);
+
     }
 
     public void SelectInventoryItemAsButton(int index)
@@ -1269,6 +1418,7 @@ public class PlayerInventory : MonoBehaviour
         }
         else
         {
+            //Debug.Log("Entering Swap Equipment Method");
             SwapEquipmentSlot(indexA, indexB);
         }
 
@@ -1276,7 +1426,8 @@ public class PlayerInventory : MonoBehaviour
 
     public void SwapEquipmentSlot(int invIndex, int equipIndex)
     {
-        // Store item info
+       // Debug.Log("Swapping Equipment");
+        // Store equipment info
         InventoryUIItem inventoryItem = equipmentSlots[equipIndex].inventoryItem;
 
         //Swap  item Info for equipment info
@@ -1285,48 +1436,49 @@ public class PlayerInventory : MonoBehaviour
         // Swap equipment info for stored item info
         inventorySlots[invIndex].inventoryItem = inventoryItem;
 
-        //if (equipmentSlots[equipIndex].inventoryItem != null)
-        //    AddModifiers(equipmentSlots[equipIndex].inventoryItem.item);
-
-        if (inventoryItem != null)
-            RemoveModifiers(inventoryItem.item);
-
         //Delete & Spawn UI
 
         EndItemInspection();
+        //EndOffHandInspection();
 
-        if (equipmentSlots[equipIndex].transform.childCount > 0)
+      
+
+        if (inventorySlots[invIndex].transform.childCount > 0) // Destroy each child of the old inventory item
+        {
+            foreach (Transform child in inventorySlots[invIndex].transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            //SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipIndex); //spawn new equipment item (old inventory item)
+
+        }
+
+        if (equipmentSlots[equipIndex].transform.childCount > 0) // Destroy each child of the old equipment item
         {
             foreach (Transform child in equipmentSlots[equipIndex].transform)
             {
                 Destroy(child.gameObject);
             }
             //SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipmentSlots[equipIndex]); //a = originally B
-
-        }
-
-        if (inventorySlots[invIndex].transform.childCount > 0)
-        {
-            foreach (Transform child in inventorySlots[invIndex].transform)
-            {
-                Destroy(child.gameObject);
-            }
-            SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipIndex); //a = originally B
-
-        }
-
-        if (inventoryItem != null)
             SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
 
+        }
 
-        //SpawnNewEquipment(equipmentSlot.inventoryItem.item, equipmentSlot);
+        if (equipmentSlots[equipIndex].inventoryItem != null)
+        {
+            SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipIndex); //spawn new equipment item (old inventory item)
+            //SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
+           // Debug.Log("Item from inventory slot wasn't null");
 
-        //SpawnNewItem(inventorySlots[indexB].inventoryItem.item, indexB); // originally A
+        } 
+        //else
+        //    Debug.Log("Item from inventory slot IS null");
 
         HoldItemMainHand();
 
 
-        //Debug.Log("Equipped " + equipmentSlots[equipIndex].inventoryItem.item.itemName + " from inventory slot #" + invIndex);
+       //Debug.Log("Equipped " + equipmentSlots[equipIndex].inventoryItem.item.itemName + " from inventory slot #" + invIndex);
 
     }
 
@@ -1413,6 +1565,7 @@ public class PlayerInventory : MonoBehaviour
                 Destroy(child.gameObject);
             }
 
+            
             SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
         }
 

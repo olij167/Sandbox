@@ -8,11 +8,14 @@ public class WeaponAttack : MonoBehaviour
     [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private PlayerInventory playerInventory;
     public bool isMainHand;
+    public ParticleSystem hitParticles;
 
     private void OnEnable()
     {
         playerController = PlayerManager.instance.player.GetComponent<PlayerController>();
         playerAttack = playerController.GetComponent<PlayerAttack>();
+
+        hitParticles = GetComponentInChildren<ParticleSystem>();
 
         playerInventory = FindObjectOfType<PlayerInventory>();
 
@@ -30,10 +33,13 @@ public class WeaponAttack : MonoBehaviour
             Debug.Log("Weapon Trigger Entered");
             if (isMainHand)
             {
-                if (playerController.isAttackingRight)
+                if (playerController.isUsingRight)
                 {
                     playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue());
                     Debug.Log("Right Weapon Attack");
+
+                    if (!hitParticles.isPlaying)
+                        hitParticles.Play();
 
 
                     //AnimatorStateInfo animState = playerController.animator.GetCurrentAnimatorStateInfo(1);
@@ -45,15 +51,19 @@ public class WeaponAttack : MonoBehaviour
                     playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue());
                     //Stagger animation
                     Debug.Log("Right Passive Attack");
+                    if (!hitParticles.isPlaying)
+                        hitParticles.Play();
 
                 }
             }
             else
             {
-                if (playerController.isAttackingLeft)
+                if (playerController.isUsingLeft)
                 {
                     playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue());
                     Debug.Log("Left Weapon Attack");
+                    if (!hitParticles.isPlaying)
+                        hitParticles.Play();
 
                     //AnimatorStateInfo animState = playerController.animator.GetCurrentAnimatorStateInfo(2);
                     //AnimatorClipInfo[] clipInfo = playerController.animator.GetCurrentAnimatorClipInfo(2);
@@ -64,6 +74,9 @@ public class WeaponAttack : MonoBehaviour
                     Debug.Log("Left Passive Attack");
 
                     playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue());
+
+                    if (!hitParticles.isPlaying)
+                        hitParticles.Play();
                 }
             }
         }

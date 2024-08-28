@@ -15,5 +15,11 @@ namespace IdyllicFantasyNature
         {
             Collider = GetComponent<Collider>();
         }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(transform.position, transform.localScale);
+        }
     }
 }

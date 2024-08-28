@@ -17,7 +17,7 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 14e62563269c11443b9c936be93b95f4, type: 3}
   itemDescription: 
   prefab: {fileID: 360447425741735862, guid: 4aac05bb6ff5b6b4097b81f0841eced0, type: 3}
-  heldRotation: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
+  heldRigWeight: 0.5
   itemType: 4
   itemValue: 5
   weight: 1
@@ -25,6 +25,7 @@ MonoBehaviour:
   isStackable: 1
   maxNumCarried: 5
   canActivate: 0
+  isTwoHanded: 0
   usesBatteries: 0
   maxBatteryCharge: 0
   healthEffect: 10
@@ -32,8 +33,10 @@ MonoBehaviour:
   healthModifier: 0
   staminaModifier: 0
   oxygenModifier: 0
+  speedModifier: 0
+  jumpModifier: 0
   armourModifier: 0
-  damageModifier: 0
+  attackDamageModifier: 0
+  passiveDamageModifier: 0
   knockBackModifier: 0
   attackSpeedModifier: 0
-  attackAnimationIndex: 0

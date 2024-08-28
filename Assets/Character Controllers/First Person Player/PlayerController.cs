@@ -47,8 +47,8 @@ public class PlayerController : MonoBehaviour
     public bool isSwimming;
     public bool isUnderwater;
     public bool isOnRope = false;
-    public bool isAttackingRight;
-    public bool isAttackingLeft;
+    public bool isUsingRight;
+    public bool isUsingLeft;
     public bool isEmoting;
 
     //public float weight;
@@ -178,7 +178,7 @@ public class PlayerController : MonoBehaviour
         }
         animator.SetBool("isEmoting", isEmoting);
 
-        if (isAttackingRight)
+        if (isUsingRight)
         {
             AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(1);
             AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(1);
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
 
                 if (currentTime >= clipInfo[0].clip.length / 2 || animState.normalizedTime >= 0.5f)
                 {
-                    isAttackingRight = false;
+                    isUsingRight = false;
 
                     //animator.SetBool("isAttacking", false);
                     //isEmoting = false;
@@ -206,9 +206,9 @@ public class PlayerController : MonoBehaviour
 
 
         }
-        animator.SetBool("isAttackingRight", isAttackingRight);
+        animator.SetBool("isUsingRight", isUsingRight);
 
-        if (isAttackingLeft)
+        if (isUsingLeft)
         {
             AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(2);
             AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(2);
@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour
 
                 if (currentTime >= clipInfo[0].clip.length / 2 || animState.normalizedTime >= 0.5f)
                 {
-                    isAttackingLeft = false;
+                    isUsingLeft = false;
 
                     //animator.SetBool("isAttacking", false);
                     //isEmoting = false;
@@ -236,7 +236,7 @@ public class PlayerController : MonoBehaviour
 
 
         }
-        animator.SetBool("isAttackingLeft", isAttackingLeft);
+        animator.SetBool("isUsingLeft", isUsingLeft);
 
 
         if (characterControllerMovement)
@@ -507,7 +507,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isProne", isProne);
 
             //if the player can climb...
-            if (canClimb && Input.GetButtonDown("Interact") && stats.stamina > 0f && !staminaSource.isPlaying)
+            if (canClimb && /*Input.GetButtonDown("Interact") &&*/ stats.stamina > 0f && !staminaSource.isPlaying)
             {
                 SetClimbVariables();
             }

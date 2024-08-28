@@ -12,7 +12,8 @@ public class InventoryItem : Item
     public GameObject prefab;
     //public string itemName;
     //public Sprite itemIcon;
-    public Quaternion heldRotation;
+    //public Quaternion heldRotation;
+    public float heldRigWeight;
 
     public ItemType itemType;
 
