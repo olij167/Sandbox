@@ -30,7 +30,7 @@ public class ItemSlot : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("On Drop (Slot)");
+        //Debug.Log("On Drop (Slot)");
 
         if (eventData.pointerDrag != null)
         {

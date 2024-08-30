@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item/Ability")]
+//[CreateAssetMenu(menuName = "Item/Ability")]
 
 public class Ability : Item
 {
@@ -10,5 +10,15 @@ public class Ability : Item
 
     // info regarding the abilities effect
     public float energyCost;
+    public float effectDuration;
+
+    public virtual void ActivateEffect(PlayerController player) // the ability effect
+    {
+
+    }
+     public virtual void DeactivateEffect(PlayerController player) // the ability effect
+    {
+
+    }
 
 }

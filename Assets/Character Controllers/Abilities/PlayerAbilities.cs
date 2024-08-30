@@ -6,11 +6,12 @@ using TMPro;
 
 public class PlayerAbilities : MonoBehaviour
 {
-    private PlayerController player;
+    [HideInInspector] public PlayerController player;
     private ThirdPersonCam cam;
     private PlayerInventory inventory;
     private EmoteManager emoteManager;
 
+    public bool effectActive;
 
     public Ability activeAbility;
     public int selectedAbilitySlot = 0;
@@ -24,10 +25,13 @@ public class PlayerAbilities : MonoBehaviour
 
     public GameObject abilityUI;
     [SerializeField] private GameObject abilityItemPrefab;
+    [SerializeField] private GameObject abilitySlotPrefab;
+    public int abilitySlotNum = 12;
     [SerializeField] private GameObject abilityBarPanel;
     [SerializeField] private GameObject abilityWindowPanel;
 
     [SerializeField] private KeyCode abilityWindowInput = KeyCode.Y;
+    [SerializeField] private KeyCode abilityInput = KeyCode.E;
 
     [SerializeField] private Color selectedColour;
     private Color originalColour;
@@ -38,14 +42,17 @@ public class PlayerAbilities : MonoBehaviour
         cam = FindObjectOfType<ThirdPersonCam>();
         inventory = FindObjectOfType<PlayerInventory>();
         emoteManager = FindObjectOfType<EmoteManager>();
-        abilitySlots = new AbilitySlot[abilityBarPanel.transform.childCount + abilityWindowPanel.transform.childCount];
+        abilitySlots = new AbilitySlot[abilityBarPanel.transform.childCount + abilitySlotNum];
 
         //for (int i = 0; i < abilitySlots.Length; i++)
         //{
         //    abilitys.Add(null);
         //}
 
-        for (int i = 0; i < abilityBarPanel.transform.childCount + abilityWindowPanel.transform.childCount; i++)
+        foreach (Transform child in abilityWindowPanel.transform)
+            Destroy(child.gameObject);
+
+        for (int i = 0; i < abilityBarPanel.transform.childCount + abilitySlotNum; i++)
         {
             if (i < abilityBarPanel.transform.childCount)
             {
@@ -54,7 +61,8 @@ public class PlayerAbilities : MonoBehaviour
             }
             else
             {
-                abilitySlots[i] = abilityWindowPanel.transform.GetChild(i - abilityBarPanel.transform.childCount).GetComponent<AbilitySlot>();
+                //abilitySlots[i] = abilityWindowPanel.transform.GetChild(i - abilityBarPanel.transform.childCount).GetComponent<AbilitySlot>();
+                abilitySlots[i] = Instantiate(abilitySlotPrefab, abilityWindowPanel.transform).GetComponent<AbilitySlot>();
                 abilitySlots[i].slot = i;
 
             }
@@ -72,6 +80,16 @@ public class PlayerAbilities : MonoBehaviour
 
     private void Update()
     {
+        if (activeAbility != null && !effectActive)
+        {
+            if (Input.GetKeyDown(abilityInput))
+            {
+                activeAbility.ActivateEffect(player);
+                effectActive = true;
+                StartCoroutine(DelaySettingFalseVariables(activeAbility.effectDuration));
+            }
+        }
+
         if (abilityUI.activeSelf)
         {
             SelectAbilityWithNumbers();
@@ -238,7 +256,13 @@ public class PlayerAbilities : MonoBehaviour
 
     }
 
-  
+    public IEnumerator DelaySettingFalseVariables(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        activeAbility.DeactivateEffect(player);
+        effectActive = false;
+    }
 
     int CheckEmptySlots(AbilitySlot[] slots)
     {

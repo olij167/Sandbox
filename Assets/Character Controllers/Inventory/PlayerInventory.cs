@@ -23,7 +23,9 @@ public class PlayerInventory : MonoBehaviour
     [Header("UI Elements")]
     public GameObject inventoryUI;
     public GameObject inventoryItemPrefab;
+    public GameObject inventorySlotPrefab;
     public GameObject inventoryBarPanel;
+    public int inventorySlotNum = 12;
     [SerializeField] private GameObject inventoryWindowPanel;
     [SerializeField] private GameObject inventoryEquipmentPanel;
     public bool inventoryWindowOpen;
@@ -88,15 +90,18 @@ public class PlayerInventory : MonoBehaviour
         emoteManager = FindObjectOfType<EmoteManager>();
         playerAbilities = FindObjectOfType<PlayerAbilities>();
 
-        inventorySlots = new ItemSlot[inventoryBarPanel.transform.childCount + inventoryWindowPanel.transform.childCount];
+        inventorySlots = new ItemSlot[inventoryBarPanel.transform.childCount + inventorySlotNum];
         equipmentSlots = new EquipmentSlot[inventoryEquipmentPanel.transform.childCount];
+
+        foreach (Transform child in inventoryWindowPanel.transform)
+            Destroy(child.gameObject);
 
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             inventory.Add(null);
         }
 
-        for (int i = 0; i < inventoryBarPanel.transform.childCount + inventoryWindowPanel.transform.childCount; i++)
+        for (int i = 0; i < inventoryBarPanel.transform.childCount + inventorySlotNum; i++)
         {
             if (i < inventoryBarPanel.transform.childCount)
             {
@@ -106,7 +111,8 @@ public class PlayerInventory : MonoBehaviour
             }
             else
             {
-                inventorySlots[i] = inventoryWindowPanel.transform.GetChild(i - inventoryBarPanel.transform.childCount).GetComponent<ItemSlot>();
+                //inventorySlots[i] = inventoryWindowPanel.transform.GetChild(i - inventoryBarPanel.transform.childCount).GetComponent<ItemSlot>();
+                inventorySlots[i] = Instantiate(inventorySlotPrefab, inventoryWindowPanel.transform).GetComponent<ItemSlot>();
                 inventorySlots[i].slot = i;
             }
         }
@@ -172,12 +178,12 @@ public class PlayerInventory : MonoBehaviour
             leftArm.weight = 0f;
         }
 
-        if (!player.isUsingRight)
+        if (!player.isUsingRight && !player.isUsingBoth)
         {
             rightHandPos.GetComponent<Collider>().enabled = false;
         }
 
-        if (!player.isUsingLeft)
+        if (!player.isUsingLeft && !player.isUsingBoth)
         {
             leftHandPos.GetComponent<Collider>().enabled = false;
         }

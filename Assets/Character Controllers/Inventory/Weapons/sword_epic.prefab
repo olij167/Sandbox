@@ -206,9 +206,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1bf0a92cff1fdd4ebe623196e5a2e4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackAnimationIndex: 1
+  twoHanded: 1
+  attackAnimationIndex: 5
   comboIndex: 0
-  attackAnimationCombo: 0100000005000000
+  attackAnimationCombo: 0400000005000000
   attackSpeed: 1.5
 --- !u!54 &1357146782
 Rigidbody:

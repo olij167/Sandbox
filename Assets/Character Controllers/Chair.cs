@@ -6,6 +6,7 @@ public class Chair : Interactable
 {
     public bool isSitting;
     public Vector3 sittingPositionOffset;
+
     public void SitDown(PlayerController playerController)
     {
         playerController.characterControllerMovement = false;

@@ -42,11 +42,13 @@ public class PlayerController : MonoBehaviour
     public bool isProne;
     public bool isDodging;
     public bool isClimbing;
+    public bool inClimbTrigger;
     public bool canClimb;
     public bool inWater;
     public bool isSwimming;
     public bool isUnderwater;
     public bool isOnRope = false;
+    public bool isUsingBoth;
     public bool isUsingRight;
     public bool isUsingLeft;
     public bool isEmoting;
@@ -71,7 +73,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Vector3 maxRopePos;
 
     [field: ReadOnlyField] public Vector3 moveDirection;
-    [SerializeField] private Transform orientation;
+    public Transform orientation;
 
 
     [Header("Stamina")]
@@ -90,8 +92,8 @@ public class PlayerController : MonoBehaviour
     //[SerializeField] private float underwaterGravScale = 1.0f;
     //[SerializeField] private float jumpForce = 4f;
     [SerializeField] private bool canJump = true;
-    [SerializeField] private bool isJumping;
-    [SerializeField] private bool isGrounded;
+    public bool isJumping;
+    public bool isGrounded;
     [SerializeField] private float isGroundedDistance = 3f;
 
     //[SerializeField] private float minFallVelocity = -0.1f;
@@ -149,21 +151,19 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        if (!isEmoting)
+        if (Input.GetButtonDown("Emote"))
         {
-            if (Input.GetButtonDown("Emote"))
+            if (emote != null)
             {
-                if (emote != null)
-                {
-                    Debug.Log("Emoting");
-                    animator.SetInteger("Emote", emote.itemID);
+                Debug.Log("Emoting");
+                animator.SetInteger("Emote", emote.itemID);
 
-                    //animator.SetBool("isEmoting", true);
-                    isEmoting = true;
-                }
+                //animator.SetBool("isEmoting", true);
+                isEmoting = true;
             }
         }
-        else
+
+        if (isEmoting)
         {
             AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(0);
 
@@ -207,6 +207,36 @@ public class PlayerController : MonoBehaviour
 
         }
         animator.SetBool("isUsingRight", isUsingRight);
+        
+        if (isUsingBoth)
+        {
+            AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(3);
+            AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(3);
+
+            if (clipInfo.Length > 0)
+            {
+                //Debug.Log(clipInfo[0].clip.name + " Length: " + clipInfo[0].clip.length);
+                float currentTime = clipInfo[0].clip.length * animState.normalizedTime;
+                // Debug.Log("Current time = " + currentTime.ToString("0.00") + ", Full Length  = " + clipInfo[0].clip.length.ToString("0.00"));
+
+                if (currentTime >= clipInfo[0].clip.length / 2 || animState.normalizedTime >= 0.5f)
+                {
+                    isUsingBoth = false;
+
+                    //animator.SetBool("isAttacking", false);
+                    //isEmoting = false;
+                }
+            }
+            //else
+            //{
+            //    isAttacking = false;
+
+            //    //animator.SetBool("isAttacking", false);
+            //}
+
+
+        }
+        animator.SetBool("isUsingBoth", isUsingBoth);
 
         if (isUsingLeft)
         {
@@ -241,37 +271,7 @@ public class PlayerController : MonoBehaviour
 
         if (characterControllerMovement)
         {
-            if (!isSwimming)
-            {
-                float yStore = moveDirection.y;
-                moveDirection = (orientation.forward * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
-                //mouseClickMovement = false;
-
-                moveDirection = moveDirection.normalized * affectedSpeed;
-                moveDirection.y = yStore;
-            }
-            else if (isSwimming && isUnderwater)
-            {
-                //float yStore = moveDirection.y;
-                Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-
-                moveDirection = (ray.direction * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
-                //mouseClickMovement = false;
-
-                moveDirection = moveDirection.normalized * affectedSpeed;
-                moveDirection.y = moveDirection.y - (stats.weight / 10);
-            }
-            else if (isSwimming && !isUnderwater)
-            {
-                float yStore = moveDirection.y;
-                moveDirection = (orientation.forward * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
-                //mouseClickMovement = false;
-
-                moveDirection = moveDirection.normalized * affectedSpeed;
-                //moveDirection.y = yStore;
-            }
-
-
+           
             animator.SetFloat("x", Input.GetAxisRaw("Horizontal"), 0.1f, Time.deltaTime);
             animator.SetFloat("z", Input.GetAxisRaw("Vertical"), 0.1f, Time.deltaTime);
             animator.SetFloat("y", moveDirection.y, 0.1f, Time.deltaTime);
@@ -366,7 +366,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //if the player is falling...
-            else if ((!controller.isGrounded || moveDirection.y < 0) && !isOnRope)
+            else if ((!controller.isGrounded && !isSwimming || moveDirection.y < 0) && !isOnRope)
             {
                 moveDirection.y += (Physics.gravity.y * currentGravScale * Time.deltaTime);
 
@@ -471,7 +471,7 @@ public class PlayerController : MonoBehaviour
 
 
             //if the player is crouching...
-            if (Input.GetButtonDown("Crouch"))
+            if (Input.GetButtonDown("Crouch") && !isSwimming)
             {
                 isCrouching = !isCrouching;
 
@@ -489,7 +489,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isCrouching", isCrouching);
 
             //if the player is prone...
-            if (Input.GetButtonDown("Prone"))
+            if (Input.GetButtonDown("Prone") && !isSwimming)
             {
                 isProne = !isProne;
 
@@ -507,14 +507,14 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isProne", isProne);
 
             //if the player can climb...
-            if (canClimb && /*Input.GetButtonDown("Interact") &&*/ stats.stamina > 0f && !staminaSource.isPlaying)
+            if (inClimbTrigger && canClimb && stats.stamina > 0f && !staminaSource.isPlaying)
             {
                 SetClimbVariables();
             }
             animator.SetBool("isClimbing", isClimbing);
 
             //if the player is climbing...
-            if (isClimbing && stats.stamina > 0f)
+            if (isClimbing && canClimb && stats.stamina > 0f)
             {
                 moveDirection.y = Input.GetAxisRaw("Vertical") * stats.climbingSpeed.GetValue();
 
@@ -532,6 +532,41 @@ public class PlayerController : MonoBehaviour
             {
                 SetSwimVariables();
 
+                float yStore = 0;
+
+                if (isUnderwater)
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+
+                    moveDirection = (ray.direction * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
+
+                    if (Input.GetButton("Jump"))
+                    {
+                        yStore += speed;
+                    }
+                    else if (stats.weight > 10)
+                        yStore -= stats.weight / 10;
+                    //else
+                    //    yStore = 0;
+                }
+                else
+                {
+                    if (stats.weight > 10)
+                        yStore -= stats.weight / 10;
+                    //else
+                    //    yStore = 0;
+
+                    moveDirection = (orientation.forward * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
+                }
+
+                if (Input.GetButton("Crouch"))
+                {
+                    yStore -= speed;
+                }
+
+                moveDirection = moveDirection.normalized * affectedSpeed;
+                moveDirection.y = yStore;
+
                 if (isUnderwater)
                 {
                     stats.currentOxygen -= Time.deltaTime * stats.oxygenDecreaseRate.GetValue();
@@ -547,9 +582,17 @@ public class PlayerController : MonoBehaviour
                     stats.currentOxygen += Time.deltaTime * stats.oxygenRegenRate.GetValue();
                 }
             }
-            else if (stats.currentOxygen < stats.maxOxygen.GetValue())
+            else 
             {
-                stats.currentOxygen += Time.deltaTime * stats.oxygenRegenRate.GetValue();
+                float yStore = moveDirection.y;
+                moveDirection = (orientation.forward * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
+                //mouseClickMovement = false;
+
+                moveDirection = moveDirection.normalized * affectedSpeed;
+                moveDirection.y = yStore;
+
+                if (stats.currentOxygen < stats.maxOxygen.GetValue())
+                    stats.currentOxygen += Time.deltaTime * stats.oxygenRegenRate.GetValue();
             }
             animator.SetBool("isSwimming", isSwimming);
 
@@ -573,7 +616,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Climbable"))
         {
-            canClimb = true;
+            inClimbTrigger = true;
         }
 
         if (other.CompareTag("Water"))
@@ -586,7 +629,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Climbable"))
         {
-            canClimb = false;
+            inClimbTrigger = false;
 
             if (isClimbing)
             {

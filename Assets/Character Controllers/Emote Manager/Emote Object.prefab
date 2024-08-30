@@ -125,6 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c055c754559691548b8c1ab42fe4b7ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 1
+  rotate: 0
   degreesPerSecond: 15
   verticalHoverDistance: 0.07
   frequency: 0.75
+  distanceFromGround: 1

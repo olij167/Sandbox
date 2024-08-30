@@ -28,7 +28,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("On Drop (Slot)");
+        //Debug.Log("On Drop (Slot)");
 
         if (eventData.pointerDrag != null)
         {
@@ -38,11 +38,18 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
             {
                 if (CheckItemType(invItem.item))
                 {
-                    OnItemDropped?.Invoke(this, new OnItemDroppedEventArgs { newItem = invItem });
+                    if (invItem.item.itemType == ItemType.Hand && invItem.item.prefab.GetComponent<WeaponItem>() && invItem.item.prefab.GetComponent<WeaponItem>().twoHanded)
+                    {
+                        Debug.Log("Cannot equip two handed weapons in off hand (slot)");
+                    }
+                    else
+                    {
+                        OnItemDropped?.Invoke(this, new OnItemDroppedEventArgs { newItem = invItem });
 
-                    invItem.isEquipped = true;
+                        invItem.isEquipped = true;
 
-                    inventory.SwapItemSlot(invItem.GetItemIndex(), slot, invItem.isEquipped);
+                        inventory.SwapItemSlot(invItem.GetItemIndex(), slot, invItem.isEquipped);
+                    }
 
                     //Spawn in-game item on player (destroy existing equipment)
 

@@ -23,6 +23,8 @@ public class EmoteManager : MonoBehaviour
     [Header("UI Elements")]
     public GameObject emoteUI;
     [SerializeField] private GameObject emoteUIPrefab;
+    [SerializeField] private GameObject emoteSlotPrefab;
+    public int emoteSlotNum = 12;
     [SerializeField] private GameObject emoteBarPanel;
     [SerializeField] private GameObject emoteWindowPanel;
     [SerializeField] private bool emoteWindowOpen;
@@ -39,14 +41,17 @@ public class EmoteManager : MonoBehaviour
         cam = FindObjectOfType<ThirdPersonCam>();
         inventory = FindObjectOfType<PlayerInventory>();
         playerAbilities = FindObjectOfType<PlayerAbilities>();
-        emoteSlots = new EmoteSlot[emoteBarPanel.transform.childCount + emoteWindowPanel.transform.childCount];
+        emoteSlots = new EmoteSlot[emoteBarPanel.transform.childCount + emoteSlotNum];
 
         //for (int i = 0; i < emoteSlots.Length; i++)
         //{
         //    emotes.Add(null);
         //}
 
-        for (int i = 0; i < emoteBarPanel.transform.childCount + emoteWindowPanel.transform.childCount; i++)
+        foreach (Transform child in emoteWindowPanel.transform)
+            Destroy(child.gameObject);
+
+        for (int i = 0; i < emoteBarPanel.transform.childCount + emoteSlotNum; i++)
         {
             if (i < emoteBarPanel.transform.childCount)
             {
@@ -55,7 +60,8 @@ public class EmoteManager : MonoBehaviour
             }
             else
             {
-                emoteSlots[i] = emoteWindowPanel.transform.GetChild(i - emoteBarPanel.transform.childCount).GetComponent<EmoteSlot>();
+                //emoteSlots[i] = emoteWindowPanel.transform.GetChild(i - emoteBarPanel.transform.childCount).GetComponent<EmoteSlot>();
+                emoteSlots[i] = Instantiate(emoteSlotPrefab, emoteWindowPanel.transform).GetComponent<EmoteSlot>();
                 emoteSlots[i].slot = i;
 
             }
@@ -220,6 +226,10 @@ public class EmoteManager : MonoBehaviour
             selectedEmoteSlot = index;
 
             activeEmote = emoteSlots[index].emoteItem.emote;
+            //player.animator.SetInteger("Emote", activeEmote.itemID);
+
+            ////animator.SetBool("isEmoting", true);
+            //player.isEmoting = true;
             Debug.Log("emote set with UI Button");
         }
         //SetSelectedEmoteColour();

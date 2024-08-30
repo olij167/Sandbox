@@ -21,8 +21,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Broadleaf_Purple
-  m_Shader: {fileID: -6465566751694194690, guid: 3230f6c5d09dd114c82b2287fcc7e15b,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 3230f6c5d09dd114c82b2287fcc7e15b, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _COLOR_OVERLAY_UV
@@ -39,6 +40,7 @@ Material:
   stringTagMap:
     RenderType: TransparentCutout
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -178,7 +180,7 @@ Material:
     - _Player_Position: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _TopColor: {r: 0.58158517, g: 0.754717, b: 0, a: 0}
-    - _Top_Color: {r: 0.5021863, g: 0.3440392, b: 0.566, a: 1}
+    - _Top_Color: {r: 0.70935524, g: 0.48794055, b: 0.8018868, a: 1}
     - _WindDirection: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _Wind_Direction: {r: 0.1, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []

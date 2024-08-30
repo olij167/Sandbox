@@ -22,6 +22,8 @@ public class PlayerUI : MonoBehaviour
 
     public float vignetteIntensity = 0.4f;
 
+    public float underWaterLerpSpeed;
+
     //public Volume postProcessingVolume;
     public float damageEffectDecreaseRate = 0.4f;
     public Volume damagePostProcessing;
@@ -73,7 +75,16 @@ public class PlayerUI : MonoBehaviour
 
         }
 
-        if (player.isSwimming || player.stats.currentOxygen < player.stats.maxOxygen.GetValue())
+        if (player.isUnderwater)
+        {
+            underwaterPostProcessing.weight = 1;
+        }
+        else if (!player.isUnderwater && underwaterPostProcessing.weight > 0)
+        {
+            underwaterPostProcessing.weight = 0;
+        }
+
+        if (player.stats.currentOxygen < player.stats.maxOxygen.GetValue())
         {
             oxygenBar.gameObject.SetActive(true);
             oxygenBar.value = player.stats.currentOxygen;
@@ -82,7 +93,7 @@ public class PlayerUI : MonoBehaviour
 
             if (oxygenBar.value <= oxygenBar.maxValue * 0.4f)
             {
-                //popUp.SetAndDisplayPopUp("Warning: Low Oxygen");
+                popUp.SetAndDisplayPopUp("Warning: Low Oxygen");
                 //StartCoroutine(DrowningUI());
             }
 
@@ -95,10 +106,10 @@ public class PlayerUI : MonoBehaviour
         }
         else oxygenBar.gameObject.SetActive(false);
 
-        if (player.canClimb && !player.isClimbing)
-        {
+        //if (player.canClimb && !player.isClimbing)
+        //{
 
-        }
+        //}
     }
 
     public void InitialiseBatteryBar(InventoryUIItem item)

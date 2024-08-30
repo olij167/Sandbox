@@ -6,6 +6,8 @@ public class WeaponItem : MonoBehaviour
 {
     //private PlayerInventory playerInventory;
 
+    public bool twoHanded;
+
     public int attackAnimationIndex;
     public int comboIndex;
     public List<int> attackAnimationCombo;

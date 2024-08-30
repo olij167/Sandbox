@@ -18,7 +18,9 @@ public class SpawnObjects : MonoBehaviour
     public bool randomPrefabs;
 
     public Transform spawnPoint;
-    [SerializeField] private Vector3 spawnArea;
+    private Vector3 spawnArea;
+    public float distanceFromGround;
+
 
     public bool spawnInRadius;
     public float spawnRadius = 10;
@@ -169,6 +171,24 @@ public class SpawnObjects : MonoBehaviour
 
     }
 
+    public Vector3 SetDistanceFromGround()
+    {
+        RaycastHit hit;
+        Vector3 floatDistance = spawnPoint.position;
+
+
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
+        {
+            Vector3 pos = hit.point;
+
+            Ray returnRay = new Ray(pos, transform.position - pos);
+
+            floatDistance = returnRay.GetPoint(distanceFromGround);
+        }
+
+        return new Vector3(spawnArea.x, floatDistance.y, spawnArea.z);
+
+    }
 
     public GameObject SpawnSpecificObjectAtRandomPos(GameObject prefab, Transform parent)
     {
@@ -215,7 +235,7 @@ public class SpawnObjects : MonoBehaviour
     {
         spawnArea = spawnPoint.position + (spawnRadius * Random.insideUnitSphere);
         //spawnArea = new Vector3 (spawnArea.x, spawnPoint.position.y, spawnArea.z);
-        spawnArea.y = spawnPoint.position.y;
+        spawnArea = SetDistanceFromGround();
         return spawnArea;
     }
     public Vector3 GenerateRandomWayPoint()

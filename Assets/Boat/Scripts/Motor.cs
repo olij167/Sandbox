@@ -16,21 +16,26 @@ public class Motor : MonoBehaviour
 
     [SerializeField] private float forceDistanceFromBoat;
 
+    public bool isRunning;
+
     void Update()
     {
 
-        ////move forward
-        boat.transform.position += boat.transform.forward * speed * Time.deltaTime;
+        if (isRunning)
+        {
+            ////move forward
+            boat.transform.position += boat.transform.forward * speed * Time.deltaTime;
 
-        //// steer
+            //// steer
 
-        //stickRotation.y = (stickRotation.y > 180) ? stickRotation.y - 360 : stickRotation.y;
+            //stickRotation.y = (stickRotation.y > 180) ? stickRotation.y - 360 : stickRotation.y;
 
-        Vector3 stickPivotXZDirection = new Vector3(stickPivot.transform.right.x, 0, 0);
+            Vector3 stickPivotXZDirection = new Vector3(stickPivot.transform.right.x, 0, 0);
 
-        Vector3 boatButLower = new Vector3(boat.transform.position.x, boat.transform.position.y - forceDistanceFromBoat, boat.transform.position.z);
+            //Vector3 boatButLower = new Vector3(boat.transform.position.x, boat.transform.position.y - forceDistanceFromBoat, boat.transform.position.z);
 
-        boat.AddForceAtPosition(stickPivotXZDirection * rotationSpeed * Time.deltaTime, transform.position, force);
+            boat.AddForceAtPosition(stickPivotXZDirection * rotationSpeed * Time.deltaTime, transform.position, force);
+        }
 
     }
 }

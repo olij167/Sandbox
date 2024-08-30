@@ -128,6 +128,7 @@ public class WheelDrive : Interactable
         playerController.characterControllerMovement = false;
         playerController.GetComponent<CharacterController>().enabled = false;
         playerController.GetComponent<CapsuleCollider>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = false;
 
 		FindObjectOfType<ThirdPersonCam>().freezeOrientation = true;
 		FindObjectOfType<ThirdPersonCam>().orientation.forward = transform.forward;
@@ -137,6 +138,8 @@ public class WheelDrive : Interactable
         playerController.transform.parent = transform;
 
 		playerController.animator.SetBool("isSitting", true);
+		playerController.animator.SetBool("isWalking", false);
+		playerController.animator.SetBool("isRunning", false);
 
         //playerController.model.SetActive( false);
 		
@@ -149,6 +152,7 @@ public class WheelDrive : Interactable
         playerController.characterControllerMovement = true;
         playerController.GetComponent<CharacterController>().enabled = true;
 		playerController.GetComponent<CapsuleCollider>().enabled = true;
+		GetComponent<Rigidbody>().isKinematic = true;
 
 		FindObjectOfType<ThirdPersonCam>().freezeOrientation = false;
 
@@ -166,6 +170,9 @@ public class WheelDrive : Interactable
 		{
 			playerController.GetComponent<PlayerAttack>().Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass);
 		}
+
+		if (other.transform.GetComponent<Terrain>() && !beingDriven)
+			GetComponent<Rigidbody>().isKinematic = true;
 
 	}
 }

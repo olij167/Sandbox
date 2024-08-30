@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2571304162624286606
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7159840499646596154}
+  - component: {fileID: 2759698348156123166}
+  m_Layer: 0
+  m_Name: Climbing Trigger
+  m_TagString: Climbable
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7159840499646596154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2571304162624286606}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.05, y: 0.98, z: 1.05}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2836439255435353027}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &2759698348156123166
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2571304162624286606}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -9031691222517324051, guid: 999aad388f1ea9c4eb88a3ff2dcc08c4, type: 3}
 --- !u!1 &2836439255362848060
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +140,6 @@ GameObject:
   - component: {fileID: 2836439255435353027}
   - component: {fileID: 2836439255435353024}
   - component: {fileID: 5810910609775073078}
-  - component: {fileID: 8075895162124107156}
   m_Layer: 0
   m_Name: Cliff_01
   m_TagString: Climbable
@@ -117,6 +162,7 @@ Transform:
   - {fileID: 2836439256721779846}
   - {fileID: 2836439255362848057}
   - {fileID: 2836439256575723812}
+  - {fileID: 7159840499646596154}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -161,19 +207,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -9031691222517324051, guid: 999aad388f1ea9c4eb88a3ff2dcc08c4, type: 3}
---- !u!65 &8075895162124107156
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2836439255435353025}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 17.07049, y: 9.42, z: 16.913532}
-  m_Center: {x: -0.07767391, y: -0.04247904, z: 0.05852413}
 --- !u!1 &2836439256575723995
 GameObject:
   m_ObjectHideFlags: 0

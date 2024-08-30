@@ -12,6 +12,8 @@ public class ThirdPersonSelection : MonoBehaviour
 
     public List<GameObject> selectedObjects;
 
+    public int firstInteractableIndex = 0;
+
     //public Transform hitTransform;
 
     //public Image interactionAimIndicator;
@@ -23,6 +25,8 @@ public class ThirdPersonSelection : MonoBehaviour
     [SerializeField] private bool isChest;
     [SerializeField] private bool isCar;
     [SerializeField] private bool isChair;
+    [SerializeField] private bool isFloatingVehicle;
+    //public bool isClimbable;
 
     [HideInInspector] public bool isItemInteracted;
     [HideInInspector] public bool isEmoteInteracted;
@@ -30,6 +34,8 @@ public class ThirdPersonSelection : MonoBehaviour
     [HideInInspector] public bool isChestInteracted;
     [HideInInspector] public bool isCarInteracted;
     [HideInInspector] public bool isChairInteracted;
+    [HideInInspector] public bool isFloatingVehicleInteracted;
+
 
     public TextMeshProUGUI interactPromptText;
 
@@ -53,108 +59,154 @@ public class ThirdPersonSelection : MonoBehaviour
     {
         if (selectedObjects.Count > 0)
         {
-            if (selectedObjects[0] != null && selectedObjects[0].GetComponent<Interactable>())
+            if (selectedObjects[0] != null)
             {
-                if (selectedObjects[0].GetComponent<ItemInWorld>())
+
+                if (selectedObjects[0].CompareTag("Climbable"))
                 {
-                    isItem = true;
-                    interactPromptText.text = "Collect " + selectedObjects[0].GetComponent<ItemInWorld>().item.itemName;
+                    playerController.canClimb = true;
 
-                    isEmote = false;
-                    isAbility = false;
-                    isChest = false;
-                    isCar = false;
-                    isChair = false;
-
-                    //isInteraction = false;
+                    for (int i = 0; i < selectedObjects.Count; i++)
+                    {
+                        if (selectedObjects[i] == null)
+                            selectedObjects.RemoveAt(i);
+                        else if (!selectedObjects[i].CompareTag("Climbable"))
+                            firstInteractableIndex = i;
+                    }
                 }
-                else if (selectedObjects[0].GetComponent<EmoteInWorld>())
+                else firstInteractableIndex = 0;
+
+                if (selectedObjects.Count <= firstInteractableIndex) firstInteractableIndex = 0;
+
+
+                if (selectedObjects[firstInteractableIndex].GetComponent<Interactable>() || selectedObjects[firstInteractableIndex].transform.CompareTag("Climbable"))
                 {
-                    isEmote = true;
-                    interactPromptText.text = "Collect " + selectedObjects[0].GetComponent<EmoteInWorld>().emote.itemName + " Emote";
+                    if (selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>())
+                    {
+                        isItem = true;
+                        interactPromptText.text = "Collect " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
 
-                    isItem = false;
-                    isAbility = false;
-                    isChest = false;
-                    isCar = false;
-                    isChair = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
 
-                    //isInteraction = false;
-                }
-                else if (selectedObjects[0].GetComponent<AbilityInWorld>())
-                {
-                    isAbility = true;
-                    interactPromptText.text = "Collect " + selectedObjects[0].GetComponent<AbilityInWorld>().ability.itemName + " Ability";
+                        //isInteraction = false;
+                    }
+                    else if (selectedObjects[firstInteractableIndex].GetComponent<EmoteInWorld>())
+                    {
+                        isEmote = true;
+                        interactPromptText.text = "Collect " + selectedObjects[firstInteractableIndex].GetComponent<EmoteInWorld>().emote.itemName + " Emote";
 
-                    isItem = false;
-                    isEmote = false;
-                    isChest = false;
-                    isCar = false;
-                    isChair = false;
+                        isItem = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
 
-                    //isInteraction = false;
-                }
-                else if (selectedObjects[0].GetComponent<ChestInventory>())
-                {
-                    isChest = true;
+                        //isInteraction = false;
+                    }
+                    else if (selectedObjects[firstInteractableIndex].GetComponent<AbilityInWorld>())
+                    {
+                        isAbility = true;
+                        interactPromptText.text = "Collect " + selectedObjects[firstInteractableIndex].GetComponent<AbilityInWorld>().ability.itemName + " Ability";
 
-                    if (!selectedObjects[0].GetComponent<ChestInventory>().chestPanel.activeSelf)
-                        interactPromptText.text = "Open Chest";
+                        isItem = false;
+                        isEmote = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
+
+                        //isInteraction = false;
+                    }
+                    else if (selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>())
+                    {
+                        isChest = true;
+
+                        if (!selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>().chestPanel.activeSelf)
+                            interactPromptText.text = "Open Chest";
+                        else
+                            interactPromptText.text = "Close Chest";
+
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
+
+                        //isInteraction = false;
+                    }
+                    else if (selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>())
+                    {
+                        isCar = true;
+
+                        if (!selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>().beingDriven)
+                            interactPromptText.text = "Enter Vehicle";
+                        else
+                            interactPromptText.text = "Exit Vehicle";
+
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
+
+                        //isInteraction = false;
+                    }
+                    else if (selectedObjects[firstInteractableIndex].GetComponent<Chair>())
+                    {
+                        isChair = true;
+
+                        if (!selectedObjects[0].GetComponent<Chair>().isSitting)
+                            interactPromptText.text = "Sit Down";
+                        else
+                            interactPromptText.text = "Stand Up";
+
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isFloatingVehicle = false;
+
+                        //isInteraction = false;
+                    } 
+                    else if (selectedObjects[0].GetComponent<FloatingVehicle>())
+                    {
+                        isFloatingVehicle = true;
+
+                        if (!selectedObjects[firstInteractableIndex].GetComponent<FloatingVehicle>().beingDriven)
+                            interactPromptText.text = "Enter Vehicle";
+                        else
+                            interactPromptText.text = "Exit Vehicle";
+
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+
+                        //isInteraction = false;
+                    }
                     else
-                        interactPromptText.text = "Close Chest";
+                    {
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
 
-                    isItem = false;
-                    isEmote = false;
-                    isAbility = false;
-                    isCar = false;
-                    isChair = false;
-
-                    //isInteraction = false;
-                }
-                else if (selectedObjects[0].GetComponent<WheelDrive>())
-                {
-                    isCar = true;
-
-                    if (!selectedObjects[0].GetComponent<WheelDrive>().beingDriven)
-                        interactPromptText.text = "Enter Vehicle";
-                    else
-                        interactPromptText.text = "Exit Vehicle";
-
-                    isItem = false;
-                    isEmote = false;
-                    isAbility = false;
-                    isChest = false;
-                    isChair = false;
-
-                    //isInteraction = false;
-                }
-                else if (selectedObjects[0].GetComponent<Chair>())
-                {
-                    isChair = true;
-
-                    if (!selectedObjects[0].GetComponent<Chair>().isSitting)
-                        interactPromptText.text = "Sit Down";
-                    else
-                        interactPromptText.text = "Stand Up";
-
-                    isItem = false;
-                    isEmote = false;
-                    isAbility = false;
-                    isChest = false;
-                    isCar = false;
-
-                    //isInteraction = false;
-                }
-                else
-                {
-                    isItem = false;
-                    isEmote = false;
-                    isAbility = false;
-                    isChest = false;
-                    isCar = false;
-                    isChair = false;
-
-                    //isInteraction = false;
+                        //isInteraction = false;
+                    }
                 }
 
 
@@ -181,8 +233,8 @@ public class ThirdPersonSelection : MonoBehaviour
                         isAbilityInteracted = true;
 
                         PickUpAbility();
-                    } 
-                    
+                    }
+
                     if (isChest)
                     {
                         isChestInteracted = true;
@@ -209,6 +261,14 @@ public class ThirdPersonSelection : MonoBehaviour
                             SitDown();
                         else selectedObject.GetComponent<Chair>().StandUp(playerController);
                     }
+                    if (isFloatingVehicle)
+                    {
+                        isFloatingVehicleInteracted = true;
+
+                        if (!selectedObject.GetComponent<FloatingVehicle>().beingDriven)
+                            EnterFloatingVehicle();
+                        else selectedObject.GetComponent<FloatingVehicle>().StandUp(playerController);
+                    }
 
                     //if (isInteraction)
                     //{
@@ -222,18 +282,38 @@ public class ThirdPersonSelection : MonoBehaviour
 
                 }
 
-                selectedObject = selectedObjects[0];
+                if (selectedObjects[firstInteractableIndex] != null)
+                    selectedObject = selectedObjects[firstInteractableIndex];
+                else
+                {
+                    selectedObjects.RemoveAt(firstInteractableIndex);
+                }
+
             }
             else
             {
                 selectedObjects.RemoveAt(0);
+
+                firstInteractableIndex = 0;
+
+                playerController.canClimb = false;
+
+                //if (playerController.isClimbing)
+                //{
+                //    playerController.isClimbing = false;
+                //}
             }
         }
         else
         {
             selectedObject = null;
-            interactPromptText.text = "";
+
+            playerController.canClimb = false;
+
         }
+
+        if (selectedObject == null || selectedObject.CompareTag("Climbable")) interactPromptText.text = "";
+
         //if (isItem || isEmote /*|| isInteraction*/)
         //{
         //    interactionAimIndicator.color = Color.red;
@@ -248,12 +328,8 @@ public class ThirdPersonSelection : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-        if (other.transform.GetComponent<Chair>() ||
-            other.transform.GetComponent<ItemInWorld>() ||
-            other.transform.GetComponent<EmoteInWorld>() ||
-            other.transform.GetComponent<AbilityInWorld>() ||
-            other.transform.GetComponent<ChestInventory>() ||
-            other.transform.GetComponent<WheelDrive>())
+        if (other.transform.GetComponent<Interactable>() || 
+            (other.transform.CompareTag("Climbable") && ! other.GetComponent<Collider>().isTrigger ))
         {
             selectedObjects.Add(other.transform.gameObject);
 
@@ -263,13 +339,11 @@ public class ThirdPersonSelection : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.GetComponent<ItemInWorld>() ||
-            other.transform.GetComponent<EmoteInWorld>() ||
-            other.transform.GetComponent<AbilityInWorld>() ||
-            other.transform.GetComponent<ChestInventory>() ||
-            other.transform.GetComponent<WheelDrive>() ||
-            other.transform.GetComponent<Chair>())
+        if (other.transform.GetComponent<Interactable>() ||
+            other.transform.CompareTag("Climbable"))
         {
+            if (other.gameObject == selectedObject) selectedObject = null;
+
             selectedObjects.Remove(other.transform.gameObject);
 
             //interactPromptText.text = "Collect " + selectedObjects[selectedObjects.Count].GetComponent<ItemInWorld>().item.itemName;
@@ -336,6 +410,16 @@ public class ThirdPersonSelection : MonoBehaviour
         StartCoroutine(DelaySettingFalseVariables());
 
     }
+    
+    public void EnterFloatingVehicle()
+    {
+        Debug.Log("Entering Vehicle");
+        selectedObject.GetComponent<FloatingVehicle>().SitDown(playerController);
+
+
+        StartCoroutine(DelaySettingFalseVariables());
+
+    }
 
     public IEnumerator DelaySettingFalseVariables()
     {
@@ -378,7 +462,14 @@ public class ThirdPersonSelection : MonoBehaviour
         {
             yield return new WaitForSeconds(delayTime);
 
-            isChestInteracted = false;
+            isChairInteracted = false;
+        }  
+        
+        if (isFloatingVehicleInteracted)
+        {
+            yield return new WaitForSeconds(delayTime);
+
+            isFloatingVehicleInteracted = false;
         }
     }
 }

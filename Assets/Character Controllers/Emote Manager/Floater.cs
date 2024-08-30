@@ -7,38 +7,63 @@ using UnityEngine;
 using System.Collections;
 
 // Makes objects float up & down while gently spinning.
-public class Floater : MonoBehaviour
+//[RequireComponent(typeof(Rigidbody))]
+public class Floater : Interactable
 {
     // User Inputs
+    public bool rotate;
+    //public bool move = true;
     public float degreesPerSecond = 15.0f;
     public float verticalHoverDistance = 0.5f;
     public float frequency = 1f;
+    [SerializeField]private float distanceFromGround = 1f;
 
     // Position Storage Variables
-    Vector3 posOffset = new Vector3();
-    Vector3 tempPos = new Vector3();
+    //protected Vector3 posOffset = new Vector3();
+    protected Vector3 tempPos = new Vector3();
+
+   // protected Rigidbody rb;
 
     // Use this for initialization
     void Start()
     {
+
+        //rb = GetComponent<Rigidbody>();
         // Store the starting position & rotation of the object
-        posOffset = transform.position;
+        //posOffset = new Vector3(transform.position.x, transform.position.y + distanceFromGround, transform.position.z);
 
         frequency += Random.Range(-frequency / 4, frequency / 4);
 
     }
-
-    // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        // Spin object around Y-Axis
-        transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.World);
+        RaycastHit hit;
 
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
+        {
+            Vector3 pos = hit.point;
 
-        // Float up/down with a Sin()
-        tempPos = posOffset;
-        tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * verticalHoverDistance;
+            Ray returnRay = new Ray(pos, transform.position - pos);
 
-        transform.position = tempPos;
+            Vector3 floatDistance = returnRay.GetPoint(distanceFromGround);
+
+           // rb.useGravity = false;
+
+            // Spin object around Y-Axis
+            if (rotate)
+                transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.World);
+
+            // Float up/down with a Sin()
+            tempPos = floatDistance;
+
+            tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * verticalHoverDistance;
+
+                transform.position = tempPos;
+        }
+        //else
+        //{
+        //    rb.useGravity = true;
+
+        //}
     }
 }
