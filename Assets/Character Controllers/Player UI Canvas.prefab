@@ -2225,6 +2225,7 @@ GameObject:
   - component: {fileID: 1265812890595564356}
   - component: {fileID: 1265812890595564359}
   - component: {fileID: 1265812890595564358}
+  - component: {fileID: 1467865079}
   m_Layer: 5
   m_Name: Player UI Canvas
   m_TagString: Untagged
@@ -2321,6 +2322,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1467865079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265812890595564353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f423896b437e9be4b8ca15db933f3ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  playerAttack: {fileID: 0}
 --- !u!1 &1265812890832896396
 GameObject:
   m_ObjectHideFlags: 0
@@ -2838,7 +2853,6 @@ GameObject:
   - component: {fileID: 1265812892152188102}
   - component: {fileID: 1265812892152188103}
   - component: {fileID: 4057106659123793026}
-  - component: {fileID: 1656878131}
   m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
@@ -2893,7 +2907,10 @@ MonoBehaviour:
   inventoryUI: {fileID: 6096723774405885163}
   inventoryItemPrefab: {fileID: 3365627313915022446, guid: 925efe41adeed724ab49ab7a41212629,
     type: 3}
+  inventorySlotPrefab: {fileID: 5437937537864359683, guid: 948da34966457ab4c9d5bc4a83b6c911,
+    type: 3}
   inventoryBarPanel: {fileID: 1265812892099082632}
+  inventorySlotNum: 12
   inventoryWindowPanel: {fileID: 1214256900}
   inventoryEquipmentPanel: {fileID: 6049958169260873462}
   inventoryWindowOpen: 0
@@ -2909,7 +2926,7 @@ MonoBehaviour:
   valueText: {fileID: 1265812890832896386}
   equipmentSlots: []
   inventoryInput: 105
-  rightDropItemInput: 122
+  rightDropItemInput: 113
   leftDropItemInput: 120
   rightThrowItemInput: 116
   lefttThrowItemInput: 103
@@ -2919,11 +2936,13 @@ MonoBehaviour:
   leftArm: {fileID: 0}
   rightArm: {fileID: 0}
   offHandSlot: {fileID: 7678509431263291014}
+  offHandPaused: {fileID: 0}
   swordTarget: {fileID: 0}
+  projectileTarget: {fileID: 0}
   holdingItemRigWeight: 0.6
   throwCooldown: 1
-  throwForce: 5
-  throwUpwardForce: 2
+  throwForce: 10
+  throwUpwardForce: 5
   canThrow: 1
 --- !u!114 &4057106659123793026
 MonoBehaviour:
@@ -2938,20 +2957,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offHandSlot: {fileID: 7678509431263291014}
---- !u!114 &1656878131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265812892152188097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f423896b437e9be4b8ca15db933f3ef3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  playerAttack: {fileID: 0}
 --- !u!1 &1533576768308237261
 GameObject:
   m_ObjectHideFlags: 0
@@ -3552,10 +3557,10 @@ RectTransform:
   m_Father: {fileID: 6952586279608395496}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -70.625, y: -611}
-  m_SizeDelta: {x: 141.25, y: 650}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3476403017644714295
 MonoBehaviour:
@@ -3580,7 +3585,7 @@ MonoBehaviour:
   m_CellSize: {x: 100, y: 100}
   m_Spacing: {x: 25, y: 25}
   m_Constraint: 1
-  m_ConstraintCount: 1
+  m_ConstraintCount: 5
 --- !u!114 &3920901100912895396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3593,7 +3598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreLayout: 1
+  m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
   m_PreferredWidth: -1
@@ -9086,6 +9091,12 @@ PrefabInstance:
       objectReference: {fileID: 1265812891865809969}
     - target: {fileID: 3385182596674918754, guid: e1df8f41857074144aa0ac95f8ea6ba1,
         type: 3}
+      propertyPath: emoteSlotPrefab
+      value: 
+      objectReference: {fileID: 4049140588370133441, guid: 35a44d660a00b4048b3640b4e385d17e,
+        type: 3}
+    - target: {fileID: 3385182596674918754, guid: e1df8f41857074144aa0ac95f8ea6ba1,
+        type: 3}
       propertyPath: emoteTextPrompts
       value: 
       objectReference: {fileID: 8283346879256683065}
@@ -9756,6 +9767,12 @@ PrefabInstance:
       propertyPath: textPopUp
       value: 
       objectReference: {fileID: 1265812891865809969}
+    - target: {fileID: 937414913915604076, guid: 90c18664bd182574bbaa8e7a92dda780,
+        type: 3}
+      propertyPath: abilitySlotPrefab
+      value: 
+      objectReference: {fileID: 6073050811239889579, guid: 5dbe185b12f871e46a8ee468dbda0d24,
+        type: 3}
     - target: {fileID: 937414913915604076, guid: 90c18664bd182574bbaa8e7a92dda780,
         type: 3}
       propertyPath: allAbilities.Array.size

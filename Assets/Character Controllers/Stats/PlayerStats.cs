@@ -33,7 +33,11 @@ public class PlayerStats : CharacterStats
     public Stat staminaDecreaseRate; // = 1f;
     public Stat staminaIncreaseRate;  // = 0.75f;
 
+    public Stat jumpingStaminaDecreaseAmount; // = 1f;
     public Stat climbingStaminaDecreaseRate; // = 1f;
+    public Stat swimmingStaminaDecreaseRate; // = 1f;
+    public Stat attackingStaminaDecreaseRate; // = 1f;
+    public Stat dodgingStaminaDecreaseAmount; // = 1f;
 
     [Header("Oxygen")]
     public float currentOxygen;

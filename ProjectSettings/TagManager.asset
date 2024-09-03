@@ -9,6 +9,8 @@ TagManager:
   - Raft
   - Oar
   - SharkBait
+  - PlayerUI
+  - PostProcessing
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - Water
   - UI
   - Sky
-  - 
-  - 
+  - Tile
+  - Door
   - 
   - 
   - 

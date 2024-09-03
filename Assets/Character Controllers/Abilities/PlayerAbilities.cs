@@ -80,15 +80,19 @@ public class PlayerAbilities : MonoBehaviour
 
     private void Update()
     {
-        if (activeAbility != null && !effectActive)
+        if (activeAbility != null && !effectActive && player.stats.power > activeAbility.energyCost)
         {
             if (Input.GetKeyDown(abilityInput))
             {
                 activeAbility.ActivateEffect(player);
                 effectActive = true;
-                StartCoroutine(DelaySettingFalseVariables(activeAbility.effectDuration));
+                player.stats.DecreasePower(activeAbility.energyCost);
+                StartCoroutine(activeAbility.DeactivateEffect(player, this));
             }
         }
+
+        if (!effectActive)
+            player.stats.RegeneratePower();
 
         if (abilityUI.activeSelf)
         {
@@ -256,13 +260,13 @@ public class PlayerAbilities : MonoBehaviour
 
     }
 
-    public IEnumerator DelaySettingFalseVariables(float delay)
-    {
-        yield return new WaitForSeconds(delay);
+    //public IEnumerator DelaySettingFalseVariables(float delay)
+    //{
+    //    yield return new WaitForSeconds(delay);
 
-        activeAbility.DeactivateEffect(player);
-        effectActive = false;
-    }
+    //    StartCoroutine(activeAbility.DeactivateEffect(player, effectActive));
+    //    //effectActive = false;
+    //}
 
     int CheckEmptySlots(AbilitySlot[] slots)
     {

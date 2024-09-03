@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ThirdPersonSelection : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class ThirdPersonSelection : MonoBehaviour
     [SerializeField] private bool isCar;
     [SerializeField] private bool isChair;
     [SerializeField] private bool isFloatingVehicle;
+    [SerializeField] private bool isSceneTransition;
+    [SerializeField] private bool isDoor;
     //public bool isClimbable;
 
     [HideInInspector] public bool isItemInteracted;
@@ -35,6 +38,8 @@ public class ThirdPersonSelection : MonoBehaviour
     [HideInInspector] public bool isCarInteracted;
     [HideInInspector] public bool isChairInteracted;
     [HideInInspector] public bool isFloatingVehicleInteracted;
+    [HideInInspector] public bool isSceneTransitionInteracted;
+    [HideInInspector] public bool isDoorInteracted;
 
 
     public TextMeshProUGUI interactPromptText;
@@ -92,6 +97,8 @@ public class ThirdPersonSelection : MonoBehaviour
                         isCar = false;
                         isChair = false;
                         isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
                     }
@@ -106,6 +113,8 @@ public class ThirdPersonSelection : MonoBehaviour
                         isCar = false;
                         isChair = false;
                         isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
                     }
@@ -120,6 +129,8 @@ public class ThirdPersonSelection : MonoBehaviour
                         isCar = false;
                         isChair = false;
                         isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
                     }
@@ -138,6 +149,8 @@ public class ThirdPersonSelection : MonoBehaviour
                         isCar = false;
                         isChair = false;
                         isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
                     }
@@ -156,6 +169,8 @@ public class ThirdPersonSelection : MonoBehaviour
                         isChest = false;
                         isChair = false;
                         isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
                     }
@@ -174,9 +189,11 @@ public class ThirdPersonSelection : MonoBehaviour
                         isChest = false;
                         isCar = false;
                         isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
-                    } 
+                    }
                     else if (selectedObjects[0].GetComponent<FloatingVehicle>())
                     {
                         isFloatingVehicle = true;
@@ -192,6 +209,45 @@ public class ThirdPersonSelection : MonoBehaviour
                         isChest = false;
                         isCar = false;
                         isChair = false;
+                        isSceneTransition = false;
+                        isDoor = false;
+
+                        //isInteraction = false;
+                    }
+                    else if (selectedObjects[0].GetComponent<SceneLoader>())
+                    {
+                        isSceneTransition = true;
+
+                        interactPromptText.text = "Enter " + selectedObjects[0].GetComponent<SceneLoader>().sceneToLoad;
+
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
+                        isDoor = false;
+
+                        //isInteraction = false;
+                    }
+                    else if (selectedObjects[0].GetComponent<ToggleDoor>())
+                    {
+                        isDoor = true;
+
+                        if(!selectedObjects[firstInteractableIndex].GetComponent<ToggleDoor>().isOpen)
+                            interactPromptText.text = "Open Door";
+                        else
+                            interactPromptText.text = "Close Door";
+
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
+                        isSceneTransition = false;
 
                         //isInteraction = false;
                     }
@@ -204,6 +260,8 @@ public class ThirdPersonSelection : MonoBehaviour
                         isCar = false;
                         isChair = false;
                         isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
                     }
@@ -269,6 +327,25 @@ public class ThirdPersonSelection : MonoBehaviour
                             EnterFloatingVehicle();
                         else selectedObject.GetComponent<FloatingVehicle>().StandUp(playerController);
                     }
+
+                    if (isSceneTransition)
+                    {
+                        isSceneTransitionInteracted = true;
+
+                        if (!selectedObject.GetComponent<SceneLoader>().isLoaded)
+                            selectedObject.GetComponent<SceneLoader>().LoadScene();
+                        else if (selectedObject.GetComponent<SceneLoader>().currentScene != "Demo")
+                            selectedObject.GetComponent<SceneLoader>().UnloadScene();
+                    }
+
+                    if (isDoor)
+                    {
+                        isDoorInteracted = true;
+
+                        selectedObject.GetComponent<ToggleDoor>().DoorInteraction();
+                    }
+
+                    StartCoroutine(DelaySettingFalseVariables());
 
                     //if (isInteraction)
                     //{
@@ -356,10 +433,6 @@ public class ThirdPersonSelection : MonoBehaviour
         InventoryItem item = selectedObject.GetComponent<ItemInWorld>().item;
 
         inventorySystem.AddItemToInventory(item, selectedObject);
-
-
-        StartCoroutine(DelaySettingFalseVariables());
-
     }
 
     public void PickUpEmote()
@@ -369,8 +442,6 @@ public class ThirdPersonSelection : MonoBehaviour
 
         emoteManager.AddEmoteToInventory(emote, selectedObject);
 
-        StartCoroutine(DelaySettingFalseVariables());
-
     } 
     public void PickUpAbility()
     {
@@ -378,8 +449,6 @@ public class ThirdPersonSelection : MonoBehaviour
         Ability ability = selectedObject.GetComponent<AbilityInWorld>().ability;
 
         playerAbilities.AddAbilityToInventory(ability, selectedObject);
-
-        StartCoroutine(DelaySettingFalseVariables());
 
     }
 
@@ -389,16 +458,12 @@ public class ThirdPersonSelection : MonoBehaviour
         ChestInventory chest = selectedObject.GetComponent<ChestInventory>();
         chest.InitialiseChestPanel();
 
-        StartCoroutine(DelaySettingFalseVariables());
-
     }
 
     public void EnterCar()
     {
         Debug.Log("Entering Vehicle");
          selectedObject.GetComponent<WheelDrive>().EnterCar();
-
-        StartCoroutine(DelaySettingFalseVariables());
 
     }
      public void SitDown()
@@ -407,8 +472,6 @@ public class ThirdPersonSelection : MonoBehaviour
         selectedObject.GetComponent<Chair>().SitDown(playerController);
 
 
-        StartCoroutine(DelaySettingFalseVariables());
-
     }
     
     public void EnterFloatingVehicle()
@@ -416,8 +479,6 @@ public class ThirdPersonSelection : MonoBehaviour
         Debug.Log("Entering Vehicle");
         selectedObject.GetComponent<FloatingVehicle>().SitDown(playerController);
 
-
-        StartCoroutine(DelaySettingFalseVariables());
 
     }
 
@@ -470,6 +531,20 @@ public class ThirdPersonSelection : MonoBehaviour
             yield return new WaitForSeconds(delayTime);
 
             isFloatingVehicleInteracted = false;
+        } 
+        
+        if (isSceneTransitionInteracted)
+        {
+            yield return new WaitForSeconds(delayTime);
+
+            isSceneTransitionInteracted = false;
+        }  
+        
+        if (isDoorInteracted)
+        {
+            yield return new WaitForSeconds(delayTime);
+
+            isDoorInteracted = false;
         }
     }
 }

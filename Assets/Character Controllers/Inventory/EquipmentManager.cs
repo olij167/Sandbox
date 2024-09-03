@@ -94,7 +94,7 @@ public class EquipmentManager : MonoBehaviour
         Debug.Log(e.newItem.item.itemName + " dropped in Off Hand Slot");
         //Debug.Log(e.oldItem.item.itemName + " removed from Hand Slot");
 
-        if (e.newItem.physicalItem.GetComponent<WeaponItem>() && e.newItem.physicalItem.GetComponent<WeaponItem>().twoHanded)
+        if (e.newItem.item.prefab.GetComponent<WeaponItem>() && e.newItem.item.prefab.GetComponent<WeaponItem>().twoHanded)
         {
             Debug.Log("Cannot equip two handed weapons in off hand (Manager)");
         }

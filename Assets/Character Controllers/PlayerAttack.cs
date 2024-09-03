@@ -7,10 +7,12 @@ public class PlayerAttack : CharacterCombat
     [HideInInspector] public PlayerController player;
     [HideInInspector] public PlayerInventory inventory;
 
+
+
     //public float enemyDetectionRange = 5f;
     //public List<GameObject> enemiesInRange;
 
-   // public bool lockedOn;
+    // public bool lockedOn;
 
     //public int rightHandComboCount;
     //public int leftHandComboCount;
@@ -23,10 +25,35 @@ public class PlayerAttack : CharacterCombat
         // collider = GetComponent<BoxCollider>();
         player = GetComponent<PlayerController>();
         inventory = FindObjectOfType<PlayerInventory>();
+
     }
 
     public void Update()
     {
+        if (inventory.selectedInventoryItem != null && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>() && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>().twoHanded && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>().projectile)
+        {
+            WeaponItem weapon = inventory.selectedPhysicalItem.GetComponent<WeaponItem>();
+
+            if (player.animator.GetLayerWeight(1) > player.animator.GetLayerWeight(3))
+            {
+                player.animator.SetLayerWeight(1, 0f);
+                player.animator.SetLayerWeight(2, 0f);
+                player.animator.SetLayerWeight(3, 1f);
+            }
+
+            player.animator.SetInteger("BothIndex", weapon.attackAnimationIndex);
+            player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed);
+            player.isUsingBoth = true;
+            player.loopHeldAnimation = true;
+
+
+        }
+        else
+        {
+            player.loopHeldAnimation = false;
+
+        }
+
         if (Input.GetButtonDown("Fire1")) // Right Hand Attack
         {
             //Check right hand equipment
@@ -38,7 +65,7 @@ public class PlayerAttack : CharacterCombat
 
                 WeaponItem weapon = inventory.selectedPhysicalItem.GetComponent<WeaponItem>();
 
-                if (weapon.twoHanded )
+                if (weapon.twoHanded)
                 {
                     if (player.animator.GetLayerWeight(1) > player.animator.GetLayerWeight(3))
                     {
@@ -48,7 +75,12 @@ public class PlayerAttack : CharacterCombat
                     }
 
                     player.animator.SetInteger("BothIndex", weapon.attackAnimationIndex);
-                    player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed);
+
+                    if (player.stats.stamina - weapon.staminaCost > 0)
+                        player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed);
+                    else
+                        player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed / 2); 
+
                     player.isUsingBoth = true;
                 }
                 else
@@ -61,21 +93,46 @@ public class PlayerAttack : CharacterCombat
                     }
 
                     player.animator.SetInteger("RightIndex", weapon.attackAnimationIndex);
-                    player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed);
+
+                    if (player.stats.stamina - weapon.staminaCost > 0)
+                        player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed);
+                    else
+                        player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed / 2);
 
                     player.isUsingRight = true;
 
                 }
 
-
-                if (weapon.attackAnimationCombo != null && weapon.attackAnimationCombo.Count > 0)
+                if (weapon.projectile)
                 {
-                    if (weapon.comboIndex + 1 < weapon.attackAnimationCombo.Count)
+                    if (weapon.projectileParticles.isStopped)
+                        weapon.projectileParticles.Play();
+                }
+                else
+                {
+                    if (weapon.slashParticles.isPlaying)
+                        weapon.slashParticles.time = 0f;
+
+                    weapon.slashParticles.Play();
+                }
+
+                if (weapon.attackComboVariables != null && weapon.attackComboVariables.Count > 0)
+                {
+                    if (weapon.comboIndex + 1 < weapon.attackComboVariables.Count)
                         weapon.comboIndex++;
                     else weapon.comboIndex = 0;
+                    
+                    weapon.attackAnimationIndex = weapon.attackComboVariables[weapon.comboIndex].attackAnimationIndex;
+                    weapon.attackSpeed = weapon.attackComboVariables[weapon.comboIndex].attackSpeed;
+                    weapon.staminaCost = weapon.attackComboVariables[weapon.comboIndex].staminaCost;
 
-                    weapon.attackAnimationIndex = weapon.attackAnimationCombo[weapon.comboIndex];
+                    player.stats.stamina -= weapon.staminaCost;
+
                 }
+
+
+                
+
 
                 inventory.rightHandPos.GetComponent<Collider>().enabled = false;
 
@@ -90,11 +147,23 @@ public class PlayerAttack : CharacterCombat
                     player.animator.SetLayerWeight(3, 0f);
                 }
 
-                player.animator.SetInteger("RightIndex", 0);
-                player.animator.SetFloat("RightAttackSpeed", 1);
+                WeaponItem rightUnarmed = inventory.rightHandPos.GetComponent<WeaponItem>();
+
+
+                player.animator.SetInteger("RightIndex", rightUnarmed.attackAnimationIndex);
+
+                if (player.stats.stamina - rightUnarmed.staminaCost > 0)
+                    player.animator.SetFloat("RightAttackSpeed", rightUnarmed.attackSpeed);
+                else
+                    player.animator.SetFloat("RightAttackSpeed", rightUnarmed.attackSpeed / 2);
+                player.stats.stamina -= rightUnarmed.staminaCost;
 
                 inventory.rightHandPos.GetComponent<Collider>().enabled = true;
 
+                if (rightUnarmed.slashParticles.isPlaying)
+                    rightUnarmed.slashParticles.time = 0f;
+
+                rightUnarmed.slashParticles.Play();
 
                 player.isUsingRight = true;
             }
@@ -114,7 +183,7 @@ public class PlayerAttack : CharacterCombat
 
         if (Input.GetButtonDown("Fire2")) // Left Hand Attack
         {
-            if ((inventory.offHandItem != null && inventory.offHandItem.GetComponent<WeaponItem>()) && (inventory.selectedPhysicalItem.GetComponent<WeaponItem>() == null || !inventory.selectedPhysicalItem.GetComponent<WeaponItem>().twoHanded))
+            if ((inventory.offHandItem != null && inventory.offHandItem.GetComponent<WeaponItem>()) && (inventory.selectedPhysicalItem == null || inventory.selectedPhysicalItem.GetComponent<WeaponItem>() == null || !inventory.selectedPhysicalItem.GetComponent<WeaponItem>().twoHanded))
             {
                 //player.animator.SetInteger("LeftIndex", inventory.offHandItem.GetComponent<WeaponItem>().attackAnimationIndex);
                 //attackAnimationIndex = inventory.offHandSlot.inventoryItem.item.attackAnimationIndex + 1;
@@ -130,22 +199,44 @@ public class PlayerAttack : CharacterCombat
                 }
 
                 player.animator.SetInteger("LeftIndex", weapon.attackAnimationIndex);
-                player.animator.SetFloat("LeftAttackSpeed", weapon.attackSpeed);
+
+                if (player.stats.stamina - weapon.staminaCost > 0)
+                    player.animator.SetFloat("LeftAttackSpeed", weapon.attackSpeed);
+                else
+                    player.animator.SetFloat("LeftAttackSpeed", weapon.attackSpeed / 2);
+
                 player.isUsingLeft = true;
 
 
-                if (weapon.attackAnimationCombo != null && weapon.attackAnimationCombo.Count > 0 /*&& !player.isUsingLeft*/)
+                //if (weapon.attackComboVariables != null && weapon.attackComboVariables.Count > 0 /*&& !player.isUsingLeft*/)
+                //{
+                //    if (weapon.comboIndex + 1 < weapon.attackComboVariables.Count)
+                //        weapon.comboIndex++;
+                //    else weapon.comboIndex = 0;
+
+                //    weapon.attackAnimationIndex = weapon.attackComboVariables[weapon.comboIndex];
+                //}
+
+                if (weapon.attackComboVariables != null && weapon.attackComboVariables.Count > 0)
                 {
-                    if (weapon.comboIndex + 1 < weapon.attackAnimationCombo.Count)
+                    if (weapon.comboIndex + 1 < weapon.attackComboVariables.Count)
                         weapon.comboIndex++;
                     else weapon.comboIndex = 0;
 
-                    weapon.attackAnimationIndex = weapon.attackAnimationCombo[weapon.comboIndex];
+                    weapon.attackAnimationIndex = weapon.attackComboVariables[weapon.comboIndex].attackAnimationIndex;
+                    weapon.attackSpeed = weapon.attackComboVariables[weapon.comboIndex].attackSpeed;
+                    weapon.staminaCost = weapon.attackComboVariables[weapon.comboIndex].staminaCost;
+
+                    player.stats.stamina -= weapon.staminaCost;
+
                 }
 
                 inventory.leftHandPos.GetComponent<Collider>().enabled = false;
 
+                if (weapon.slashParticles.isPlaying)
+                    weapon.slashParticles.time = 0f;
 
+                weapon.slashParticles.Play();
             }
             else if (inventory.selectedPhysicalItem != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>() != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>().twoHanded) // if the main hand has a two handed weapon
             {
@@ -159,25 +250,49 @@ public class PlayerAttack : CharacterCombat
                 }
 
                 player.animator.SetInteger("BothIndex", weapon.attackAnimationIndex);
-                player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed);
+
+                if (player.stats.stamina - weapon.staminaCost > 0)
+                    player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed);
+                else
+                    player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed / 2);
+
                 player.isUsingBoth = true;
 
-                if (weapon.attackAnimationCombo != null && weapon.attackAnimationCombo.Count > 0 /*&& !player.isUsingLeft*/)
+                if (weapon.attackComboVariables != null && weapon.attackComboVariables.Count > 0 /*&& !player.isUsingLeft*/)
                 {
-                    if (weapon.comboIndex + 1 < weapon.attackAnimationCombo.Count)
+                    if (weapon.comboIndex + 1 < weapon.attackComboVariables.Count)
                         weapon.comboIndex++;
                     else weapon.comboIndex = 0;
 
-                    weapon.attackAnimationIndex = weapon.attackAnimationCombo[weapon.comboIndex];
+                    weapon.attackAnimationIndex = weapon.attackComboVariables[weapon.comboIndex].attackAnimationIndex;
+                    weapon.attackSpeed = weapon.attackComboVariables[weapon.comboIndex].attackSpeed;
+                    weapon.staminaCost = weapon.attackComboVariables[weapon.comboIndex].staminaCost;
                 }
+
+                if (weapon.slashParticles.isPlaying)
+                    weapon.slashParticles.time = 0f;
+
+                weapon.slashParticles.Play();
             }
             else
             {
-                player.animator.SetInteger("LeftIndex", 0);
-                player.animator.SetFloat("LeftAttackSpeed", 1);
+               WeaponItem leftUnarmed = inventory.leftHandPos.GetComponent<WeaponItem>();
+
+                player.animator.SetInteger("LeftIndex", leftUnarmed.attackAnimationIndex);
+
+                if (player.stats.stamina - leftUnarmed.staminaCost > 0)
+                    player.animator.SetFloat("LeftAttackSpeed", leftUnarmed.attackSpeed);
+                else
+                    player.animator.SetFloat("LeftAttackSpeed", leftUnarmed.attackSpeed / 2);
+
+                player.stats.stamina -= leftUnarmed.staminaCost;
 
                 inventory.leftHandPos.GetComponent<Collider>().enabled = true;
 
+                if (leftUnarmed.slashParticles.isPlaying)
+                    leftUnarmed.slashParticles.time = 0f;
+
+                leftUnarmed.slashParticles.Play();
 
                 player.isUsingLeft = true;
             }

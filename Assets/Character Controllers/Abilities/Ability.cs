@@ -16,9 +16,9 @@ public class Ability : Item
     {
 
     }
-     public virtual void DeactivateEffect(PlayerController player) // the ability effect
+     public virtual IEnumerator DeactivateEffect(PlayerController player, PlayerAbilities abilities) // the ability effect
     {
-
+        yield return null;
     }
 
 }

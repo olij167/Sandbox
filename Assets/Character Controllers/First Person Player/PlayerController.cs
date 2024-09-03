@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public PlayerStats stats;
 
+    public Vector3 spawnPoint;
+
     //[Header("Health")]
     //public float currentHealth;
     //public float maxHealth;
@@ -49,6 +51,7 @@ public class PlayerController : MonoBehaviour
     public bool isUnderwater;
     public bool isOnRope = false;
     public bool isUsingBoth;
+    public bool loopHeldAnimation;
     public bool isUsingRight;
     public bool isUsingLeft;
     public bool isEmoting;
@@ -91,7 +94,7 @@ public class PlayerController : MonoBehaviour
     //[SerializeField] private float gravScale = 1.0f;
     //[SerializeField] private float underwaterGravScale = 1.0f;
     //[SerializeField] private float jumpForce = 4f;
-    [SerializeField] private bool canJump = true;
+    public bool canJump = true;
     public bool isJumping;
     public bool isGrounded;
     [SerializeField] private float isGroundedDistance = 3f;
@@ -219,7 +222,7 @@ public class PlayerController : MonoBehaviour
                 float currentTime = clipInfo[0].clip.length * animState.normalizedTime;
                 // Debug.Log("Current time = " + currentTime.ToString("0.00") + ", Full Length  = " + clipInfo[0].clip.length.ToString("0.00"));
 
-                if (currentTime >= clipInfo[0].clip.length / 2 || animState.normalizedTime >= 0.5f)
+                if ((currentTime >= clipInfo[0].clip.length / 2 || animState.normalizedTime >= 0.5f) && !loopHeldAnimation)
                 {
                     isUsingBoth = false;
 
@@ -275,6 +278,7 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("x", Input.GetAxisRaw("Horizontal"), 0.1f, Time.deltaTime);
             animator.SetFloat("z", Input.GetAxisRaw("Vertical"), 0.1f, Time.deltaTime);
             animator.SetFloat("y", moveDirection.y, 0.1f, Time.deltaTime);
+
 
             //isGrounded = controller.isGrounded;
 
@@ -339,7 +343,14 @@ public class PlayerController : MonoBehaviour
                 {
                     animator.SetBool("isEmoting", false);
 
-                    moveDirection.y = stats.jumpForce.GetValue();
+
+                    if (stats.stamina > stats.jumpingStaminaDecreaseAmount.GetValue())
+                        moveDirection.y = stats.jumpForce.GetValue();
+                    else 
+                        moveDirection.y = stats.jumpForce.GetValue() / 2;
+
+
+                    stats.stamina -= stats.jumpingStaminaDecreaseAmount.GetValue();
 
                     isJumping = true;
 
@@ -366,13 +377,15 @@ public class PlayerController : MonoBehaviour
             }
 
             //if the player is falling...
-            else if ((!controller.isGrounded && !isSwimming || moveDirection.y < 0) && !isOnRope)
+            else if ((!controller.isGrounded && !isSwimming || moveDirection.y < -1f) && !isOnRope)
             {
+                
                 moveDirection.y += (Physics.gravity.y * currentGravScale * Time.deltaTime);
 
                 if (controller.velocity.y < fallVelocity)
                 {
                     fallVelocity = controller.velocity.y;
+                    isGrounded = false;
                 }
 
                 if (isJumping)
@@ -399,7 +412,7 @@ public class PlayerController : MonoBehaviour
                     stats.DecreaseHealth(fallVelocity * stats.fallDamageMultiplier);
                 }
 
-                fallVelocity = 0f;
+                fallVelocity = -0.1f;
                 moveDirection.y = 0f;
 
                 if (isOnRope)
@@ -428,12 +441,13 @@ public class PlayerController : MonoBehaviour
             }
             else if (!isCrouching && !isProne) SetWalkVariables();
 
-            if (canDodge && controller.velocity.magnitude > 2f)
+            if (canDodge && controller.velocity.magnitude > 2f && stats.stamina > stats.dodgingStaminaDecreaseAmount.GetValue())
             {
                 if (Input.GetButtonDown("Dodge") && stats.stamina > 0f)
                 {
                     animator.SetBool("isEmoting", false);
 
+                    stats.stamina -= stats.dodgingStaminaDecreaseAmount.GetValue();
 
                     isDodging = true;
                 }
@@ -518,7 +532,7 @@ public class PlayerController : MonoBehaviour
             {
                 moveDirection.y = Input.GetAxisRaw("Vertical") * stats.climbingSpeed.GetValue();
 
-                if (controller.velocity.magnitude > 2f)
+                if (controller.velocity.magnitude > 1f || moveDirection.y >= 2f)
                 {
                     stats.stamina -= Time.deltaTime * stats.climbingStaminaDecreaseRate.GetValue();
 
@@ -564,6 +578,17 @@ public class PlayerController : MonoBehaviour
                     yStore -= speed;
                 }
 
+                if (stats.stamina > 0f)
+                {
+                    if (controller.velocity.magnitude > 2f)
+                    {
+                        stats.stamina -= Time.deltaTime * stats.swimmingStaminaDecreaseRate.GetValue();
+                    }
+                    else stats.stamina -= Time.deltaTime * (stats.swimmingStaminaDecreaseRate.GetValue() / 4);
+                }
+                else stats.Die();
+
+
                 moveDirection = moveDirection.normalized * affectedSpeed;
                 moveDirection.y = yStore;
 
@@ -606,6 +631,10 @@ public class PlayerController : MonoBehaviour
                 affectedSpeed = stats.minSpeed;
             }
 
+            if (!animator.GetBool("isRunning") && !isClimbing && !isDodging && !isJumping && !isClimbing && !isSwimming && !isUsingRight && !isUsingLeft && !isUsingBoth)
+            {
+                stats.RegenerateStamina();
+            }
 
             controller.Move(moveDirection * Time.deltaTime);
         }
@@ -718,8 +747,8 @@ public class PlayerController : MonoBehaviour
 
         if (stats.stamina <= 0f && !staminaSource.isPlaying)
             staminaSource.Play();
-        if (!isClimbing)
-            stats.RegenerateStamina();
+        //if (!isClimbing)
+        //    stats.RegenerateStamina();
     }
 
     void SetRunVariables()

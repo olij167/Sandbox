@@ -8,5 +8,11 @@ public class Emote : Item
     //public string emoteName;
     //public int emoteID;
     //public Sprite emoteIcon;
+    public EmoteType emoteType;
     public AnimationClip emoteAnimation;
+}
+
+public enum EmoteType
+{
+    Dance, Gesture, Pose, Action
 }

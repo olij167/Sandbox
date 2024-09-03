@@ -71,7 +71,9 @@ public class PlayerInventory : MonoBehaviour
     public TwoBoneIKConstraint rightArm;
 
     public EquipmentSlot offHandSlot;
+    public InventoryUIItem offHandPaused;
     public Transform swordTarget;
+    public Transform projectileTarget;
 
     [Range(0f, 1f)] public float holdingItemRigWeight = 0.6f;
 
@@ -178,15 +180,23 @@ public class PlayerInventory : MonoBehaviour
             leftArm.weight = 0f;
         }
 
-        if (!player.isUsingRight && !player.isUsingBoth)
+        if (!player.isUsingBoth)
         {
-            rightHandPos.GetComponent<Collider>().enabled = false;
-        }
+           
 
-        if (!player.isUsingLeft && !player.isUsingBoth)
-        {
-            leftHandPos.GetComponent<Collider>().enabled = false;
+            if (!player.isUsingRight)
+            {
+                rightHandPos.GetComponent<Collider>().enabled = false;
+            }
+
+            if (!player.isUsingLeft)
+            {
+                leftHandPos.GetComponent<Collider>().enabled = false;
+            }
         }
+        //else
+        //    if (offHandItem != null)
+        //    PauseOffHandInspection();
 
         if (inventoryBarPanel.activeSelf)
         {
@@ -198,6 +208,12 @@ public class PlayerInventory : MonoBehaviour
 
             if (selectedInventoryItem != null)
             {
+                if (selectedInventoryItem.item.prefab.GetComponent<WeaponItem>() && selectedInventoryItem.item.prefab.GetComponent<WeaponItem>().twoHanded)
+                {
+                    if (offHandItem != null)
+                        PauseOffHandInspection();
+                }
+
                 SetSelectedItemColour();
                 HoldItemMainHand();
                 rightHandTextPrompts.gameObject.SetActive(true);
@@ -254,6 +270,12 @@ public class PlayerInventory : MonoBehaviour
             }
             selectedInventoryItem = null;
             SetSelectedItemColour();
+        }
+
+        if (offHandPaused != null && (selectedInventoryItem == null || !selectedInventoryItem.physicalItem.GetComponent<WeaponItem>() || !selectedInventoryItem.physicalItem.GetComponent<WeaponItem>().twoHanded))
+        {
+            HoldItemOffHand(offHandPaused);
+            offHandPaused = null;
         }
 
         if (offHandSlot.inventoryItem != null)
@@ -984,8 +1006,16 @@ public class PlayerInventory : MonoBehaviour
                 //if (selectedInventoryItem.item.isTwoHanded)
                 //    EndOffHandInspection(offHandSlot);
 
-                selectedPhysicalItem = Instantiate(selectedInventoryItem.item.prefab, rightHandPos.position, Quaternion.identity, rightHandPos);
-                selectedPhysicalItem.transform.LookAt(swordTarget);
+                selectedPhysicalItem = Instantiate(selectedInventoryItem.item.prefab, rightHandPos.position, Quaternion.identity);
+                selectedPhysicalItem.transform.parent = rightHandPos;
+
+                //if (selectedPhysicalItem.GetComponent<WeaponItem>() && selectedPhysicalItem.GetComponent<WeaponItem>().projectile)
+                //{
+                //    //selectedPhysicalItem.transform.eulerAngles = player.orientation.forward ;
+                //   selectedPhysicalItem.transform.LookAt(projectileTarget);
+                //}
+                //else
+                    selectedPhysicalItem.transform.LookAt(swordTarget);
                 //selectedPhysicalItem.transform.parent = rightHandPos;
                 // selectedPhysicalItem.transform.eulerAngles = Vector3.zero;
                 //selectedPhysicalItem.transform.rotation = Quaternion.Inverse( rightHandPos.rotation);
@@ -1004,6 +1034,7 @@ public class PlayerInventory : MonoBehaviour
                 if (selectedPhysicalItem.GetComponent<Rigidbody>() && selectedPhysicalItem.GetComponent<Rigidbody>().useGravity != false)
                 {
                     selectedPhysicalItem.GetComponent<Rigidbody>().useGravity = false;
+                    selectedPhysicalItem.GetComponent<Rigidbody>().isKinematic = true;
                 }
             }
             else selectedPhysicalItem = selectedInventoryItem.physicalItem;
@@ -1061,6 +1092,23 @@ public class PlayerInventory : MonoBehaviour
 
 
         if (offHandItem != null && offHandSlot.inventoryItem == null)
+        {
+            Destroy(offHandItem);
+        }
+    }
+
+    public void PauseOffHandInspection()
+    {
+        if (offHandSlot.inventoryItem != null)
+        {
+            RemoveModifiers(offHandSlot.inventoryItem.item);
+            offHandPaused = offHandSlot.inventoryItem;
+            offHandSlot.inventoryItem = null;
+
+        }
+
+
+        if (offHandItem != null)
         {
             Destroy(offHandItem);
         }
