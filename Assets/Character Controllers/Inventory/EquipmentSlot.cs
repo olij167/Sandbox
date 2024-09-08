@@ -38,7 +38,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
             {
                 if (CheckItemType(invItem.item))
                 {
-                    if (invItem.item.itemType == ItemType.Hand && invItem.item.prefab.GetComponent<WeaponItem>() && invItem.item.prefab.GetComponent<WeaponItem>().twoHanded)
+                    if (invItem.item.itemType == ItemType.Hand && invItem.item.prefab.GetComponent<WeaponItem>() && invItem.item.prefab.GetComponent<WeaponItem>().isTwoHanded)
                     {
                         Debug.Log("Cannot equip two handed weapons in off hand (slot)");
                     }

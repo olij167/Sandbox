@@ -20,6 +20,7 @@ public class EnemyStats : CharacterStats
         base.Die();
 
         // death animation
+        FindObjectOfType<PlayerAttack>().lookTargets.RemoveMember(transform);
         animator.SetBool("isDead", true);
         GetComponent<Collider>().enabled = false;
         StartCoroutine(DeathAnimationDelay());

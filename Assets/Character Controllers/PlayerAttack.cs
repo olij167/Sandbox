@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerAttack : CharacterCombat
 {
     [HideInInspector] public PlayerController player;
+    //[HideInInspector] public CinemachineFreeLook camController;
+    [HideInInspector] public ThirdPersonCam thirdPersonCam;
+    public CinemachineTargetGroup lookTargets;
     [HideInInspector] public PlayerInventory inventory;
 
+    //private Transform defaultLookTarget;
 
 
-    //public float enemyDetectionRange = 5f;
-    //public List<GameObject> enemiesInRange;
 
-    // public bool lockedOn;
+    public float enemyDetectionRange = 5f;
+    public List<GameObject> enemiesInRange;
+
+    public bool lockedOn;
+
+   // private WeaponItem projectileWeapon;
 
     //public int rightHandComboCount;
     //public int leftHandComboCount;
@@ -25,14 +33,23 @@ public class PlayerAttack : CharacterCombat
         // collider = GetComponent<BoxCollider>();
         player = GetComponent<PlayerController>();
         inventory = FindObjectOfType<PlayerInventory>();
+        //camController = FindObjectOfType<CinemachineFreeLook>();
+        thirdPersonCam = FindObjectOfType<ThirdPersonCam>();
+
+        //defaultLookTarget = camController.m_LookAt;
+
 
     }
 
-    public void Update()
+    public override void Update()
     {
-        if (inventory.selectedInventoryItem != null && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>() && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>().twoHanded && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>().projectile)
+        base.Update();
+
+        if (inventory.selectedInventoryItem != null && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>() && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>().isTwoHanded && inventory.selectedInventoryItem.item.prefab.GetComponent<WeaponItem>().isProjectile)
         {
             WeaponItem weapon = inventory.selectedPhysicalItem.GetComponent<WeaponItem>();
+
+            //projectileWeapon = weapon;
 
             if (player.animator.GetLayerWeight(1) > player.animator.GetLayerWeight(3))
             {
@@ -46,45 +63,116 @@ public class PlayerAttack : CharacterCombat
             player.isUsingBoth = true;
             player.loopHeldAnimation = true;
 
+            PlayerUI ui = player.GetComponent<PlayerUI>();
 
+            ui.InitialiseAmmoBar(weapon, inventory.selectedInventoryItem);
+            ui.ammoBar.gameObject.SetActive(true);
+
+            if (Input.GetButton("Fire1") && weapon.currentAmmo > 0)
+            {
+                if (weapon.projectileParticles.isStopped)
+                    weapon.projectileParticles.Play();
+
+                if (!weapon.ammoDecreasing)
+                {
+                    weapon.ammoDecreasing = true;
+                }
+            }
+            else
+            {
+                if (weapon.projectileParticles.isPlaying)
+                    weapon.projectileParticles.Stop();
+
+                weapon.ammoDecreasing = false;
+            }
         }
         else
         {
-            player.loopHeldAnimation = false;
+            if (player.loopHeldAnimation)
+                player.loopHeldAnimation = false;
 
-        }
+            if (player.GetComponent<PlayerUI>().ammoBar.gameObject.activeSelf)
+                player.GetComponent<PlayerUI>().ammoBar.gameObject.SetActive(false);
 
-        if (Input.GetButtonDown("Fire1")) // Right Hand Attack
-        {
-            //Check right hand equipment
-            //Play related attack animation
-            //If no equipment play punch animation 
+            //projectileWeapon = null;
 
-            if (inventory.selectedInventoryItem != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>())
+
+            if (Input.GetButtonDown("Fire1")) // Right Hand Attack
             {
+                //Check right hand equipment
+                //Play related attack animation
+                //If no equipment play punch animation 
 
-                WeaponItem weapon = inventory.selectedPhysicalItem.GetComponent<WeaponItem>();
-
-                if (weapon.twoHanded)
+                if (inventory.selectedInventoryItem != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>())
                 {
-                    if (player.animator.GetLayerWeight(1) > player.animator.GetLayerWeight(3))
+
+                    WeaponItem weapon = inventory.selectedPhysicalItem.GetComponent<WeaponItem>();
+
+                    if (weapon.isTwoHanded)
                     {
-                        player.animator.SetLayerWeight(1, 0f);
-                        player.animator.SetLayerWeight(2, 0f);
-                        player.animator.SetLayerWeight(3, 1f);
+                        if (player.animator.GetLayerWeight(1) > player.animator.GetLayerWeight(3))
+                        {
+                            player.animator.SetLayerWeight(1, 0f);
+                            player.animator.SetLayerWeight(2, 0f);
+                            player.animator.SetLayerWeight(3, 1f);
+                        }
+
+                        player.animator.SetInteger("BothIndex", weapon.attackAnimationIndex);
+
+                        if (player.stats.stamina - weapon.staminaCost > 0)
+                            player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed);
+                        else
+                            player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed / 2);
+
+                        player.isUsingBoth = true;
+                    }
+                    else
+                    {
+                        if (player.animator.GetLayerWeight(1) < player.animator.GetLayerWeight(3))
+                        {
+                            player.animator.SetLayerWeight(1, 1f);
+                            player.animator.SetLayerWeight(2, 1f);
+                            player.animator.SetLayerWeight(3, 0f);
+                        }
+
+                        player.animator.SetInteger("RightIndex", weapon.attackAnimationIndex);
+
+                        if (player.stats.stamina - weapon.staminaCost > 0)
+                            player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed);
+                        else
+                            player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed / 2);
+
+                        player.isUsingRight = true;
+
                     }
 
-                    player.animator.SetInteger("BothIndex", weapon.attackAnimationIndex);
 
-                    if (player.stats.stamina - weapon.staminaCost > 0)
-                        player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed);
-                    else
-                        player.animator.SetFloat("BothAttackSpeed", weapon.attackSpeed / 2); 
+                    if (weapon.slashParticles.isPlaying)
+                        weapon.slashParticles.time = 0f;
 
-                    player.isUsingBoth = true;
+                    weapon.slashParticles.Play();
+
+
+                    if (weapon.attackComboVariables != null && weapon.attackComboVariables.Count > 0)
+                    {
+                        if (weapon.comboIndex + 1 < weapon.attackComboVariables.Count)
+                            weapon.comboIndex++;
+                        else weapon.comboIndex = 0;
+
+                        weapon.attackAnimationIndex = weapon.attackComboVariables[weapon.comboIndex].attackAnimationIndex;
+                        weapon.attackSpeed = weapon.attackComboVariables[weapon.comboIndex].attackSpeed;
+                        weapon.staminaCost = weapon.attackComboVariables[weapon.comboIndex].staminaCost;
+
+                        player.stats.stamina -= weapon.staminaCost;
+
+                    }
+
+                    inventory.rightHandPos.GetComponent<Collider>().enabled = false;
+
                 }
-                else
+                else // Right Hand Punch
                 {
+
                     if (player.animator.GetLayerWeight(1) < player.animator.GetLayerWeight(3))
                     {
                         player.animator.SetLayerWeight(1, 1f);
@@ -92,90 +180,37 @@ public class PlayerAttack : CharacterCombat
                         player.animator.SetLayerWeight(3, 0f);
                     }
 
-                    player.animator.SetInteger("RightIndex", weapon.attackAnimationIndex);
+                    WeaponItem rightUnarmed = inventory.rightHandPos.GetComponent<WeaponItem>();
 
-                    if (player.stats.stamina - weapon.staminaCost > 0)
-                        player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed);
+
+                    player.animator.SetInteger("RightIndex", rightUnarmed.attackAnimationIndex);
+
+                    if (player.stats.stamina - rightUnarmed.staminaCost > 0)
+                        player.animator.SetFloat("RightAttackSpeed", rightUnarmed.attackSpeed);
                     else
-                        player.animator.SetFloat("RightAttackSpeed", weapon.attackSpeed / 2);
+                        player.animator.SetFloat("RightAttackSpeed", rightUnarmed.attackSpeed / 2);
+                    player.stats.stamina -= rightUnarmed.staminaCost;
+
+                    inventory.rightHandPos.GetComponent<Collider>().enabled = true;
+
+                    if (rightUnarmed.slashParticles.isPlaying)
+                        rightUnarmed.slashParticles.time = 0f;
+
+                    rightUnarmed.slashParticles.Play();
 
                     player.isUsingRight = true;
-
                 }
-
-                if (weapon.projectile)
-                {
-                    if (weapon.projectileParticles.isStopped)
-                        weapon.projectileParticles.Play();
-                }
-                else
-                {
-                    if (weapon.slashParticles.isPlaying)
-                        weapon.slashParticles.time = 0f;
-
-                    weapon.slashParticles.Play();
-                }
-
-                if (weapon.attackComboVariables != null && weapon.attackComboVariables.Count > 0)
-                {
-                    if (weapon.comboIndex + 1 < weapon.attackComboVariables.Count)
-                        weapon.comboIndex++;
-                    else weapon.comboIndex = 0;
-                    
-                    weapon.attackAnimationIndex = weapon.attackComboVariables[weapon.comboIndex].attackAnimationIndex;
-                    weapon.attackSpeed = weapon.attackComboVariables[weapon.comboIndex].attackSpeed;
-                    weapon.staminaCost = weapon.attackComboVariables[weapon.comboIndex].staminaCost;
-
-                    player.stats.stamina -= weapon.staminaCost;
-
-                }
-
-
-                
-
-
-                inventory.rightHandPos.GetComponent<Collider>().enabled = false;
-
+                //if (enemiesInRange.Count > 0)
+                //{
+                //    for (int i = 0; i < enemiesInRange.Count; i++)
+                //    {
+                //        // sort by closest to player
+                //        //target closest enemy
+                //    }
+                //}
             }
-            else // Right Hand Punch
-            {
-
-                if (player.animator.GetLayerWeight(1) < player.animator.GetLayerWeight(3))
-                {
-                    player.animator.SetLayerWeight(1, 1f);
-                    player.animator.SetLayerWeight(2, 1f);
-                    player.animator.SetLayerWeight(3, 0f);
-                }
-
-                WeaponItem rightUnarmed = inventory.rightHandPos.GetComponent<WeaponItem>();
-
-
-                player.animator.SetInteger("RightIndex", rightUnarmed.attackAnimationIndex);
-
-                if (player.stats.stamina - rightUnarmed.staminaCost > 0)
-                    player.animator.SetFloat("RightAttackSpeed", rightUnarmed.attackSpeed);
-                else
-                    player.animator.SetFloat("RightAttackSpeed", rightUnarmed.attackSpeed / 2);
-                player.stats.stamina -= rightUnarmed.staminaCost;
-
-                inventory.rightHandPos.GetComponent<Collider>().enabled = true;
-
-                if (rightUnarmed.slashParticles.isPlaying)
-                    rightUnarmed.slashParticles.time = 0f;
-
-                rightUnarmed.slashParticles.Play();
-
-                player.isUsingRight = true;
-            }
-            //if (enemiesInRange.Count > 0)
-            //{
-            //    for (int i = 0; i < enemiesInRange.Count; i++)
-            //    {
-            //        // sort by closest to player
-            //        //target closest enemy
-            //    }
-            //}
         }
+
         //    //Check left hand equipment
         //    //Play related attack animation
         //    //If no equipment play punch animation 
@@ -183,7 +218,7 @@ public class PlayerAttack : CharacterCombat
 
         if (Input.GetButtonDown("Fire2")) // Left Hand Attack
         {
-            if ((inventory.offHandItem != null && inventory.offHandItem.GetComponent<WeaponItem>()) && (inventory.selectedPhysicalItem == null || inventory.selectedPhysicalItem.GetComponent<WeaponItem>() == null || !inventory.selectedPhysicalItem.GetComponent<WeaponItem>().twoHanded))
+            if ((inventory.offHandItem != null && inventory.offHandItem.GetComponent<WeaponItem>()) && (inventory.selectedPhysicalItem == null || inventory.selectedPhysicalItem.GetComponent<WeaponItem>() == null || !inventory.selectedPhysicalItem.GetComponent<WeaponItem>().isTwoHanded))
             {
                 //player.animator.SetInteger("LeftIndex", inventory.offHandItem.GetComponent<WeaponItem>().attackAnimationIndex);
                 //attackAnimationIndex = inventory.offHandSlot.inventoryItem.item.attackAnimationIndex + 1;
@@ -238,7 +273,7 @@ public class PlayerAttack : CharacterCombat
 
                 weapon.slashParticles.Play();
             }
-            else if (inventory.selectedPhysicalItem != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>() != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>().twoHanded) // if the main hand has a two handed weapon
+            else if (inventory.selectedPhysicalItem != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>() != null && inventory.selectedPhysicalItem.GetComponent<WeaponItem>().isTwoHanded) // if the main hand has a two handed weapon
             {
                 WeaponItem weapon = inventory.selectedPhysicalItem.GetComponent<WeaponItem>();
 
@@ -276,7 +311,7 @@ public class PlayerAttack : CharacterCombat
             }
             else
             {
-               WeaponItem leftUnarmed = inventory.leftHandPos.GetComponent<WeaponItem>();
+                WeaponItem leftUnarmed = inventory.leftHandPos.GetComponent<WeaponItem>();
 
                 player.animator.SetInteger("LeftIndex", leftUnarmed.attackAnimationIndex);
 
@@ -298,29 +333,136 @@ public class PlayerAttack : CharacterCombat
             }
 
         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            //lock on to closest enemy
+            if (!lockedOn)
+            {
+                if (enemiesInRange != null && enemiesInRange.Count > 0)
+                {
+                    foreach (GameObject enemy in enemiesInRange)
+                    {
+                        int i = lookTargets.FindMember(enemy.transform);
+                        if (lookTargets.m_Targets.Length >= i && lookTargets.m_Targets[i].target != null)
+                            lookTargets.m_Targets[i].weight = Mathf.Lerp(0, 1 + (enemyDetectionRange - Vector3.Distance(transform.position, enemy.transform.position)) / enemyDetectionRange, Vector3.Distance(transform.position, enemy.transform.position) / enemyDetectionRange);
+                    }
+                    //thirdPersonCam.lockedOn = true;
+                    lockedOn = true;
+                }
+                else
+                {
+                    //camController.m_LookAt = defaultLookTarget;
+                    lockedOn = false;
+                    //thirdPersonCam.lockedOn = false;
+
+                }
+            }
+            else
+            {
+                //camController.m_LookAt = defaultLookTarget;
+                lockedOn = false;
+                //thirdPersonCam.lockedOn = false;
+
+            }
+        }
+
+        for (int i = 0; i < enemiesInRange.Count; i++)
+        {
+            if (enemiesInRange[i] == null)
+            {
+                //lookTargets.RemoveMember(enemiesInRange[i].transform);
+                enemiesInRange.RemoveAt(i);
+            }
+        }
+
+        if (lockedOn && enemiesInRange != null && enemiesInRange.Count > 0)
+        {
+            if (!thirdPersonCam.targetOrientation)
+            {
+                thirdPersonCam.targetOrientation = true;
+                //thirdPersonCam.orbitVirtual.m_Priority = 10;
+                //thirdPersonCam.thirdPersonVirtual.m_Priority = 15;
+            }
+
+            for (int i = 0; i < enemiesInRange.Count; i++)
+            {
+                if (enemiesInRange[i] == null)
+                {
+                    int e = lookTargets.FindMember(enemiesInRange[i].transform);
+                    if (lookTargets.m_Targets.Length >= e && lookTargets.m_Targets[e].target != null)
+                        lookTargets.m_Targets[e].weight = Mathf.Lerp(0, 1 + (enemyDetectionRange - Vector3.Distance(transform.position, enemiesInRange[i].transform.position)) / enemyDetectionRange, (enemyDetectionRange - Vector3.Distance(transform.position, enemiesInRange[i].transform.position)) / enemyDetectionRange);
+                }
+            }
+        }
+        else if ((lockedOn && (enemiesInRange == null || enemiesInRange.Count <= 0)) || !lockedOn)
+        {
+            //camController.m_LookAt = defaultLookTarget;
+            for (int i = 0; i < enemiesInRange.Count; i++)
+            {
+                if (enemiesInRange[i] == null)
+                {
+                    int e = lookTargets.FindMember(enemiesInRange[i].transform);
+
+                    if (lookTargets.m_Targets.Length >= e && lookTargets.m_Targets[e].target != null)
+                        lookTargets.m_Targets[e].weight = 0;
+                }
+            }
+            if (lockedOn)
+            {
+                lockedOn = false;
+
+                //thirdPersonCam.lockedOn = false;
+
+            }
+
+            if (thirdPersonCam.targetOrientation)
+            {
+                //thirdPersonCam.orbitVirtual.m_Priority = 15;
+                //thirdPersonCam.thirdPersonVirtual.m_Priority = 10;
+                thirdPersonCam.targetOrientation = false;
+            }
+        }
+
+        //for (int i = 0; i < enemiesInRange.Count; i++)
+        //{
+        //    if (enemiesInRange[i] == null)
+        //    {
+        //        //lookTargets.RemoveMember(enemiesInRange[i].transform);
+        //        enemiesInRange.RemoveAt(i);
+        //    }
+        //}
     }
 
-    //private void FixedUpdate()
-    //{
-    //    Collider[] hitColliders = Physics.OverlapSphere(transform.position, enemyDetectionRange);
-    //    foreach (Collider collider in hitColliders)
-    //    {
-    //        if (collider.GetComponent<EnemyStats>() && !enemiesInRange.Contains(collider.gameObject))
-    //        {
-    //            enemiesInRange.Add(collider.gameObject);
-    //        }
-    //    }
+    private void LateUpdate()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, enemyDetectionRange);
+        foreach (Collider collider in hitColliders)
+        {
+            if (collider.GetComponent<EnemyStats>() && !enemiesInRange.Contains(collider.gameObject))
+            {
+                enemiesInRange.Add(collider.gameObject);
+                lookTargets.AddMember(collider.transform, 0, collider.GetComponent<CapsuleCollider>().radius);
+            }
+        }
 
-    //    for (int e = 0; e < enemiesInRange.Count; e++)
-    //    {
-    //        float distance = Vector3.Distance(enemiesInRange[e].transform.position, transform.position);
+        for (int e = 0; e < enemiesInRange.Count; e++)
+        {
+            if (enemiesInRange[e] != null)
+            {
+                float distance = Vector3.Distance(enemiesInRange[e].transform.position, transform.position);
 
-    //        if (distance > enemyDetectionRange)
-    //            enemiesInRange.RemoveAt(e);
-    //    }
+                if (distance > enemyDetectionRange)
+                {
+                    lookTargets.RemoveMember(enemiesInRange[e].transform);
+                    enemiesInRange.RemoveAt(e);
 
-    //    CheckClosestEnemy();
-    //}
+                }
+            }
+        }
+
+        CheckClosestEnemy();
+    }
 
     public void SetAttackArea(Vector3 newScale)
     {
@@ -328,24 +470,34 @@ public class PlayerAttack : CharacterCombat
         //collider.size = newScale;
     }
 
-    //public void CheckClosestEnemy()
-    //{
+    public void CheckClosestEnemy()
+    {
 
-    //    enemiesInRange.Sort(CompareDistanceToMe);
+        enemiesInRange.Sort(CompareDistanceToMe);
 
-    //}
+        if (enemiesInRange != null && enemiesInRange.Count > 0)
+            thirdPersonCam.aimTarget = enemiesInRange[0].transform;
+        //thirdPersonCam.aimCamPos = thirdPersonCam.aimTarget.position;
 
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = Color.cyan;
-    //    Gizmos.DrawWireSphere(transform.position, enemyDetectionRange);
-    //}
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, enemyDetectionRange);
+    }
 
 
-    //int CompareDistanceToMe(GameObject a, GameObject b)
-    //{
-    //    float squaredRangeA = (a.transform.position - transform.position).sqrMagnitude;
-    //    float squaredRangeB = (b.transform.position - transform.position).sqrMagnitude;
-    //    return squaredRangeA.CompareTo(squaredRangeB);
-    //}
+    int CompareDistanceToMe(GameObject a, GameObject b)
+    {
+        if (a != null && b != null)
+        {
+            float squaredRangeA = (a.transform.position - transform.position).sqrMagnitude;
+            float squaredRangeB = (b.transform.position - transform.position).sqrMagnitude;
+            return squaredRangeA.CompareTo(squaredRangeB);
+        }
+        else return 1000;
+    }
+
+  
 }

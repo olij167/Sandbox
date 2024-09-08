@@ -27,7 +27,7 @@ public class CharacterCombat : MonoBehaviour
         myStats = GetComponent<CharacterStats>();
     }
 
-    private void FixedUpdate()
+    public virtual void Update()
     {
         if (attackCooldown > 0f)
         {
@@ -35,7 +35,7 @@ public class CharacterCombat : MonoBehaviour
         }
     }
 
-    public void Attack(CharacterStats targetStats, float damage)
+    public void Attack(CharacterStats targetStats, float damage, bool isPassive)
     {
         if (attackCooldown <= 0f)
         {
@@ -48,7 +48,7 @@ public class CharacterCombat : MonoBehaviour
             attackCooldown = 1f / myStats.attackSpeed.GetValue();
 
             if (targetStats.GetComponent<Rigidbody>())
-            StartCoroutine(DamageEffects(targetStats.GetComponent<Rigidbody>(), knockbackDelay));
+                StartCoroutine(DamageEffects(targetStats.GetComponent<Rigidbody>(), targetStats.GetComponent<CharacterCombat>().knockbackDelay, isPassive));
 
 
             else if (targetStats.GetComponent<PlayerController>())
@@ -68,6 +68,7 @@ public class CharacterCombat : MonoBehaviour
 
             //Debug.Log(gameObject.name + " attack cooldown = " + attackCooldown);
         }
+        else Debug.Log("Cooldown still running");
     }
 
     IEnumerator DoDamage(CharacterStats stats, float delay, float damage)
@@ -81,9 +82,10 @@ public class CharacterCombat : MonoBehaviour
 
     }
 
-    IEnumerator DamageEffects(Rigidbody targetRB, float delay)
+    IEnumerator DamageEffects(Rigidbody targetRB, float delay, bool isPassive)
     {
-        Vector3 dir = (targetRB.transform.position - transform.position).normalized;
+        Vector3 head = targetRB.transform.position - transform.position;
+        Vector3 dir = head / head.magnitude;
 
         if (targetRB.GetComponent<Rigidbody>())
         {
@@ -97,16 +99,26 @@ public class CharacterCombat : MonoBehaviour
 
             targetRB.isKinematic = false;
 
-            targetRB.AddForce(dir * myStats.knockBack.GetValue());
-
-            Debug.Log("Applying " + myStats.knockBack.GetValue() + " Knockback to " + targetRB.gameObject.name);
+            if (!isPassive)
+            {
+                targetRB.AddForce(dir * myStats.knockBack.GetValue(), ForceMode.Impulse);
+                Debug.Log("Applying " + myStats.knockBack.GetValue() + " Attack Knockback to " + targetRB.gameObject.name);
+            }
+            else
+            {
+                targetRB.AddForce(dir * myStats.knockBack.GetValue() / 2f, ForceMode.Impulse);
+                Debug.Log("Applying " + myStats.knockBack.GetValue() / 2f + " Passive Knockback to " + targetRB.gameObject.name);
+            }
 
             yield return new WaitForSeconds(delay);
 
-            enemy.animator.SetBool("takeDamage", false);
+            if (enemy != null)
+            {
+                enemy.animator.SetBool("takeDamage", false);
 
-            enemy.pauseTarget = false;
-            targetRB.isKinematic = true;
+                enemy.pauseTarget = false;
+                targetRB.isKinematic = true;
+            }
         }
         //else if (targetStats.GetComponent<CharacterController>())
         //{

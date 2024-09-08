@@ -262,8 +262,8 @@ MonoBehaviour:
   myStats: {fileID: 0}
   attackCooldown: 0
   attackDelay: 1
-  knockbackDelay: 2
-  hitEffect: {fileID: 0}
+  knockbackDelay: 5
+  hitEffect: {fileID: 2403513504218744522}
 --- !u!136 &8550862207706892778
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1048,6 +1048,12 @@ PrefabInstance:
 --- !u!4 &1732490339942228170 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1221368277856604051, guid: 508db7f5c88fbbe458dd3e2778881d95,
+    type: 3}
+  m_PrefabInstance: {fileID: 646303048324329305}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2403513504218744522 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3000206586134112659, guid: 508db7f5c88fbbe458dd3e2778881d95,
     type: 3}
   m_PrefabInstance: {fileID: 646303048324329305}
   m_PrefabAsset: {fileID: 0}

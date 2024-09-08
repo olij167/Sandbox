@@ -11,12 +11,15 @@ public class InventoryUIItem : MonoBehaviour, /*IPointerDownHandler,*/ IDragHand
 
     public InventoryItem item;
     public Image image;
+    //public SkinnedMeshRenderer mesh;
+
     public TextMeshProUGUI stackCountText;
     public int numCarried;
 
     public bool isInUse;
 
     public float batteryCharge;
+    public float ammo;
 
     public GameObject physicalItem;
 
@@ -68,6 +71,10 @@ public class InventoryUIItem : MonoBehaviour, /*IPointerDownHandler,*/ IDragHand
             batteryCharge = item.maxBatteryCharge;
         }
         //else ba
+        if (item.isProjectile)
+        {
+            ammo = item.maxAmmo;
+        }
 
         slot = newSlot;
 

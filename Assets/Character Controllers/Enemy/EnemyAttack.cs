@@ -31,9 +31,9 @@ public class EnemyAttack : CharacterCombat
             Debug.Log(gameObject.name + " Hit the Player");
 
             if (GetComponent<EnemyController>().animator.GetBool("isAttacking"))
-                Attack(player.GetComponent<CharacterStats>(), GetComponent<EnemyStats>().attackDamage.GetValue());
+                Attack(player.GetComponent<CharacterStats>(), GetComponent<EnemyStats>().attackDamage.GetValue(), false);
             else
-                Attack(player.GetComponent<CharacterStats>(), GetComponent<EnemyStats>().passiveDamage.GetValue());
+                Attack(player.GetComponent<CharacterStats>(), GetComponent<EnemyStats>().passiveDamage.GetValue(), true);
 
             if (!hitEffect.isPlaying)
                 hitEffect.Play();
@@ -45,9 +45,9 @@ public class EnemyAttack : CharacterCombat
             Debug.Log(gameObject.name + " Hit another enemy");
 
             if (GetComponent<EnemyController>().animator.GetBool("isAttacking"))
-                Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<EnemyStats>().attackDamage.GetValue());
+                Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<EnemyStats>().attackDamage.GetValue(), false);
             else
-                Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<EnemyStats>().passiveDamage.GetValue());
+                Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<EnemyStats>().passiveDamage.GetValue(), true);
 
             if (!hitEffect.isPlaying)
                 hitEffect.Play();

@@ -96,6 +96,31 @@ public class WheelDrive : Interactable
 
 			}
 		}
+        else
+        {
+			foreach (WheelCollider wheel in m_Wheels)
+			{
+				// A simple car where front wheels steer while rear ones drive.
+				if (wheel.transform.localPosition.z > 0)
+					wheel.steerAngle = 0;
+
+				if (wheel.transform.localPosition.z < 0)
+				{
+					wheel.brakeTorque = brakeTorque;
+				}
+
+				if (wheel.transform.localPosition.z < 0 && driveType != DriveType.FrontWheelDrive)
+				{
+					wheel.motorTorque = 0;
+				}
+
+				if (wheel.transform.localPosition.z >= 0 && driveType != DriveType.RearWheelDrive)
+				{
+					wheel.motorTorque = 0;
+				}
+
+			}
+		}
 			foreach (WheelCollider wheel in m_Wheels)
 			{
 				// Update visual wheels if any.
@@ -127,7 +152,7 @@ public class WheelDrive : Interactable
     {
         playerController.characterControllerMovement = false;
         playerController.GetComponent<CharacterController>().enabled = false;
-        playerController.GetComponent<CapsuleCollider>().enabled = false;
+        playerController.GetComponent<BoxCollider>().enabled = false;
         GetComponent<Rigidbody>().isKinematic = false;
 
 		FindObjectOfType<ThirdPersonCam>().freezeOrientation = true;
@@ -138,6 +163,7 @@ public class WheelDrive : Interactable
         playerController.transform.parent = transform;
 
 		playerController.animator.SetBool("isSitting", true);
+		//playerController.animator.SetBool("isUsingBoth", true);
 		playerController.animator.SetBool("isWalking", false);
 		playerController.animator.SetBool("isRunning", false);
 
@@ -151,7 +177,7 @@ public class WheelDrive : Interactable
     {
         playerController.characterControllerMovement = true;
         playerController.GetComponent<CharacterController>().enabled = true;
-		playerController.GetComponent<CapsuleCollider>().enabled = true;
+		playerController.GetComponent<BoxCollider>().enabled = true;
 		GetComponent<Rigidbody>().isKinematic = true;
 
 		FindObjectOfType<ThirdPersonCam>().freezeOrientation = false;
@@ -168,7 +194,7 @@ public class WheelDrive : Interactable
 	{
 		if (other.gameObject.GetComponent<EnemyStats>())
 		{
-			playerController.GetComponent<PlayerAttack>().Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass);
+			playerController.GetComponent<PlayerAttack>().Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass, false);
 		}
 
 		if (other.transform.GetComponent<Terrain>() && !beingDriven)

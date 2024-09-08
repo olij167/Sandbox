@@ -271,14 +271,14 @@ public class ThirdPersonSelection : MonoBehaviour
                 if (Input.GetKeyDown(selectInput))
                 {
 
-                    if (isItem)
+                    if (isItem && selectedObject.GetComponent<ItemInWorld>())
                     {
                         isItemInteracted = true;
 
                         PickUpItem();
                     }
 
-                    if (isEmote)
+                    if (isEmote && selectedObject.GetComponent<EmoteInWorld>())
                     {
                         isEmoteInteracted = true;
 
@@ -286,14 +286,14 @@ public class ThirdPersonSelection : MonoBehaviour
                         PickUpEmote();
                     }
 
-                    if (isAbility)
+                    if (isAbility && selectedObject.GetComponent<AbilityInWorld>())
                     {
                         isAbilityInteracted = true;
 
                         PickUpAbility();
                     }
 
-                    if (isChest)
+                    if (isChest && selectedObject.GetComponent<ChestInventory>())
                     {
                         isChestInteracted = true;
 
@@ -302,7 +302,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         else selectedObject.GetComponent<ChestInventory>().CloseChest();
                     }
 
-                    if (isCar)
+                    if (isCar && selectedObject.GetComponent<WheelDrive>())
                     {
                         isCarInteracted = true;
 
@@ -311,7 +311,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         else selectedObject.GetComponent<WheelDrive>().ExitCar();
                     }
 
-                    if (isChair)
+                    if (isChair && selectedObject.GetComponent<Chair>())
                     {
                         isChairInteracted = true;
 
@@ -319,7 +319,7 @@ public class ThirdPersonSelection : MonoBehaviour
                             SitDown();
                         else selectedObject.GetComponent<Chair>().StandUp(playerController);
                     }
-                    if (isFloatingVehicle)
+                    if (isFloatingVehicle && selectedObject.GetComponent<FloatingVehicle>())
                     {
                         isFloatingVehicleInteracted = true;
 
@@ -328,7 +328,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         else selectedObject.GetComponent<FloatingVehicle>().StandUp(playerController);
                     }
 
-                    if (isSceneTransition)
+                    if (isSceneTransition && selectedObject.GetComponent<SceneLoader>())
                     {
                         isSceneTransitionInteracted = true;
 
@@ -338,7 +338,7 @@ public class ThirdPersonSelection : MonoBehaviour
                             selectedObject.GetComponent<SceneLoader>().UnloadScene();
                     }
 
-                    if (isDoor)
+                    if (isDoor && selectedObject.GetComponent<ToggleDoor>())
                     {
                         isDoorInteracted = true;
 

@@ -15,6 +15,11 @@ public class PlayerUI : MonoBehaviour
     public Slider staminaBar;
     public Slider oxygenBar;
     public Slider batteryBar;
+    public Slider ammoBar;
+
+    public Slider expBar;
+    public TextMeshProUGUI currentExpText;
+    public TextMeshProUGUI currentLevelText;
 
     public TextPopUp popUp;
 
@@ -37,11 +42,14 @@ public class PlayerUI : MonoBehaviour
 
         batteryBar.gameObject.SetActive(false);
         oxygenBar.gameObject.SetActive(false);
+        ammoBar.gameObject.SetActive(false);
 
         healthBar.maxValue = player.stats.maxHealth.GetValue();
         staminaBar.maxValue = player.stats.maxStamina.GetValue();
         powerBar.maxValue = player.stats.maxPower.GetValue();
         oxygenBar.maxValue = player.stats.maxOxygen.GetValue();
+
+        expBar.maxValue = player.stats.maxExperience;
 
         player.animator.SetFloat("Health", player.stats.currentHealth);
 
@@ -49,9 +57,23 @@ public class PlayerUI : MonoBehaviour
 
     private void Update()
     {
+
         healthBar.value = player.stats.currentHealth;
         staminaBar.value = player.stats.stamina;
         powerBar.value = player.stats.power;
+        expBar.value = player.stats.experience;
+
+        if (currentLevelText.text != player.stats.currentLevel.ToString())
+        {
+            currentLevelText.text = player.stats.currentLevel.ToString("0");
+            currentExpText.text = player.stats.experience.ToString() + " / " + player.stats.maxExperience.ToString() + " EXP until next level";
+            expBar.maxValue = player.stats.maxExperience;
+        }
+
+        if (!currentExpText.text.Contains(player.stats.experience.ToString()))
+        {
+            currentExpText.text = player.stats.experience.ToString() + " / " + player.stats.maxExperience.ToString() + " EXP until next level";
+        }
 
         if (player.stats.isTakingDamage)
         {
@@ -116,6 +138,12 @@ public class PlayerUI : MonoBehaviour
     {
         batteryBar.maxValue = item.item.maxBatteryCharge;
         batteryBar.value = item.batteryCharge;
+    }
+
+    public void InitialiseAmmoBar(WeaponItem weaponItem, InventoryUIItem item)
+    {
+        ammoBar.maxValue = weaponItem.maxAmmo;
+        ammoBar.value = item.ammo;
     }
 
 }

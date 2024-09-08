@@ -35,7 +35,7 @@ public class WeaponAttack : MonoBehaviour
             {
                 if (playerController.isUsingRight)
                 {
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue());
+                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue(), false);
                     Debug.Log("Right Weapon Attack");
 
                     //if (!hitParticles.isPlaying)
@@ -48,7 +48,7 @@ public class WeaponAttack : MonoBehaviour
                 }
                 else
                 {
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue());
+                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue(), true);
                     //Stagger animation
                     Debug.Log("Right Passive Attack");
                     //if (!hitParticles.isPlaying)
@@ -60,7 +60,7 @@ public class WeaponAttack : MonoBehaviour
             {
                 if (playerController.isUsingLeft)
                 {
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue());
+                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue(), false);
                     Debug.Log("Left Weapon Attack");
                     //if (!hitParticles.isPlaying)
                     //    hitParticles.Play();
@@ -73,7 +73,7 @@ public class WeaponAttack : MonoBehaviour
                 {
                     Debug.Log("Left Passive Attack");
 
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue());
+                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue(), true);
 
                     //if (!hitParticles.isPlaying)
                     //    hitParticles.Play();

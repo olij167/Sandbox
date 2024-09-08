@@ -16,6 +16,7 @@ public class InventoryItem : Item
     public float heldRigWeight;
 
     public ItemType itemType;
+    public SkinnedMeshRenderer mesh;
 
     public float itemValue;
 
@@ -29,7 +30,10 @@ public class InventoryItem : Item
 
     public bool canActivate;
 
-    public bool isTwoHanded;
+    //public bool isTwoHanded;
+
+    public bool isProjectile;
+    public float maxAmmo;
 
     public bool usesBatteries;
     public float maxBatteryCharge;
