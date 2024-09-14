@@ -771,6 +771,11 @@ public class PlayerInventory : MonoBehaviour
             item.physicalItem.GetComponent<Rigidbody>().isKinematic = false;
         }
 
+        if (item.physicalItem.AddComponent<StickToObject>())
+        {
+            Destroy(item.physicalItem.GetComponent<StickToObject>());
+        }
+
         item.physicalItem.GetComponent<ItemInWorld>().enabled = true;
         item.physicalItem.GetComponent<Collider>().enabled = true;
 
@@ -820,6 +825,11 @@ public class PlayerInventory : MonoBehaviour
 
 
         item.physicalItem.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+
+        if (item.physicalItem.AddComponent<StickToObject>())
+        {
+            Destroy(item.physicalItem.GetComponent<StickToObject>());
+        }
 
         if (mainHand)
         {

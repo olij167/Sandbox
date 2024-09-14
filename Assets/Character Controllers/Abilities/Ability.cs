@@ -12,13 +12,24 @@ public class Ability : Item
     public float energyCost;
     public float effectDuration;
 
-    public virtual void ActivateEffect(PlayerController player) // the ability effect
+    public virtual void ActivateEffect(PlayerController player, PlayerAbilities abilities) // the ability effect
     {
 
     }
      public virtual IEnumerator DeactivateEffect(PlayerController player, PlayerAbilities abilities) // the ability effect
     {
+        abilities.effectActive = false;
+
+        if (abilities.abilityObject != null)
+            Destroy(abilities.abilityObject);
+
         yield return null;
     }
+
+    //public virtual IEnumerator Move(GameObject spawnedObject, PlayerController player)
+    //{
+    //    yield return null;
+
+    //}
 
 }

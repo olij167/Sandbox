@@ -13,6 +13,8 @@ public class PlayerAbilities : MonoBehaviour
 
     public bool effectActive;
 
+    public GameObject abilityObject;
+
     public Ability activeAbility;
     public int selectedAbilitySlot = 0;
     public List<Ability> abilities;
@@ -84,8 +86,7 @@ public class PlayerAbilities : MonoBehaviour
         {
             if (Input.GetKeyDown(abilityInput))
             {
-                activeAbility.ActivateEffect(player);
-                effectActive = true;
+                activeAbility.ActivateEffect(player, this);
                 player.stats.DecreasePower(activeAbility.energyCost);
                 StartCoroutine(activeAbility.DeactivateEffect(player, this));
             }

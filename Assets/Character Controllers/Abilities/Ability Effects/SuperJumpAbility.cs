@@ -6,9 +6,9 @@ using UnityEngine;
 public class SuperJumpAbility : Ability
 {
     public float jumpEffect = 10f;
-    public override void ActivateEffect(PlayerController player)
+    public override void ActivateEffect(PlayerController player, PlayerAbilities abilities)
     {
-        base.ActivateEffect(player);
+        base.ActivateEffect(player, abilities);
 
         if (player.canJump && !player.isJumping && player.isGrounded)
         {

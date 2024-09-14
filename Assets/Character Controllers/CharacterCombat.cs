@@ -82,7 +82,7 @@ public class CharacterCombat : MonoBehaviour
 
     }
 
-    IEnumerator DamageEffects(Rigidbody targetRB, float delay, bool isPassive)
+    public IEnumerator DamageEffects(Rigidbody targetRB, float delay, bool isPassive)
     {
         Vector3 head = targetRB.transform.position - transform.position;
         Vector3 dir = head / head.magnitude;
@@ -91,13 +91,17 @@ public class CharacterCombat : MonoBehaviour
         {
 
             //Rigidbody targetRB = targetRB.GetComponent<Rigidbody>();
-            EnemyController enemy = targetRB.GetComponent<EnemyController>();
 
-            enemy.pauseTarget = true;
+            if (targetRB.GetComponent<EnemyController>())
+            {
+                EnemyController enemy = targetRB.GetComponent<EnemyController>();
 
-            enemy.animator.SetBool("takeDamage", true);
+                enemy.pauseTarget = true;
 
-            targetRB.isKinematic = false;
+                enemy.animator.SetBool("takeDamage", true);
+
+                targetRB.isKinematic = false;
+            }
 
             if (!isPassive)
             {
@@ -112,13 +116,18 @@ public class CharacterCombat : MonoBehaviour
 
             yield return new WaitForSeconds(delay);
 
-            if (enemy != null)
+            if (targetRB != null && targetRB.GetComponent<EnemyController>())
             {
-                enemy.animator.SetBool("takeDamage", false);
+                EnemyController enemy = targetRB.GetComponent<EnemyController>();
+                if (enemy != null)
+                {
+                    enemy.animator.SetBool("takeDamage", false);
 
-                enemy.pauseTarget = false;
-                targetRB.isKinematic = true;
+                    enemy.pauseTarget = false;
+                    targetRB.isKinematic = true;
+                }
             }
+
         }
         //else if (targetStats.GetComponent<CharacterController>())
         //{

@@ -11,7 +11,7 @@ public class Chair : Interactable
     {
         playerController.characterControllerMovement = false;
         playerController.GetComponent<CharacterController>().enabled = false;
-        playerController.GetComponent<CapsuleCollider>().enabled = false;
+        playerController.GetComponent<BoxCollider>().enabled = false;
 
         playerController.transform.position = transform.position + sittingPositionOffset;
 
@@ -29,7 +29,7 @@ public class Chair : Interactable
     {
         playerController.characterControllerMovement = true;
         playerController.GetComponent<CharacterController>().enabled = true;
-        playerController.GetComponent<CapsuleCollider>().enabled = true;
+        playerController.GetComponent<BoxCollider>().enabled = true;
 
         playerController.transform.parent = null;
         //playerController.model.SetActive(true);

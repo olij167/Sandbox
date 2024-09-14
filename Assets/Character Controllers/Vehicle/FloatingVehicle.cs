@@ -15,6 +15,8 @@ public class FloatingVehicle : Interactable
 
     public Vector3 sittingPositionOffset;
     [SerializeField] private float distanceFromGround = 1f;
+    public float verticalHoverDistance = 0.25f;
+    public float frequency = 1f;
 
 
     private void Awake()
@@ -35,18 +37,24 @@ public class FloatingVehicle : Interactable
 
             Vector3 floatDistance = returnRay.GetPoint(distanceFromGround);
 
+            Vector3 tempPos = floatDistance;
+
+            tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * verticalHoverDistance;
 
             if (beingDriven)
             {
                 //move = false;
 
                 moveDirection = (player.orientation.forward * Input.GetAxisRaw("Vertical")) + (player.orientation.right * Input.GetAxisRaw("Horizontal"));
-                moveDirection = moveDirection.normalized * speed;
-                moveDirection.y = floatDistance.y;
+                moveDirection = moveDirection.normalized * speed * Time.deltaTime;
+                //moveDirection.y = floatDistance.y;
+                //moveDirection.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * verticalHoverDistance;
 
 
-                transform.position = Vector3.Lerp(transform.position, moveDirection, Time.deltaTime);
+                //transform.position += moveDirection * Time.deltaTime;
+                transform.position = new Vector3(transform.position.x + moveDirection.x, tempPos.y, transform.position.z + moveDirection.z) ;
             }
+            else transform.position = tempPos;
         }
     }
 
@@ -54,7 +62,7 @@ public class FloatingVehicle : Interactable
     {
         playerController.characterControllerMovement = false;
         playerController.GetComponent<CharacterController>().enabled = false;
-        playerController.GetComponent<CapsuleCollider>().enabled = false;
+        playerController.GetComponent<BoxCollider>().enabled = false;
 
         playerController.transform.position = transform.position + sittingPositionOffset;
 
@@ -72,7 +80,7 @@ public class FloatingVehicle : Interactable
     {
         playerController.characterControllerMovement = true;
         playerController.GetComponent<CharacterController>().enabled = true;
-        playerController.GetComponent<CapsuleCollider>().enabled = true;
+        playerController.GetComponent<BoxCollider>().enabled = true;
 
         playerController.transform.parent = null;
         //playerController.model.SetActive(true);

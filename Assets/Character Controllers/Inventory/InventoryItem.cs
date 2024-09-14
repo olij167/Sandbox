@@ -16,7 +16,7 @@ public class InventoryItem : Item
     public float heldRigWeight;
 
     public ItemType itemType;
-    public SkinnedMeshRenderer mesh;
+   // public SkinnedMeshRenderer mesh;
 
     public float itemValue;
 

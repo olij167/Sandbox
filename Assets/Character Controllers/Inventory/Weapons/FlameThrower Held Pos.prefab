@@ -299,6 +299,11 @@ PrefabInstance:
       propertyPath: CollisionModule.m_EnergyLossOnCollision.minMaxState
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7037420770036788946, guid: 5ada32e63212b5441ba7b29ca605be52,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7037420771174548616, guid: 5ada32e63212b5441ba7b29ca605be52,
         type: 3}
       propertyPath: m_RootOrder
@@ -373,6 +378,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FlameThrower
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037420771745536399, guid: 5ada32e63212b5441ba7b29ca605be52,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037420771815818129, guid: 5ada32e63212b5441ba7b29ca605be52,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9146172818211862215, guid: 5ada32e63212b5441ba7b29ca605be52, type: 3}

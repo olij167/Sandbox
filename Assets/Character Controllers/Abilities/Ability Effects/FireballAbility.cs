@@ -6,29 +6,37 @@ using UnityEngine;
 
 public class FireballAbility : Ability
 {
-    public ParticleSystem fireballParticles;
-    public ParticleSystem spawnedParticles;
-    //public float fireballSpeed;
-    //public float fireballDamage;
-    public override void ActivateEffect(PlayerController player)
-    {
-        if (spawnedParticles == null)
-            spawnedParticles = Instantiate(fireballParticles, player.transform.position, Quaternion.identity);
+    //public ParticleSystem fireballParticles;
+    //public ParticleSystem spawnedParticles;
+    public GameObject fireball;
+    //public GameObject spawnedFireball;
+    //public int spawnedNum;
+   // public int maxSpawnedNum;
 
-        spawnedParticles.Play();
-        //Vector3 dir = player.orientation.forward * fireballSpeed * Time.deltaTime;
+    //public float fireballSpeed;
+    public float fireballDamage;
+
+    //public float maxDistance;
+    public override void ActivateEffect(PlayerController player, PlayerAbilities abilities)
+    {
+        //if (spawnedNum < maxSpawnedNum)
+        abilities.abilityObject = Instantiate(fireball, new Vector3(player.model.transform.position.x, player.model.transform.position.y + 1f, player.model.transform.position.z), Quaternion.identity);
+        abilities.abilityObject.transform.forward = player.model.transform.forward;
+        //spawned.GetComponent<AbilityEffect>()
+        // spawnedFireball.GetComponent<Rigidbody>().AddForce(spawnedFireball.transform.forward * fireballSpeed);
+
+        //spawnedFireball.Play();
 
     }
 
+
+
     public override IEnumerator DeactivateEffect(PlayerController player, PlayerAbilities abilities)
     {
-        yield return new WaitUntil(() => spawnedParticles.isStopped);
+
+        yield return new WaitForSeconds(effectDuration);
 
 
-         Destroy(spawnedParticles.gameObject);
-        abilities.effectActive = false;
-
-
-        yield return null;
+        yield return base.DeactivateEffect(player, abilities);
     }
 }

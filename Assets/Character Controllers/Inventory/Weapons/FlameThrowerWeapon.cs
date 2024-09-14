@@ -10,7 +10,7 @@ public class FlameThrowerWeapon : Ability
     public ParticleSystem spawnedParticles;
     //public float fireballSpeed;
     //public float fireballDamage;
-    public override void ActivateEffect(PlayerController player)
+    public override void ActivateEffect(PlayerController player, PlayerAbilities abilities)
     {
         if (spawnedParticles == null)
             spawnedParticles = Instantiate(flamethrowerParticles, player.orientation.transform.position, Quaternion.identity);

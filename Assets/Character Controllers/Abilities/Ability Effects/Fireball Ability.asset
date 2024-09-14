@@ -17,5 +17,9 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 8ec5b52b09d90074a83d61c1334190f9, type: 3}
   energyCost: 10
   effectDuration: 2
-  fireballParticles: {fileID: 0}
-  spawnedParticles: {fileID: 0}
+  fireball: {fileID: 4684466040694504687, guid: 12c72a0fd5c2d2b41957239a0b85a11d,
+    type: 3}
+  spawnedFireball: {fileID: 0}
+  fireballSpeed: 10
+  fireballDamage: 50
+  maxDistance: 5
