@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45993263, g: 0.93769467, b: 1.049452, a: 1}
+  m_IndirectSpecularColor: {r: 0.39105624, g: 0.7238937, b: 0.6414705, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7417,6 +7417,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa5a8884fc0158c4c80a271ce3e1aa92, type: 3}
+--- !u!84 &650794724
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 1920
+  m_Height: 1080
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 90
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &665834411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7540,11 +7577,11 @@ PrefabInstance:
       objectReference: {fileID: 818485687}
     - target: {fileID: 564816714, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.065598
+      value: 1.541902
       objectReference: {fileID: 0}
     - target: {fileID: 564816714, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -3.049642
+      value: -3.343717
       objectReference: {fileID: 0}
     - target: {fileID: 676354292, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7564,15 +7601,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 676354292, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.6625186
+      value: 0.66251856
       objectReference: {fileID: 0}
     - target: {fileID: 676354292, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000011980914
+      value: 0.0000011629012
       objectReference: {fileID: 0}
     - target: {fileID: 676354292, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00000038499698
+      value: -0.0000003952997
       objectReference: {fileID: 0}
     - target: {fileID: 818485701, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: attackDelay
@@ -7604,15 +7641,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1035397051, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.21791816
+      value: 0.21791811
       objectReference: {fileID: 0}
     - target: {fileID: 1035397051, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000025413529
+      value: -0.00000003579192
       objectReference: {fileID: 0}
     - target: {fileID: 1035397051, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000000005674497
+      value: 0.000000007991728
       objectReference: {fileID: 0}
     - target: {fileID: 1035397054, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: field of view
@@ -7632,11 +7669,11 @@ PrefabInstance:
       objectReference: {fileID: 397111935}
     - target: {fileID: 1107665161, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.065598
+      value: 1.541902
       objectReference: {fileID: 0}
     - target: {fileID: 1107665161, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -3.049642
+      value: -3.343717
       objectReference: {fileID: 0}
     - target: {fileID: 1196040038, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: interactPromptText
@@ -7672,11 +7709,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1811874616, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000011934402
+      value: 0.0000011934429
       objectReference: {fileID: 0}
     - target: {fileID: 1811874616, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00000031276832
+      value: -0.00000031276733
       objectReference: {fileID: 0}
     - target: {fileID: 1862664156, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_Targets.Array.data[0].radius
@@ -7712,11 +7749,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2141365183, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.065598
+      value: 1.541902
       objectReference: {fileID: 0}
     - target: {fileID: 2141365183, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -3.049642
+      value: -3.343717
       objectReference: {fileID: 0}
     - target: {fileID: 1379634594792329121, guid: dbddf0a1989d95e4f841b47d1da2ba89,
         type: 3}
@@ -8870,43 +8907,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 33
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &857490091
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 2044
-  m_Height: 1287
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 90
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!114 &869539186 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1603801310930790530, guid: f82c2b3cb82c42449982227086ecc58c,
@@ -9023,7 +9023,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920642351}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
   m_Name: 
@@ -11344,7 +11344,7 @@ PrefabInstance:
     - target: {fileID: 5169165454233506675, guid: e4029cef6896fc047b0e6ca1232b103e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5169165454233506676, guid: e4029cef6896fc047b0e6ca1232b103e,
         type: 3}
@@ -15848,7 +15848,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 857490091}
+      objectReference: {fileID: 650794724}
     - target: {fileID: 692421375649379052, guid: 15d636b15f71cdb419a4576373e3a3b0,
         type: 3}
       propertyPath: m_IsActive
@@ -16648,7 +16648,7 @@ MonoBehaviour:
     - name: Grass_Layer
       layerID: 4
       threshold: 0
-    instanceCount: 864
+    instanceCount: 831
     prefabs:
     - index: 0
       probability: 20
@@ -16686,7 +16686,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 324
+    instanceCount: 316
     prefabs:
     - index: 5
       probability: 20
@@ -16724,7 +16724,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 318
+    instanceCount: 309
     prefabs:
     - index: 10
       probability: 20
@@ -16762,7 +16762,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 294
+    instanceCount: 284
     prefabs:
     - index: 15
       probability: 20
@@ -16803,7 +16803,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 288
+    instanceCount: 280
     prefabs:
     - index: 20
       probability: 20
@@ -16844,7 +16844,7 @@ MonoBehaviour:
     - name: Grass_Layer
       layerID: 4
       threshold: 0
-    instanceCount: 59
+    instanceCount: 57
     prefabs:
     - index: 25
       probability: 50
@@ -16870,7 +16870,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 232
+    instanceCount: 225
     prefabs:
     - index: 27
       probability: 50
@@ -16896,7 +16896,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 320
+    instanceCount: 309
     prefabs:
     - index: 29
       probability: 25
@@ -16937,7 +16937,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 393700
+    instanceCount: 379894
     index: 0
     type: 1
     renderAsBillboard: 0
@@ -16964,7 +16964,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 211554
+    instanceCount: 205954
     index: 1
     type: 1
     renderAsBillboard: 0
@@ -16991,7 +16991,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 211723
+    instanceCount: 206072
     index: 2
     type: 0
     renderAsBillboard: 0
@@ -17019,7 +17019,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 213215
+    instanceCount: 207621
     index: 3
     type: 0
     renderAsBillboard: 0
@@ -17053,7 +17053,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 391266
+    instanceCount: 377617
     index: 4
     type: 0
     renderAsBillboard: 0
@@ -17087,7 +17087,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 391371
+    instanceCount: 377670
     index: 5
     type: 1
     renderAsBillboard: 1
@@ -17117,7 +17117,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 114548
+    instanceCount: 108720
     index: 6
     type: 1
     renderAsBillboard: 1
@@ -17147,7 +17147,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 115660
+    instanceCount: 109933
     index: 7
     type: 1
     renderAsBillboard: 0
@@ -17174,7 +17174,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 105798
+    instanceCount: 103024
     index: 8
     type: 1
     renderAsBillboard: 0
@@ -17207,7 +17207,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 3721
+    instanceCount: 3589
     index: 9
     type: 0
     renderAsBillboard: 0
@@ -17235,7 +17235,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 349
+    instanceCount: 336
     index: 10
     type: 0
     renderAsBillboard: 0
@@ -17269,7 +17269,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 2307
+    instanceCount: 2227
     index: 11
     type: 0
     renderAsBillboard: 0
@@ -17297,7 +17297,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 435
+    instanceCount: 422
     index: 12
     type: 0
     renderAsBillboard: 0
@@ -17325,7 +17325,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 434
+    instanceCount: 423
     index: 13
     type: 0
     renderAsBillboard: 0
@@ -17358,7 +17358,7 @@ MonoBehaviour:
     - name: Treeless Grass
       layerID: 7
       threshold: 0
-    instanceCount: 1205
+    instanceCount: 1158
     index: 14
     type: 0
     renderAsBillboard: 0
@@ -17441,7 +17441,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 106171
+    instanceCount: 103334
     index: 17
     type: 1
     renderAsBillboard: 1
@@ -17468,7 +17468,7 @@ MonoBehaviour:
     - name: Forest_Layer
       layerID: 3
       threshold: 0
-    instanceCount: 106134
+    instanceCount: 103271
     index: 18
     type: 1
     renderAsBillboard: 0
@@ -19030,12 +19030,27 @@ PrefabInstance:
     - target: {fileID: 6287168673111542777, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
         type: 3}
       propertyPath: maxAngle
-      value: 35
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6287168673111542777, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
         type: 3}
       propertyPath: driveType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6287168673111542777, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
+        type: 3}
+      propertyPath: maxTorque
+      value: 750
+      objectReference: {fileID: 0}
+    - target: {fileID: 6287168673111542777, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
+        type: 3}
+      propertyPath: stepsAbove
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6287168673111542777, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
+        type: 3}
+      propertyPath: stepsBelow
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6287168673111542777, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
         type: 3}
@@ -19046,7 +19061,7 @@ PrefabInstance:
     - target: {fileID: 6287168673111542777, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
         type: 3}
       propertyPath: criticalSpeed
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6287168673111542778, guid: 2f5a45ebf9bb9aa4e8469fd9510a63aa,
         type: 3}

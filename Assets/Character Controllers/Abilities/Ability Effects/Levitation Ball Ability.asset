@@ -16,6 +16,6 @@ MonoBehaviour:
   itemID: 0
   itemIcon: {fileID: 21300000, guid: cdec13907ffc75749ab2ed436bec6b14, type: 3}
   energyCost: 10
-  effectDuration: 10
+  effectDuration: 5
   levitationBall: {fileID: 893916343382926454, guid: 5258bf505b86d3b4cb19117a99a4b6f1,
     type: 3}

@@ -104,7 +104,7 @@ Material:
     - _Metallic: 0
     - _MoonIntensity: 10
     - _MoonScale: 1
-    - _NightOpacity: 2.6664303e-24
+    - _NightOpacity: 0
     - _NightSkySpeed: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -116,8 +116,8 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SunIntensity: 0.4735599
-    - _SunScale: 0.35516992
+    - _SunIntensity: 0.68748105
+    - _SunScale: 0.51561093
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -126,9 +126,9 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MoonColor: {r: 1, g: 0.98999995, b: 0.87, a: 1}
-    - _SkyColor1: {r: 0.34015515, g: 0.46021697, b: 0.6984724, a: 1}
-    - _SkyColor2: {r: 0.6536507, g: 0.8416757, b: 0.8541166, a: 1}
-    - _SkyColor3: {r: 0.49931812, g: 0.7479464, b: 0.77577823, a: 0.7860955}
+    - _SkyColor1: {r: 0.37257022, g: 0.53679836, b: 0.72317886, a: 1}
+    - _SkyColor2: {r: 0.5720592, g: 0.6748269, b: 0.5657693, a: 1}
+    - _SkyColor3: {r: 0.487921, g: 0.70508146, b: 0.667192, a: 0.74824756}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SunColor: {r: 1, g: 0.98999995, b: 0.87, a: 1}
   m_BuildTextureStacks: []
