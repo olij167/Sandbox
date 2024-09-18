@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class UseItem : MonoBehaviour
 {
-    private PlayerInventory inventory;
+    public PlayerInventory inventory;
     private PlayerUI playerUI;
     private GameObject selectedItem;
     private ItemAction itemAction;
 
     private void Start()
     {
-        inventory = FindObjectOfType<PlayerInventory>();
-        playerUI = FindObjectOfType<PlayerUI>();
+        //inventory = FindObjectOfType<PlayerInventory>();
+        playerUI = GetComponent<PlayerUI>();
     }
 
     private void Update()

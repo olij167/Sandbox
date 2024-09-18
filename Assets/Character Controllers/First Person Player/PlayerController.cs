@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEditor;
 
@@ -7,7 +8,7 @@ using UnityEditor;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerStats))]
 [RequireComponent(typeof(AudioSource))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [HideInInspector] public CharacterController controller;
 
@@ -153,6 +154,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!IsOwner) return;
 
         if (Input.GetButtonDown("Emote"))
         {
@@ -872,32 +874,32 @@ public class PlayerController : MonoBehaviour
     //}
 }
 
-[CustomEditor(typeof(PlayerController))]
-public class PlayerControllerEditor : Editor
-{
-    float healthChangeAmount;
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        PlayerController controller = (PlayerController)target;
-        if (controller == null) return;
+//[CustomEditor(typeof(PlayerController))]
+//public class PlayerControllerEditor : Editor
+//{
+//    float healthChangeAmount;
+//    public override void OnInspectorGUI()
+//    {
+//        base.OnInspectorGUI();
+//        PlayerController controller = (PlayerController)target;
+//        if (controller == null) return;
 
-        healthChangeAmount = EditorGUILayout.FloatField("Health Change Amount: ", healthChangeAmount);
+//        healthChangeAmount = EditorGUILayout.FloatField("Health Change Amount: ", healthChangeAmount);
 
-        GUILayout.BeginHorizontal();
+//        GUILayout.BeginHorizontal();
 
-        if (GUILayout.Button("Increase Health"))
-        {
-            controller.stats.IncreaseHealth(healthChangeAmount);
-        }
+//        if (GUILayout.Button("Increase Health"))
+//        {
+//            controller.stats.IncreaseHealth(healthChangeAmount);
+//        }
 
-        if (GUILayout.Button("Decrease Health"))
-        {
+//        if (GUILayout.Button("Decrease Health"))
+//        {
 
-            controller.stats.StartDecreaseHealth(healthChangeAmount);
-        }
+//            controller.stats.StartDecreaseHealth(healthChangeAmount);
+//        }
 
-        GUILayout.EndHorizontal();
-    }
-}
+//        GUILayout.EndHorizontal();
+//    }
+//}
 

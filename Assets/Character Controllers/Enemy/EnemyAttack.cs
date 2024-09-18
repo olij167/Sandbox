@@ -10,7 +10,7 @@ public class EnemyAttack : CharacterCombat
 
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>();
+        //player = FindObjectOfType<PlayerController>();
         myStats = GetComponent<CharacterStats>();
         //combat = GetComponentInParent<CharacterCombat>();
         hitEffect = GetComponentInChildren<ParticleSystem>();
@@ -26,8 +26,9 @@ public class EnemyAttack : CharacterCombat
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject == player.gameObject)
+        if (other.gameObject.CompareTag("Player"))
         {
+            player = other.gameObject.GetComponent<PlayerController>();
             Debug.Log(gameObject.name + " Hit the Player");
 
             if (GetComponent<EnemyController>().animator.GetBool("isAttacking"))

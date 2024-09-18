@@ -10,10 +10,13 @@ public class EmoteInWorld : Interactable
 
     private void Awake()
     {
-        emoteManager = FindObjectOfType<EmoteManager>();
+        if (emoteManager != null)
+        {
+            emoteManager = FindObjectOfType<EmoteManager>();
 
-        if (emote == null)
-            emote = RandomiseUnownedEmote();
+            if (emote == null)
+                emote = RandomiseUnownedEmote();
+        }
     }
     public Emote RandomiseEmote()
     {

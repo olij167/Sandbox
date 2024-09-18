@@ -20,22 +20,26 @@ public class ChestInventory : Interactable
         thirdPersonCam = FindObjectOfType<ThirdPersonCam>();
         playerController = FindObjectOfType<PlayerController>();
         playerInventory = FindObjectOfType<PlayerInventory>();
-        chestPanel = playerInventory.chestPanel;
 
-        inventorySlots = new ItemSlot[chestPanel.transform.childCount];
-
-        for (int i = 0; i < inventorySlots.Length; i++)
+        if (playerInventory != null)
         {
-            inventory.Add(null);
-        }
+            chestPanel = playerInventory.chestPanel;
 
-        for (int i = 0; i < chestPanel.transform.childCount ; i++)
-        {
-            if (i < chestPanel.transform.childCount)
+            inventorySlots = new ItemSlot[chestPanel.transform.childCount];
+
+            for (int i = 0; i < inventorySlots.Length; i++)
             {
-                inventorySlots[i] = chestPanel.transform.GetChild(i).GetComponent<ItemSlot>();
-                inventorySlots[i].slot = i;
+                inventory.Add(null);
+            }
 
+            for (int i = 0; i < chestPanel.transform.childCount; i++)
+            {
+                if (i < chestPanel.transform.childCount)
+                {
+                    inventorySlots[i] = chestPanel.transform.GetChild(i).GetComponent<ItemSlot>();
+                    inventorySlots[i].slot = i;
+
+                }
             }
         }
     }

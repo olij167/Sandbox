@@ -16,12 +16,14 @@ public class EnemyUI : MonoBehaviour
     {
         enemyStats = GetComponent<EnemyStats>();
 
+        healthBar.maxValue = enemyStats.maxHealth.GetValue();
+
         nameTag.text = enemyStats.enemyName;
     }
 
     private void Update()
     {
-        healthBar.value = enemyStats.currentHealth;
+        healthBar.value = Mathf.Lerp(healthBar.value, enemyStats.currentHealth, Time.deltaTime * 0.5f);
     }
 
 }

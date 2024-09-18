@@ -62,7 +62,7 @@ public class PlayerInventory : MonoBehaviour
     public float inventoryValue;
 
     public List<InventoryUIItem> inventory;
-    private PlayerController player;
+    [SerializeField]private PlayerController player;
     private ThirdPersonCam cam;
 
 
@@ -935,7 +935,8 @@ public class PlayerInventory : MonoBehaviour
                 weight += inventory[i].item.weight * inventory[i].numCarried;
             }
         }
-        player.stats.weight = weight;
+
+        //player.stats.weight = weight;
         weightText.text = weight.ToString("0.00") + ("KG");
         return inventoryWeight = weight;
     }
@@ -1046,8 +1047,7 @@ public class PlayerInventory : MonoBehaviour
                 //    EndOffHandInspection(offHandSlot);
 
                 selectedPhysicalItem = Instantiate(selectedInventoryItem.item.prefab, rightHandPos.position, Quaternion.identity, player.transform);
-                StickToObject stick = selectedPhysicalItem.AddComponent<StickToObject>();
-                stick.followTransform = rightHandPos;
+
 
                 //selectedPhysicalItem.transform.localRotation = Quaternion.Inverse(rightHandPos.localRotation);
 
@@ -1055,12 +1055,16 @@ public class PlayerInventory : MonoBehaviour
 
                 if (selectedPhysicalItem.GetComponent<WeaponItem>() && selectedPhysicalItem.GetComponent<WeaponItem>().isProjectile)
                 {
+                    StickToObject stick = selectedPhysicalItem.AddComponent<StickToObject>();
+                    stick.followTransform = rightHandPos;
                     //selectedPhysicalItem.transform.eulerAngles = player.orientation.forward ;
                     selectedPhysicalItem.transform.LookAt(projectileTarget);
                 }
-                else
+                else if ((selectedPhysicalItem.GetComponent<WeaponItem>() && !selectedPhysicalItem.GetComponent<WeaponItem>().isProjectile) || !selectedPhysicalItem.GetComponent<WeaponItem>())
+                {
+                    selectedPhysicalItem.transform.parent = rightHandPos;
                     selectedPhysicalItem.transform.LookAt(swordTarget);
-                //selectedPhysicalItem.transform.parent = rightHandPos;
+                }//selectedPhysicalItem.transform.parent = rightHandPos;
                 // selectedPhysicalItem.transform.eulerAngles = Vector3.zero;
                 //selectedPhysicalItem.transform.rotation = Quaternion.Inverse( rightHandPos.rotation);
                 //selectedPhysicalItem.transform.eulerAngles = selectedInventoryItem.item.heldRotation;

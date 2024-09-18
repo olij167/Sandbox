@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Day Sky
   m_Shader: {fileID: 4800000, guid: 3793a1d6013f58e439674862b2865104, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -104,7 +107,7 @@ Material:
     - _Metallic: 0
     - _MoonIntensity: 10
     - _MoonScale: 1
-    - _NightOpacity: 0
+    - _NightOpacity: 0.0000004776066
     - _NightSkySpeed: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -116,8 +119,8 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SunIntensity: 0.68748105
-    - _SunScale: 0.51561093
+    - _SunIntensity: 0.181886
+    - _SunScale: 0.13641451
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -126,9 +129,9 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MoonColor: {r: 1, g: 0.98999995, b: 0.87, a: 1}
-    - _SkyColor1: {r: 0.37257022, g: 0.53679836, b: 0.72317886, a: 1}
-    - _SkyColor2: {r: 0.5720592, g: 0.6748269, b: 0.5657693, a: 1}
-    - _SkyColor3: {r: 0.487921, g: 0.70508146, b: 0.667192, a: 0.74824756}
+    - _SkyColor1: {r: 0.2087484, g: 0.16225676, b: 0.584766, a: 1}
+    - _SkyColor2: {r: 0.94452107, g: 0.58674836, b: 0.53216445, a: 1}
+    - _SkyColor3: {r: 0.5575312, g: 0.5022158, b: 0.5113188, a: 0.89215684}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SunColor: {r: 1, g: 0.98999995, b: 0.87, a: 1}
   m_BuildTextureStacks: []

@@ -51,7 +51,17 @@ public class PlayerStats : CharacterStats
     {
         base.Die();
         // Toggle Death UI & State
-        PlayerManager.instance.KillPlayer();
+        KillPlayer();
+    }
+
+    public void KillPlayer()
+    {
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        //drop inventory
+        //respawn player
+
+        Debug.Log("U dieed ;( rippp");
     }
 
     public override void DecreaseHealth(float decreaseAmount)

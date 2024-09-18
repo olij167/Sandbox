@@ -481,13 +481,6 @@ public class PlayerAttack : CharacterCombat
 
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, enemyDetectionRange);
-    }
-
-
     int CompareDistanceToMe(GameObject a, GameObject b)
     {
         if (a != null && b != null)
@@ -499,5 +492,9 @@ public class PlayerAttack : CharacterCombat
         else return 1000;
     }
 
-  
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, enemyDetectionRange);
+    }
 }

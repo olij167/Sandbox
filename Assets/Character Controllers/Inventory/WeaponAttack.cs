@@ -12,20 +12,23 @@ public class WeaponAttack : MonoBehaviour
 
     private void OnEnable()
     {
-        playerController = FindObjectOfType<PlayerController>();
-        playerAttack = playerController.GetComponent<PlayerAttack>();
+        if (FindObjectOfType<PlayerController>())
+        {
+            playerController = FindObjectOfType<PlayerController>();
+            playerAttack = playerController.GetComponent<PlayerAttack>();
 
-        //hitParticles = GetComponentInChildren<ParticleSystem>();
+            //hitParticles = GetComponentInChildren<ParticleSystem>();
 
-        playerInventory = FindObjectOfType<PlayerInventory>();
-
+            playerInventory = FindObjectOfType<PlayerInventory>();
+        }
 
     }
 
 
     public void OnTriggerEnter(Collider other)
     {
-        if (playerInventory.selectedPhysicalItem == transform.parent.gameObject)
+
+        if (playerInventory!= null && playerInventory.selectedPhysicalItem == transform.parent.gameObject)
             isMainHand = true;
 
         if (other.gameObject.GetComponent<EnemyStats>() && playerController != null)
@@ -80,6 +83,6 @@ public class WeaponAttack : MonoBehaviour
                 }
             }
         }
-        else if (playerController == null) Debug.Log("No Player Controlller, Cannot find player attack");
+        //else if (playerController == null) Debug.Log("No Player Controller, Cannot find player attack");
     }
 }

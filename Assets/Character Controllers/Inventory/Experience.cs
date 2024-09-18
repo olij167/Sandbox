@@ -14,23 +14,25 @@ public class Experience : MonoBehaviour
 
     private void Awake()
     {
-        player = FindObjectOfType<PlayerStats>();
+        if (FindObjectOfType<PlayerStats>())
+            player = FindObjectOfType<PlayerStats>();
         //rb = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) <= attractionRadius)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attractionSpeed  * Time.deltaTime);
-            Debug.Log("Moving towards player");
-        }
+        if (player != null)
+            if (Vector3.Distance(transform.position, player.transform.position) <= attractionRadius)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attractionSpeed * Time.deltaTime);
+                Debug.Log("Moving towards player");
+            }
         //else if (acceleration > 0) acceleration = 0f;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == player.gameObject)
+        if ( player != null && other.gameObject == player.gameObject)
         {
             player.AddExperience(experienceValue);
 
