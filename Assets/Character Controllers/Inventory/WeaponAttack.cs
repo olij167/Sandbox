@@ -31,14 +31,14 @@ public class WeaponAttack : MonoBehaviour
         if (playerInventory!= null && playerInventory.selectedPhysicalItem == transform.parent.gameObject)
             isMainHand = true;
 
-        if (other.gameObject.GetComponent<EnemyStats>() && playerController != null)
+        if (other.gameObject.GetComponent<EntityStats>() && playerController != null)
         {
             Debug.Log("Weapon Trigger Entered");
             if (isMainHand)
             {
                 if (playerController.isUsingRight)
                 {
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue(), false);
+                    playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.attackDamage.GetValue(), false);
                     Debug.Log("Right Weapon Attack");
 
                     //if (!hitParticles.isPlaying)
@@ -51,7 +51,7 @@ public class WeaponAttack : MonoBehaviour
                 }
                 else
                 {
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue(), true);
+                    playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.passiveDamage.GetValue(), true);
                     //Stagger animation
                     Debug.Log("Right Passive Attack");
                     //if (!hitParticles.isPlaying)
@@ -63,7 +63,7 @@ public class WeaponAttack : MonoBehaviour
             {
                 if (playerController.isUsingLeft)
                 {
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.attackDamage.GetValue(), false);
+                    playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.attackDamage.GetValue(), false);
                     Debug.Log("Left Weapon Attack");
                     //if (!hitParticles.isPlaying)
                     //    hitParticles.Play();
@@ -76,7 +76,7 @@ public class WeaponAttack : MonoBehaviour
                 {
                     Debug.Log("Left Passive Attack");
 
-                    playerAttack.Attack(other.gameObject.GetComponent<EnemyStats>(), playerController.stats.passiveDamage.GetValue(), true);
+                    playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.passiveDamage.GetValue(), true);
 
                     //if (!hitParticles.isPlaying)
                     //    hitParticles.Play();

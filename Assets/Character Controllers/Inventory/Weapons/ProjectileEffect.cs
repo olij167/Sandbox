@@ -27,9 +27,9 @@ public class ProjectileEffect : MonoBehaviour
 
         if (doDamage)
         {
-            if (other.GetComponent<EnemyStats>())
+            if (other.GetComponent<EntityStats>())
             {
-                playerAttack.Attack(other.GetComponent<EnemyStats>(), damage, false);
+                playerAttack.Attack(other.GetComponent<EntityStats>(), damage, false);
                 Debug.Log(other.name + " hit with a projectile for " + damage + " damage");
             }
 
@@ -46,9 +46,9 @@ public class ProjectileEffect : MonoBehaviour
     {
         if (doDamage)
         {
-            if (other.transform.GetComponent<EnemyStats>())
+            if (other.transform.GetComponent<EntityStats>())
             {
-                playerAttack.Attack(other.transform.GetComponent<EnemyStats>(), damage, false);
+                playerAttack.Attack(other.transform.GetComponent<EntityStats>(), damage, false);
                 Debug.Log(other.transform.name + " hit with a projectile for " + damage + " damage");
             }
 

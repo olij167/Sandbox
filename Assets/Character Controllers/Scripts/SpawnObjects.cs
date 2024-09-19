@@ -10,7 +10,7 @@ public class SpawnObjects : MonoBehaviour
     public Transform parent;
     public List<GameObject> prefabs;
 
-    public bool randomSpawnPoint;
+    //public bool randomSpawnPoint;
 
     Vector3 spawnPos;
     public int spawnNumPerPrefab, totalSpawnNum;
@@ -38,12 +38,15 @@ public class SpawnObjects : MonoBehaviour
 
     public void Update()
     {
-        SpawnPrefabs(randomPrefabs, randomSpawnPoint);
+        if ((spawnConstant && spawnedObjects.Count < maxSpawnAmount) || (!spawnConstant && (randomPrefabs && spawnedObjects.Count < totalSpawnNum || !randomPrefabs && spawnedObjects.Count < spawnNumPerPrefab * prefabs.Count) ))
+        {
+            SpawnPrefabs(randomPrefabs, spawnInRadius);
+        }
 
         CheckIfDestroyed();
     }
 
-    public void SpawnPrefabs(bool randomPrefabs, bool randomPos)
+    public void SpawnPrefabs(bool randomPrefabs, bool inRadius)
     {
         if (!randomPrefabs)
         {
@@ -53,16 +56,16 @@ public class SpawnObjects : MonoBehaviour
                 {
                     if (fluctuateSpawnRate)
                     {
-                        SpawnSporatic(prefabs[i], parent, spawnRate, randomPos);
+                        SpawnSporatic(prefabs[i], parent, spawnRate, inRadius);
                     }
                     else
                     {
-                        SpawnConsistent(prefabs[i], parent, spawnRate, randomPos);
+                        SpawnConsistent(prefabs[i], parent, spawnRate, inRadius);
                     }
                 }
                 else
                 {
-                    SpawnGameObjectsAtRandomPos(prefabs[i], spawnNumPerPrefab);
+                    SpawnConsistent(prefabs[i], parent, 0, inRadius);
                 }
 
             }
@@ -77,16 +80,16 @@ public class SpawnObjects : MonoBehaviour
                 {
                     if (fluctuateSpawnRate)
                     {
-                        SpawnSporatic(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, randomPos);
+                        SpawnSporatic(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, inRadius);
                     }
                     else
                     {
-                        SpawnConsistent(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, randomPos);
+                        SpawnConsistent(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, inRadius);
                     }
                 }
                 else
                 {
-                    SpawnGameObjectsAtRandomPos(prefabs[i], spawnNumPerPrefab);
+                    SpawnConsistent(prefabs[Random.Range(0, prefabs.Count)], parent, 0, inRadius);
                 }
 
             }
@@ -106,30 +109,28 @@ public class SpawnObjects : MonoBehaviour
         }
     }
 
-    public void SpawnConsistent(GameObject prefab, Transform parent, float spawnRate, bool randomSpawnPos)
+    public void SpawnConsistent(GameObject prefab, Transform parent, float spawnRate, bool inRadius)
     {
         timer -= Time.deltaTime;
-        if (spawnedObjects.Count < maxSpawnAmount)
-        {
-            if (timer <= 0f)
-            {
-                if (spawnInRadius)
-                    GenerateRandomPointWithinRadius();
-                else spawnArea = spawnPoint.position;
 
-                if (!randomSpawnPos)
-                {
-                    GameObject newObject = Instantiate(prefab, spawnArea, Quaternion.identity);
-                    newObject.transform.parent = parent;
-                    spawnedObjects.Add(newObject);
-                }
-                else
-                {
-                    SpawnSpecificObjectAtRandomPos(prefab, parent);
-                }
-                timer = spawnRate;
+        if (timer <= 0f)
+        {
+
+            if (inRadius)
+            {
+                spawnArea = GenerateRandomPointWithinRadius();
+                GameObject newObject = Instantiate(prefab, spawnArea, Quaternion.identity);
+                newObject.transform.parent = parent;
+                spawnedObjects.Add(newObject);
             }
+            else
+            {
+                spawnArea = spawnPoint.position;
+                SpawnSpecificObjectAtRandomPos(prefab, parent);
+            }
+            timer = spawnRate;
         }
+        
         //else
         //{
         //    //Debug.Log("Max Objects Reached");
@@ -138,35 +139,27 @@ public class SpawnObjects : MonoBehaviour
 
     }
 
-    public void SpawnSporatic(GameObject prefab, Transform parent, float spawnRate, bool randomSpawnPos)
+    public void SpawnSporatic(GameObject prefab, Transform parent, float spawnRate, bool inRadius)
     {
         timer -= Time.deltaTime;
-        if (spawnedObjects.Count < maxSpawnAmount)
+
+        if (timer <= 0f)
         {
-            if (timer <= 0f)
+
+            if (inRadius)
             {
-                if (spawnInRadius)
-                    GenerateRandomPointWithinRadius();
-                else spawnArea = spawnPoint.position;
+                spawnArea = GenerateRandomPointWithinRadius();
+                GameObject newObject = Instantiate(prefab, spawnArea, Quaternion.identity);
+                newObject.transform.parent = parent;
+                spawnedObjects.Add(newObject);
 
-                if (!randomSpawnPos)
-                {
-                    GameObject newObject = Instantiate(prefab, spawnArea, Quaternion.identity);
-                    newObject.transform.parent = parent;
-                    spawnedObjects.Add(newObject);
-
-                }
-                else
-                {
-                    SpawnSpecificObjectAtRandomPos(prefab, parent);
-                }
-                timer = Random.Range(spawnRate - fluctuationRange, spawnRate + fluctuationRange);
             }
-        }
-        else
-        {
-            //Debug.Log("Max Objects Reached");
-            //return null;
+            else
+            {
+                spawnArea = spawnPoint.position;
+                SpawnSpecificObjectAtRandomPos(prefab, parent);
+            }
+            timer = Random.Range(spawnRate - fluctuationRange, spawnRate + fluctuationRange);
         }
 
     }
@@ -192,29 +185,22 @@ public class SpawnObjects : MonoBehaviour
 
     public GameObject SpawnSpecificObjectAtRandomPos(GameObject prefab, Transform parent)
     {
-        if (spawnedObjects.Count < maxSpawnAmount)
-        {
-            spawnPos = GenerateRandomWayPoint();
-            //spawnPos = GetRandomPointOnGraph();
-            GameObject newObject = Instantiate(prefab, spawnPos, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)));
-            newObject.transform.parent = parent;
-            spawnedObjects.Add(newObject);
+
+        spawnPos = GenerateRandomWayPoint();
+        //spawnPos = GetRandomPointOnGraph();
+        GameObject newObject = Instantiate(prefab, spawnPos, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)));
+        newObject.transform.parent = parent;
+        spawnedObjects.Add(newObject);
 
 
-            return newObject;
-        }
-        else
-        {
-            Debug.Log("Max Objects Reached");
-            return null;
-        }
+        return newObject;
+
     }
 
     public void SpawnGameObjectsAtRandomPos(GameObject prefab, int numToSpawn)
     {
-        if (spawnedObjects.Count < maxSpawnAmount)
-        {
-            for (int i = 0; i < numToSpawn; i++)
+
+        for (int i = 0; i < numToSpawn; i++)
         {
             spawnPos = GenerateRandomWayPoint();
             //spawnPos = GetRandomPointOnGraph();
@@ -223,12 +209,7 @@ public class SpawnObjects : MonoBehaviour
             spawnedObjects.Add(newObject);
 
         }
-        }
-        else
-        {
-            Debug.Log("Max Objects Reached");
-            //return null;
-        }
+
     }
 
     public Vector3 GenerateRandomPointWithinRadius()
@@ -264,6 +245,8 @@ public class SpawnObjects : MonoBehaviour
             // select a random point on it
             point = Vector3.Lerp(firstVertexPosition, secondVertexPosition, UnityEngine.Random.Range(0.05f, 0.95f));
         }
+
+        point = SetDistanceFromGround();
 
         return point;
     }

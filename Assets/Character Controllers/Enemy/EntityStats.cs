@@ -2,22 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStats : CharacterStats
+public class EntityStats : CharacterStats
 {
-    public string enemyName;
+    public string entityName;
 
     Animator animator;
     bool deathAnimationComplete;
 
     public GameObject experienceItem;
 
+    public bool isDead;
+
     private void Awake()
     {
-        animator = GetComponent<EnemyController>().animator;
+        animator = GetComponent<EntityController>().animator;
     }
     public override void Die()
     {
         base.Die();
+
+        isDead = true;
 
         // death animation
         if (FindObjectOfType<PlayerAttack>())
@@ -26,9 +30,6 @@ public class EnemyStats : CharacterStats
         GetComponent<Collider>().enabled = false;
         StartCoroutine(DeathAnimationDelay());
 
-
-        //PlayerManager.instance.attackArea.enemiesInRange.Remove(gameObject.GetComponent<Enemy>());
-       
         //spawn loot
     }
 

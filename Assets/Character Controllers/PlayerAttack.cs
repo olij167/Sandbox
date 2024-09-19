@@ -439,7 +439,7 @@ public class PlayerAttack : CharacterCombat
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, enemyDetectionRange);
         foreach (Collider collider in hitColliders)
         {
-            if (collider.GetComponent<EnemyStats>() && !enemiesInRange.Contains(collider.gameObject))
+            if (collider.GetComponent<EntityStats>() && !enemiesInRange.Contains(collider.gameObject))
             {
                 enemiesInRange.Add(collider.gameObject);
                 lookTargets.AddMember(collider.transform, 0, collider.GetComponent<CapsuleCollider>().radius);

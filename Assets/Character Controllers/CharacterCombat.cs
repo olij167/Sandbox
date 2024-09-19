@@ -92,11 +92,11 @@ public class CharacterCombat : MonoBehaviour
 
             //Rigidbody targetRB = targetRB.GetComponent<Rigidbody>();
 
-            if (targetRB.GetComponent<EnemyController>())
+            if (targetRB.GetComponent<EntityController>())
             {
-                EnemyController enemy = targetRB.GetComponent<EnemyController>();
+                EntityController enemy = targetRB.GetComponent<EntityController>();
 
-                enemy.pauseTarget = true;
+                enemy.isPaused = true;
 
                 enemy.animator.SetBool("takeDamage", true);
 
@@ -116,14 +116,14 @@ public class CharacterCombat : MonoBehaviour
 
             yield return new WaitForSeconds(delay);
 
-            if (targetRB != null && targetRB.GetComponent<EnemyController>())
+            if (targetRB != null && targetRB.GetComponent<EntityController>())
             {
-                EnemyController enemy = targetRB.GetComponent<EnemyController>();
+                EntityController enemy = targetRB.GetComponent<EntityController>();
                 if (enemy != null)
                 {
                     enemy.animator.SetBool("takeDamage", false);
 
-                    enemy.pauseTarget = false;
+                    enemy.isPaused = false;
                     targetRB.isKinematic = true;
                 }
             }

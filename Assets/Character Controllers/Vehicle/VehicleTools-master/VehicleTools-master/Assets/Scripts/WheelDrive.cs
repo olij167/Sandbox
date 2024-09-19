@@ -192,9 +192,9 @@ public class WheelDrive : Interactable
 
 	public void OnCollisionEnter(Collision other)
 	{
-		if (other.gameObject.GetComponent<EnemyStats>())
+		if (other.gameObject.GetComponent<EntityStats>())
 		{
-			playerController.GetComponent<PlayerAttack>().Attack(other.gameObject.GetComponent<EnemyStats>(), GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass, false);
+			playerController.GetComponent<PlayerAttack>().Attack(other.gameObject.GetComponent<EntityStats>(), GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass, false);
 		}
 
 		if (other.transform.GetComponent<Terrain>() && !beingDriven)

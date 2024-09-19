@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class EntityController : MonoBehaviour
 {
-    public int enemyID;
+    public int entityID;
 
     public enum Gender { male, female }
     public Gender gender;
     public float age;
+    public float agingSpeed;
     public Vector2 birthSizeRange;
     public float ageOfMaturity;
     public Vector2 maturitySizeRange;
     public float reproductionTime;
+    public bool canReproduce;
+    public GameObject childPrefab;
+
+    public EntityController mother;
+     public EntityController father;
+     public List<EntityController> children;
+     public List<EntityController> siblings;
 
     [field: ReadOnlyField, SerializeField] private float rMin, rMax;
     [field: ReadOnlyField, SerializeField] private Vector3 minSize, maxSize;
@@ -23,15 +31,23 @@ public class EnemyController : MonoBehaviour
     public float lookDistance = 10f;
     public Animator animator;
 
+    public Transform wanderTarget;
+    public float wanderShiftSpeed = 5f;
+    private float wanderShift;
+    //public float wanderShiftDistance = 5f;
+
+    public bool followBehind;
+
     public PointOfInterest target;
     NavMeshAgent agent;
     //CharacterCombat combat;
     Rigidbody rb;
 
-    public bool pauseTarget;
+    public bool isPaused;
 
     public LayerMask ignoreLayers;
 
+    public List<Food> foodList;
     public List<PointOfInterest> pointsOfInterest;
 
     public List<PointOfInterest> detectedObjects;
@@ -41,12 +57,28 @@ public class EnemyController : MonoBehaviour
     {
         public Transform interestingObject;
         public float priority;
+        public bool shouldAvoid;
     }
 
-    private void Start()
+    [System.Serializable]
+    public class Food
+    {
+        public Transform foodObject;
+        public float healthRecovery;
+    }
+
+
+    private void Awake()
     {
         //if (PlayerManager.instance != null)
         //    target = PlayerManager.instance.player.transform;
+
+        age = 0f;
+
+        wanderShift = wanderShiftSpeed;
+        wanderShiftSpeed = Random.Range(wanderShift / 2, wanderShift);
+
+        children = new List<EntityController>();
 
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
@@ -67,13 +99,16 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
 
-        age += Time.deltaTime;
+        age += agingSpeed * Time.deltaTime;
 
-        if (age <= ageOfMaturity)
+        if (age < ageOfMaturity)
         {
-            
+            canReproduce = false;
+
             transform.localScale = Vector3.Lerp(minSize, maxSize, age / ageOfMaturity);
         }
+        else if (age > ageOfMaturity && age < ageOfMaturity + 1) canReproduce = true;
+        else followBehind = false;
 
         if (animator.GetBool("takeDamage"))
         {
@@ -102,7 +137,29 @@ public class EnemyController : MonoBehaviour
         CheckHighestPriority();
 
         if (detectedObjects != null && detectedObjects.Count > 0)
-            target = detectedObjects[0];
+        {
+            if (detectedObjects[0].interestingObject.GetComponent<EntityController>() && detectedObjects[0].interestingObject.GetComponent<EntityController>().entityID == entityID)
+            {
+                if (age < ageOfMaturity && detectedObjects[0].interestingObject.GetComponent<EntityController>().age > age)
+                {
+                    //follow for protection
+                    followBehind = true;
+                    target = detectedObjects[0];
+
+                }
+                else if (canReproduce && detectedObjects[0].interestingObject.GetComponent<EntityController>().canReproduce && detectedObjects[0].interestingObject.GetComponent<EntityController>().gender != gender)
+                {
+                    //pursue for reproduction;
+                    target = detectedObjects[0];
+                }
+                else target = null;
+            }
+            else if ((detectedObjects[0].interestingObject.GetComponent<EntityController>() && detectedObjects[0].interestingObject.GetComponent<EntityController>().entityID != entityID) || !detectedObjects[0].interestingObject.GetComponent<EntityController>())
+            {
+                followBehind = false;
+                target = detectedObjects[0];
+            }
+        }
         else target = null;
 
         if (target != null && target.interestingObject != null)
@@ -111,14 +168,37 @@ public class EnemyController : MonoBehaviour
 
             if (distance <= lookDistance)
             {
-                if (!pauseTarget)
+                if (!isPaused)
                 {
                     agent.isStopped = false;
-                    agent.SetDestination(target.interestingObject.position);
+
+                    if (!target.shouldAvoid)
+                    {
+                        agent.SetDestination(target.interestingObject.position);
+                        FaceTarget(target.interestingObject.position);
+
+                    }
+                    else
+                    {
+                        if (followBehind)
+                        {
+                            Vector3 behindPos = new Vector3(target.interestingObject.position.x, target.interestingObject.position.y, target.interestingObject.position.z - target.interestingObject.localScale.magnitude * 2);
+                            agent.SetDestination(transform.position + (transform.position - behindPos) / (transform.position - behindPos).magnitude);
+
+                        }
+                        else
+                        {
+                            agent.SetDestination(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
+
+                        }
+                        //Debug.Log(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
+
+                        FaceTarget(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
+                        //agent.SetDestination(-target.interestingObject.position);
+                    }
                 }
                 else agent.isStopped = true;
 
-                FaceTarget();
 
                 //if (distance <= agent.stoppingDistance)
                 //{
@@ -131,6 +211,23 @@ public class EnemyController : MonoBehaviour
                 //}
             }
         }
+        else if (!isPaused)
+        {
+            //Wander
+            agent.isStopped = false;
+
+            //agent.SetDestination(transform.position + (wanderTarget.position - transform.position) / (wanderTarget.position - transform.position).magnitude);
+            agent.SetDestination(wanderTarget.position);
+            //FaceTarget(wanderTarget.position);
+
+        }
+        else
+            agent.isStopped = true;
+
+        
+        wanderTarget.transform.RotateAround(wanderTarget.parent.position, Vector3.up, wanderShiftSpeed * Time.deltaTime);
+        //wanderTarget.transform.position = new Vector3(wanderTarget.parent.position.x + Mathf.PingPong(wanderShiftSpeed * Time.deltaTime, wanderShiftDistance), wanderTarget.parent.position.y, wanderTarget.parent.position.z + Mathf.PingPong(wanderShiftSpeed * Time.deltaTime, wanderShiftDistance));
+
 
         if (rb.velocity.magnitude > 1f)
         {
@@ -171,19 +268,21 @@ public class EnemyController : MonoBehaviour
                 {
                     Debug.DrawRay(pos, dir * lookDistance, Color.red);
 
-                    PointOfInterest obj = new PointOfInterest();
+                    PointOfInterest pOI = new PointOfInterest();
 
-                    obj.interestingObject = hit.transform.root;
+                    pOI.interestingObject = hit.transform.root;
 
                     //Debug.Log("Hit: " + obj.interestingObject.name);
 
                     for (int p = 0; p < pointsOfInterest.Count; p++)
                     {
-                        if (obj.interestingObject.name.Contains(pointsOfInterest[p].interestingObject.name))
+                        if (pOI.interestingObject.name.Contains(pointsOfInterest[p].interestingObject.name))
                         {
-                            obj.priority = pointsOfInterest[p].priority;
+                            pOI.priority = pointsOfInterest[p].priority;
 
-                            obj.priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(obj.interestingObject.position, transform.position) / lookDistance);
+                            pOI.priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(pOI.interestingObject.position, transform.position) / lookDistance);
+
+                            pOI.shouldAvoid = pointsOfInterest[p].shouldAvoid;
                             break;
                         }
                         else if (p + 1 >= pointsOfInterest.Count)
@@ -196,12 +295,12 @@ public class EnemyController : MonoBehaviour
                     bool isInList = false;
                     foreach (PointOfInterest o in detectedObjects)
                     {
-                        if (o.interestingObject == obj.interestingObject) isInList = true;
+                        if (o.interestingObject == pOI.interestingObject) isInList = true;
                     }
 
                     if (!isInList)
                     {
-                        detectedObjects.Add(obj);
+                        detectedObjects.Add(pOI);
 
                     }
                 }
@@ -239,19 +338,21 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    
 
- 
-    private void FaceTarget()
+
+
+    private void FaceTarget(Vector3 targetPos)
     {
         //Vector3 direction = (target.position - transform.position).normalized;
         //Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.y));
         //transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f) ;
 
-                Vector3 targetPostition = new Vector3(target.interestingObject.position.x,
-                                       transform.position.y,
-                                       target.interestingObject.position.z);
+        Vector3 targetPostition = new Vector3(targetPos.x,
+                      transform.position.y,
+                      targetPos.z);
+
         transform.LookAt(targetPostition);
+
     }
 
     int CompareObjectPriority(PointOfInterest a, PointOfInterest b)
@@ -276,31 +377,6 @@ public class EnemyController : MonoBehaviour
 
         detectedObjects.Sort(CompareObjectPriority);
     }
-
-    //public void CheckClosestEnemy()
-    //{
-    //    //detectedObjects.Sort(CompareDistanceToMe);
-
-
-    //    //thirdPersonCam.aimCamPos = thirdPersonCam.aimTarget.position;
-
-    //}
-
-    //int CompareDistanceToMe(GameObject a, GameObject b)
-    //{
-    //    if (a != null && b != null)
-    //    {
-    //        float squaredRangeA = (a.transform.position - transform.position).sqrMagnitude;
-    //        float squaredRangeB = (b.transform.position - transform.position).sqrMagnitude;
-    //        return squaredRangeA.CompareTo(squaredRangeB);
-    //    }
-    //    else return 1000;
-    //}
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(eyes.position, lookDistance);
-    //}
 
    
 }
