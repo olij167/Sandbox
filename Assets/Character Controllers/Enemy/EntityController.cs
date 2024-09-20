@@ -45,6 +45,9 @@ public class EntityController : MonoBehaviour
 
     public bool isPaused;
 
+    public bool isEating;
+    public float eatingTimer;
+
     public LayerMask ignoreLayers;
 
     public List<Food> foodList;
@@ -65,6 +68,7 @@ public class EntityController : MonoBehaviour
     {
         public Transform foodObject;
         public float healthRecovery;
+        public float eatingTime;
     }
 
 
@@ -224,7 +228,7 @@ public class EntityController : MonoBehaviour
         else
             agent.isStopped = true;
 
-        
+
         wanderTarget.transform.RotateAround(wanderTarget.parent.position, Vector3.up, wanderShiftSpeed * Time.deltaTime);
         //wanderTarget.transform.position = new Vector3(wanderTarget.parent.position.x + Mathf.PingPong(wanderShiftSpeed * Time.deltaTime, wanderShiftDistance), wanderTarget.parent.position.y, wanderTarget.parent.position.z + Mathf.PingPong(wanderShiftSpeed * Time.deltaTime, wanderShiftDistance));
 
@@ -235,6 +239,11 @@ public class EntityController : MonoBehaviour
         }
         else
             animator.SetBool("isWalking", false);
+
+        //if (isEating && eatingTimer > 0)
+        //{
+        //    eatingTimer -= Time.deltaTime;
+        //}
 
         //else agent.isStopped = true;
     }

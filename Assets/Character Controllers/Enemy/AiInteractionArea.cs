@@ -7,65 +7,115 @@ public class AiInteractionArea : MonoBehaviour
 
     private EntityController entityController;
 
+    public List<GameObject> objectsInTrigger;
+
     private void Awake()
     {
         entityController = transform.parent.root.GetComponent<EntityController>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (entityController.target != null && entityController.target.interestingObject == other.transform)
+        if (objectsInTrigger != null && objectsInTrigger.Count > 0)
         {
-            if (other.GetComponent<EntityController>() && other.GetComponent<EntityController>().entityID == entityController.entityID)
+            foreach(GameObject obj in objectsInTrigger)
+            //for (int oIT = 0; oIT < objectsInTrigger.Count; oIT++)
             {
-                EntityController entity = other.GetComponent<EntityController>();
-
-                if (entityController.gender == EntityController.Gender.female && entity.gender == EntityController.Gender.male)
+                if (obj == null)
                 {
-                    if (entityController.canReproduce && entity.canReproduce 
-                        && entity.mother != entityController && entityController.father != entity
-                        && !entityController.children.Contains(entity) && !entityController.siblings.Contains(entity)
-                        && !entity.children.Contains(entityController) && !entity.siblings.Contains(entityController)) // Prevent pedophilia and incest 
-                    {
-                        entityController.canReproduce = false;
-                        StartCoroutine(Reproduce(entityController.reproductionTime, entityController, entity));
-                    }
+                    objectsInTrigger.Remove(obj);
+                    break;
                 }
 
-            }
-            else
-            if (other.gameObject.GetComponent<PlayerController>() || (other.GetComponent<EntityController>() && other.GetComponent<EntityController>().entityID != entityController.entityID))
-            {
-                for (int i = 0; i < entityController.foodList.Count; i++)
+
+                if (entityController.target != null && entityController.target.interestingObject == obj.transform)
                 {
-                    if (entityController.foodList[i].foodObject == other.gameObject)
+                    if (obj.GetComponent<EntityController>() && obj.GetComponent<EntityController>().entityID == entityController.entityID)
                     {
-                        //if the other npc dies, eat it
-                        if (other.GetComponent<EntityStats>() && other.GetComponent<EntityStats>().isDead)
+                        EntityController entity = obj.GetComponent<EntityController>();
+
+                        if (entityController.gender == EntityController.Gender.female && entity.gender == EntityController.Gender.male)
                         {
-                            GetComponent<EntityStats>().IncreaseHealth(entityController.foodList[i].healthRecovery);
-                            Debug.Log(gameObject.name + " has eaten " + other.name + " for " + entityController.foodList[i].healthRecovery + " health recovery");
+                            if (entityController.canReproduce && entity.canReproduce
+                                && entity.mother != entityController && entityController.father != entity
+                                && !entityController.children.Contains(entity) && !entityController.siblings.Contains(entity)
+                                && !entity.children.Contains(entityController) && !entity.siblings.Contains(entityController)) // Prevent pedophilia and incest 
+                            {
+                                entityController.canReproduce = false;
+                                StartCoroutine(Reproduce(entityController.reproductionTime, entityController, entity));
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (obj.gameObject.GetComponent<PlayerController>() || (obj.GetComponent<EntityController>() && obj.GetComponent<EntityController>().entityID != entityController.entityID))
+                        {
+                            entityController.animator.SetBool("isAttacking", true);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < entityController.foodList.Count; i++)
+                            {
+                                if (obj.name.Contains(entityController.foodList[i].foodObject.name))
+                                {
+                                    if (obj.GetComponent<EntityStats>())
+                                    {
+                                        if (obj.GetComponent<EntityStats>().isDead)
+                                        {
+                                            GetComponent<EntityStats>().IncreaseHealth(entityController.foodList[i].healthRecovery);
+                                            Debug.Log(gameObject.name + " has eaten " + obj.name + " for " + entityController.foodList[i].healthRecovery + " health recovery");
+                                            objectsInTrigger.Remove(obj);
+                                        }
+                                    }
+                                    else if (!entityController.isEating)
+                                    {
+                                        //consume non-living object
+
+                                        StartCoroutine(EatInanimateFood(entityController.foodList[i].eatingTime, obj, i));
+                                        entityController.isEating = true;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                entityController.animator.SetBool("isAttacking", true);
             }
-            //else
-            //{
-            //    for (int i = 0; i < entityController.foodList.Count; i++)
-            //    {
-            //        if (entityController.foodList[i].foodObject == other.gameObject)
-            //        {
-            //            //consume non-living object
-            //        }
-            //    }
-            //}
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (objectsInTrigger == null) objectsInTrigger = new List<GameObject>();
+
+        for (int i = 0; i < entityController.pointsOfInterest.Count; i++)
+        {
+            if (other.name.Contains(entityController.pointsOfInterest[i].interestingObject.name))
+                if (!objectsInTrigger.Contains(other.gameObject))
+                    objectsInTrigger.Add(other.gameObject);
+        }
+    }
+
+    public IEnumerator EatInanimateFood(float eatingTime, GameObject food, int foodListIndex)
+    {
+        Debug.Log(gameObject.name + " has begun eating " + food.name );
+
+        yield return new WaitForSeconds(eatingTime);
+
+        GetComponent<EntityStats>().IncreaseHealth(entityController.foodList[foodListIndex].healthRecovery);
+        Debug.Log(gameObject.name + " has eaten " + food.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
+        
+        objectsInTrigger.Remove(food);
+
+        Destroy(food);
+        entityController.isEating = false;
     }
 
     public IEnumerator Reproduce(float incubationTime, EntityController mother, EntityController father)
     {
         Debug.Log("Incubation Begun");
+        mother.canReproduce = false;
 
         yield return new WaitForSeconds(incubationTime);
 
@@ -122,5 +172,8 @@ public class AiInteractionArea : MonoBehaviour
                 entityController.animator.SetBool("isAttacking", false);
             }
         }
+
+        if (objectsInTrigger.Contains(other.gameObject))
+            objectsInTrigger.Remove(other.gameObject);
     }
 }

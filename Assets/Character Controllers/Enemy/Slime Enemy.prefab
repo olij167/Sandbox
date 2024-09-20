@@ -731,8 +731,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 2
-  m_Acceleration: 20
+  m_Speed: 1.5
+  m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0.9
@@ -782,14 +782,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4362f9e0a3103c448b0087839596b17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityID: 0
+  entityID: 1
   gender: 0
   age: 0
   agingSpeed: 1
   birthSizeRange: {x: 0.2, y: 0.4}
-  ageOfMaturity: 5
+  ageOfMaturity: 30
   maturitySizeRange: {x: 0.8, y: 2}
-  reproductionTime: 2
+  reproductionTime: 15
   canReproduce: 0
   childPrefab: {fileID: 2172824284947859693}
   mother: {fileID: 0}
@@ -811,15 +811,25 @@ MonoBehaviour:
     priority: 0
     shouldAvoid: 0
   isPaused: 0
+  isEating: 0
+  eatingTimer: 0
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 1142
-  foodList: []
+  foodList:
+  - foodObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
+      type: 3}
+    healthRecovery: 10
+    eatingTime: 2
   pointsOfInterest:
   - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
       type: 3}
     priority: 1
     shouldAvoid: 1
+  - interestingObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
+      type: 3}
+    priority: 1.5
+    shouldAvoid: 0
   - interestingObject: {fileID: 4912476555309126663, guid: 156263a8b65c51a469351b062ff7e4a9,
       type: 3}
     priority: 2
@@ -1035,6 +1045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d6f54401ca9d442bf7909cf3d959a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectsInTrigger: []
 --- !u!65 &2320686574809571306
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -361,9 +361,9 @@ MonoBehaviour:
   age: 0
   agingSpeed: 1
   birthSizeRange: {x: 0.2, y: 0.4}
-  ageOfMaturity: 30
+  ageOfMaturity: 60
   maturitySizeRange: {x: 0.8, y: 2}
-  reproductionTime: 10
+  reproductionTime: 30
   canReproduce: 0
   childPrefab: {fileID: 4912476555309126658}
   mother: {fileID: 0}
