@@ -26,11 +26,11 @@ public class FoodItem : ItemAction
         
         if (staminaEffect > 0)
         {
-            player.stats.IncreaseStamina(staminaEffect);
+            player.stats.stamina = player.stats.IncreaseStatInstant(player.stats.stamina, player.stats.maxStamina.GetValue(), staminaEffect);
         }
         else if (staminaEffect < 0)
         {
-            player.stats.DecreaseStamina(staminaEffect);
+            player.stats.stamina = player.stats.IncreaseStatInstant(player.stats.stamina, player.stats.maxStamina.GetValue(), staminaEffect);
         }
     }
 }

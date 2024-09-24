@@ -48,7 +48,7 @@ public class CharacterCombat : MonoBehaviour
             attackCooldown = 1f / myStats.attackSpeed.GetValue();
 
             if (targetStats.GetComponent<Rigidbody>())
-                StartCoroutine(DamageEffects(targetStats.GetComponent<Rigidbody>(), targetStats.GetComponent<CharacterCombat>().knockbackDelay, isPassive));
+                StartCoroutine(DamageEffects(targetStats.gameObject, targetStats.GetComponent<CharacterCombat>().knockbackDelay, isPassive));
 
 
             else if (targetStats.GetComponent<PlayerController>())
@@ -68,7 +68,7 @@ public class CharacterCombat : MonoBehaviour
 
             //Debug.Log(gameObject.name + " attack cooldown = " + attackCooldown);
         }
-        else Debug.Log("Cooldown still running");
+        //else Debug.Log("Cooldown still running");
     }
 
     IEnumerator DoDamage(CharacterStats stats, float delay, float damage)
@@ -82,66 +82,52 @@ public class CharacterCombat : MonoBehaviour
 
     }
 
-    public IEnumerator DamageEffects(Rigidbody targetRB, float delay, bool isPassive)
+    public IEnumerator DamageEffects(GameObject target, float delay, bool isPassive)
     {
-        Vector3 head = targetRB.transform.position - transform.position;
-        Vector3 dir = head / head.magnitude;
 
-        if (targetRB.GetComponent<Rigidbody>())
+        while (target != null)
         {
+            Vector3 head = target.transform.position - transform.position;
+            Vector3 dir = head / head.magnitude;
 
-            //Rigidbody targetRB = targetRB.GetComponent<Rigidbody>();
-
-            if (targetRB.GetComponent<EntityController>())
+            if (target.GetComponent<Rigidbody>())
             {
-                EntityController enemy = targetRB.GetComponent<EntityController>();
+                Rigidbody targetRB = target.GetComponent<Rigidbody>();
+                //Rigidbody targetRB = targetRB.GetComponent<Rigidbody>();
 
-                enemy.isPaused = true;
-
-                enemy.animator.SetBool("takeDamage", true);
-
-                targetRB.isKinematic = false;
-            }
-
-            if (!isPassive)
-            {
-                targetRB.AddForce(dir * myStats.knockBack.GetValue(), ForceMode.Impulse);
-                Debug.Log("Applying " + myStats.knockBack.GetValue() + " Attack Knockback to " + targetRB.gameObject.name);
-            }
-            else
-            {
-                targetRB.AddForce(dir * myStats.knockBack.GetValue() / 2f, ForceMode.Impulse);
-                Debug.Log("Applying " + myStats.knockBack.GetValue() / 2f + " Passive Knockback to " + targetRB.gameObject.name);
-            }
-
-            yield return new WaitForSeconds(delay);
-
-            if (targetRB != null && targetRB.GetComponent<EntityController>())
-            {
-                EntityController enemy = targetRB.GetComponent<EntityController>();
-                if (enemy != null)
+                if (targetRB.GetComponent<EntityController>())
                 {
-                    enemy.animator.SetBool("takeDamage", false);
+                    EntityController enemy = targetRB.GetComponent<EntityController>();
 
-                    enemy.isPaused = false;
-                    targetRB.isKinematic = true;
+                    enemy.isPaused = true;
+
+                    enemy.animator.SetBool("takeDamage", true);
+
+                    targetRB.isKinematic = false;
+
+                    
+
                 }
+
+                if (!isPassive)
+                {
+                    targetRB.AddForce(dir * myStats.knockBack.GetValue(), ForceMode.Impulse);
+                    //Debug.Log("Applying " + myStats.knockBack.GetValue() + " Attack Knockback to " + targetRB.gameObject.name);
+                }
+                else
+                {
+                    targetRB.AddForce(dir * myStats.knockBack.GetValue() / 2f, ForceMode.Impulse);
+                    //Debug.Log("Applying " + myStats.knockBack.GetValue() / 2f + " Passive Knockback to " + targetRB.gameObject.name);
+                }
+                //yield return null;
+
+                yield return new WaitForSeconds(delay);
+
+
             }
-
         }
-        //else if (targetStats.GetComponent<CharacterController>())
-        //{
-        //    PlayerController playerController = targetStats.GetComponent<PlayerController>();
-
-        //    playerController.animator.SetInteger("DamageIndex", Random.Range(0, playerController.maxDamageAnimationIndex));
-        //    playerController.animator.SetBool("TakeDamage", true);
-
-        //    yield return new WaitForSeconds(delay);
-
-        //    playerController.animator.SetBool("TakeDamage", false);
 
 
-        //}
 
 
     }

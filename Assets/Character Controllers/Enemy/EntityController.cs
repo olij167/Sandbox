@@ -5,8 +5,11 @@ using UnityEngine.AI;
 
 public class EntityController : MonoBehaviour
 {
+    [Header("Entity Info")]
+
     public int entityID;
 
+    [HideInInspector] public EntityStats stats;
     public enum Gender { male, female }
     public Gender gender;
     public float age;
@@ -18,14 +21,7 @@ public class EntityController : MonoBehaviour
     public bool canReproduce;
     public GameObject childPrefab;
 
-    public EntityController mother;
-     public EntityController father;
-     public List<EntityController> children;
-     public List<EntityController> siblings;
-
-    [field: ReadOnlyField, SerializeField] private float rMin, rMax;
-    [field: ReadOnlyField, SerializeField] private Vector3 minSize, maxSize;
-
+    [Header("Detection")]
     public Transform eyes;
    // public float lookRadius = 10f;
     public float lookDistance = 10f;
@@ -34,9 +30,13 @@ public class EntityController : MonoBehaviour
     public Transform wanderTarget;
     public float wanderShiftSpeed = 5f;
     private float wanderShift;
+
     //public float wanderShiftDistance = 5f;
 
     public bool followBehind;
+    public float followDistance = 6f;
+
+    public Focus currentFocus;
 
     public PointOfInterest target;
     NavMeshAgent agent;
@@ -44,16 +44,29 @@ public class EntityController : MonoBehaviour
     Rigidbody rb;
 
     public bool isPaused;
+    public bool isAsleep;
 
     public bool isEating;
     public float eatingTimer;
 
+      public bool isDrinking;
+      public bool isMating;
+
     public LayerMask ignoreLayers;
+    public List<PointOfInterest> detectedObjects;
 
     public List<Food> foodList;
     public List<PointOfInterest> pointsOfInterest;
 
-    public List<PointOfInterest> detectedObjects;
+
+    [Header("Family")]
+    public EntityController mother;
+    public EntityController father;
+    public List<EntityController> children;
+    public List<EntityController> siblings;
+
+    [field: ReadOnlyField, SerializeField] private float rMin, rMax;
+    [field: ReadOnlyField, SerializeField] private Vector3 minSize, maxSize;
 
     [System.Serializable]
     public class PointOfInterest
@@ -61,7 +74,14 @@ public class EntityController : MonoBehaviour
         public Transform interestingObject;
         public float priority;
         public bool shouldAvoid;
+        public Focus focusType;
     }
+
+    public enum Focus
+    {
+        Food, Water, Companion, Sleep, Avoid
+    }
+
 
     [System.Serializable]
     public class Food
@@ -76,6 +96,7 @@ public class EntityController : MonoBehaviour
     {
         //if (PlayerManager.instance != null)
         //    target = PlayerManager.instance.player.transform;
+        stats = GetComponent<EntityStats>();
 
         age = 0f;
 
@@ -103,7 +124,12 @@ public class EntityController : MonoBehaviour
     private void Update()
     {
 
-        age += agingSpeed * Time.deltaTime;
+        ManageStats();
+        InterpretStats();
+
+        if (stats.isDead) StopAllCoroutines();
+
+            age += agingSpeed * Time.deltaTime;
 
         if (age < ageOfMaturity)
         {
@@ -111,7 +137,12 @@ public class EntityController : MonoBehaviour
 
             transform.localScale = Vector3.Lerp(minSize, maxSize, age / ageOfMaturity);
         }
-        else if (age > ageOfMaturity && age < ageOfMaturity + 1) canReproduce = true;
+        else if (age > ageOfMaturity && age < ageOfMaturity + 1)
+        {
+            canReproduce = true;
+
+            stats.sexDrive = stats.maxSexDrive.GetValue();
+        }
         else followBehind = false;
 
         if (animator.GetBool("takeDamage"))
@@ -132,6 +163,8 @@ public class EntityController : MonoBehaviour
                 if (currentTime >= clipInfo[0].clip.length)
                 {
                     animator.SetBool("takeDamage", false);
+
+                    EndDamageEffects();
                     //isEmoting = false;
                 }
             }
@@ -140,29 +173,36 @@ public class EntityController : MonoBehaviour
         DetectSurroundings(eyes);
         CheckHighestPriority();
 
-        if (detectedObjects != null && detectedObjects.Count > 0)
+        if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].interestingObject != null)
         {
-            if (detectedObjects[0].interestingObject.GetComponent<EntityController>() && detectedObjects[0].interestingObject.GetComponent<EntityController>().entityID == entityID)
+            for (int i = 0; i < detectedObjects.Count; i++)
             {
-                if (age < ageOfMaturity && detectedObjects[0].interestingObject.GetComponent<EntityController>().age > age)
+                if (detectedObjects[i].focusType == currentFocus)
                 {
-                    //follow for protection
-                    followBehind = true;
-                    target = detectedObjects[0];
+                    if (detectedObjects[i].focusType == Focus.Companion )
+                    {
+                        if (age < ageOfMaturity )
+                        {
+                            //follow for protection
+                            followBehind = true;
 
+                        }
+                        else if (detectedObjects[i].interestingObject.GetComponent<EntityController>() && detectedObjects[i].interestingObject.GetComponent<EntityController>().gender == gender)
+                        {
+                            i++;
+                        }
+                       
+                    }
+                   
+                    target = detectedObjects[i];
+                    break;
                 }
-                else if (canReproduce && detectedObjects[0].interestingObject.GetComponent<EntityController>().canReproduce && detectedObjects[0].interestingObject.GetComponent<EntityController>().gender != gender)
+                else if (i + 1 >= detectedObjects.Count)
                 {
-                    //pursue for reproduction;
-                    target = detectedObjects[0];
+                    target = null;
                 }
-                else target = null;
             }
-            else if ((detectedObjects[0].interestingObject.GetComponent<EntityController>() && detectedObjects[0].interestingObject.GetComponent<EntityController>().entityID != entityID) || !detectedObjects[0].interestingObject.GetComponent<EntityController>())
-            {
-                followBehind = false;
-                target = detectedObjects[0];
-            }
+           
         }
         else target = null;
 
@@ -174,9 +214,10 @@ public class EntityController : MonoBehaviour
             {
                 if (!isPaused)
                 {
+                    isAsleep = false;
                     agent.isStopped = false;
 
-                    if (!target.shouldAvoid)
+                    if (target.focusType != Focus.Avoid)
                     {
                         agent.SetDestination(target.interestingObject.position);
                         FaceTarget(target.interestingObject.position);
@@ -186,7 +227,7 @@ public class EntityController : MonoBehaviour
                     {
                         if (followBehind)
                         {
-                            Vector3 behindPos = new Vector3(target.interestingObject.position.x, target.interestingObject.position.y, target.interestingObject.position.z - target.interestingObject.localScale.magnitude * 2);
+                            Vector3 behindPos = new Vector3(target.interestingObject.position.x, target.interestingObject.position.y, target.interestingObject.position.z - target.interestingObject.localScale.magnitude * followDistance);
                             agent.SetDestination(transform.position + (transform.position - behindPos) / (transform.position - behindPos).magnitude);
 
                         }
@@ -199,6 +240,15 @@ public class EntityController : MonoBehaviour
 
                         FaceTarget(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
                         //agent.SetDestination(-target.interestingObject.position);
+                    }
+                }
+                else if (isAsleep)
+                {
+                    if (stats.energy >= stats.maxEnergy.GetValue())
+                    {
+                        isAsleep = false;
+                        isPaused = false;
+                        agent.isStopped = false;
                     }
                 }
                 else agent.isStopped = true;
@@ -217,6 +267,8 @@ public class EntityController : MonoBehaviour
         }
         else if (!isPaused)
         {
+
+            isAsleep = false;
             //Wander
             agent.isStopped = false;
 
@@ -225,7 +277,16 @@ public class EntityController : MonoBehaviour
             //FaceTarget(wanderTarget.position);
 
         }
-        else
+        else if (isAsleep)
+        {
+            if (stats.energy >= stats.maxEnergy.GetValue())
+            {
+                isAsleep = false;
+                isPaused = false;
+                agent.isStopped = false;
+            }
+        }
+        else if (isPaused && !isAsleep)
             agent.isStopped = true;
 
 
@@ -248,9 +309,96 @@ public class EntityController : MonoBehaviour
         //else agent.isStopped = true;
     }
 
-    private void FixedUpdate()
+    public void ManageStats()
     {
+        if (!isAsleep)
+            stats.energy = stats.DecreaseStatInstant(stats.energy, 0, stats.energyDecreaseRate.GetValue());
+        else
+            stats.energy = stats.IncreaseStatInstant(stats.energy, stats.maxEnergy.GetValue(), stats.energyIncreaseRate.GetValue());
         
+        if (!isDrinking)
+        stats.thirst = stats.DecreaseStatInstant(stats.thirst, 0, stats.thirstDecreaseRate.GetValue());
+
+        if (!isEating)
+        stats.hunger = stats.DecreaseStatInstant(stats.hunger, 0, stats.hungerDecreaseRate.GetValue());
+
+        if (!isMating && canReproduce)
+        stats.sexDrive = stats.IncreaseStatInstant(stats.sexDrive, stats.maxSexDrive.GetValue(), stats.sexDriveIncreaseRate.GetValue());
+    }
+
+    public void InterpretStats()
+    {
+        if (stats.energy <= 0f) // go to sleep
+        {
+            isPaused = true;
+            isAsleep = true;
+            currentFocus = Focus.Sleep;
+
+        }
+        else
+        {
+            //Debug.Log("Sex Drive: " + (stats.maxSexDrive.GetValue() - stats.sexDrive));
+            if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].focusType == Focus.Avoid)
+                currentFocus = Focus.Avoid;
+            else if (detectedObjects == null || detectedObjects.Count == 0 || detectedObjects[0].focusType != Focus.Avoid)
+            {
+                if (stats.thirst < stats.hunger && stats.thirst < (stats.maxSexDrive.GetValue() - stats.sexDrive)  && stats.thirst < stats.energy)
+                {
+                    //look for water
+                    currentFocus = Focus.Water;
+                }
+                else if (stats.hunger < stats.thirst && stats.hunger < (stats.maxSexDrive.GetValue() - stats.sexDrive) && stats.hunger < stats.energy)
+                {
+                    //look for food
+                    currentFocus = Focus.Food;
+                }
+                else if ((stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.hunger && (stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.thirst && (stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.energy)
+                {
+                    //look for a mate
+                    currentFocus = Focus.Companion;
+
+                }
+                else if (stats.energy < stats.hunger && stats.energy < stats.thirst && stats.energy < (stats.maxSexDrive.GetValue() - stats.sexDrive) ) // go to sleep
+                {
+                    isPaused = true;
+                    isAsleep = true;
+                    currentFocus = Focus.Sleep;
+
+                }
+                else 
+                    currentFocus = Focus.Companion;
+            }
+
+            if (detectedObjects != null)
+            {
+                for (int d = 0; d < detectedObjects.Count; d++)
+                {
+                    if (detectedObjects[d].interestingObject != null)
+                        if (detectedObjects[d].focusType == currentFocus || detectedObjects[d].focusType == Focus.Avoid)
+                        {
+                            detectedObjects[d].priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(detectedObjects[d].interestingObject.position, transform.position) / lookDistance);
+                        }
+                }
+            }
+
+            //for (int p = 0; p < pointsOfInterest.Count; p++)
+            //{
+            //    if (pointsOfInterest[p].focusType == currentFocus)
+            //    {
+            //        pointsOfInterest[p].priority = pointsOfInterest[p].priority;
+
+            //        pointsOfInterest[p].priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(pointsOfInterest[p].interestingObject.position, transform.position) / lookDistance);
+
+            //        break;
+            //    }
+            //    else if (p + 1 >= pointsOfInterest.Count)
+            //    {
+            //        //Debug.Log("Not an intersting object");
+            //        return;
+            //    }
+            //}
+
+        }
     }
 
     public int viewRays = 24;
@@ -291,6 +439,8 @@ public class EntityController : MonoBehaviour
 
                             pOI.priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(pOI.interestingObject.position, transform.position) / lookDistance);
 
+                            pOI.focusType = pointsOfInterest[p].focusType;
+
                             pOI.shouldAvoid = pointsOfInterest[p].shouldAvoid;
                             break;
                         }
@@ -325,7 +475,7 @@ public class EntityController : MonoBehaviour
 
                 for (int i = 0; i < pointsOfInterest.Count; i++)
                 {
-                    if (detectedObjects[d].interestingObject.name.Contains(pointsOfInterest[i].interestingObject.name))
+                    if (detectedObjects[d].focusType == pointsOfInterest[i].focusType)
                     {
                         detectedObjects[d].priority = pointsOfInterest[i].priority + (detectedObjects[d].interestingObject.position - transform.position).sqrMagnitude / lookDistance;
 
@@ -346,7 +496,21 @@ public class EntityController : MonoBehaviour
 
     }
 
+    public void EndDamageEffects()
+    {
 
+        isPaused = false;
+
+        if (animator != null)
+            animator.SetBool("TakeDamage", false);
+
+        if (GetComponent<Rigidbody>())
+        {
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
+
+
+    }
 
 
 

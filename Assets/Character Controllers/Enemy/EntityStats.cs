@@ -6,6 +6,26 @@ public class EntityStats : CharacterStats
 {
     public string entityName;
 
+    public float energy;
+    public Stat maxEnergy;
+    public Stat energyIncreaseRate;
+    public Stat energyDecreaseRate;
+
+    public float hunger;
+    public Stat maxHunger;
+    public Stat hungerIncreaseRate;
+    public Stat hungerDecreaseRate;
+
+    public float thirst;
+    public Stat maxThirst;
+    public Stat thirstIncreaseRate;
+    public Stat thirstDecreaseRate;
+
+    public float sexDrive;
+    public Stat maxSexDrive;
+    public Stat sexDriveIncreaseRate;
+    public Stat sexDriveDecreaseRate;
+
     Animator animator;
     bool deathAnimationComplete;
 
@@ -43,7 +63,7 @@ public class EntityStats : CharacterStats
 
             if (clipInfo.Length > 0)
             {
-                Debug.Log(clipInfo[0].clip.name + " Length: " + clipInfo[0].clip.length);
+                //Debug.Log(clipInfo[0].clip.name + " Length: " + clipInfo[0].clip.length);
 
                 yield return new WaitForSeconds(clipInfo[0].clip.length);
 

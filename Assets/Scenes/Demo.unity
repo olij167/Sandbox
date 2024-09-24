@@ -1089,6 +1089,44 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 08a51d11a99803d489b0d6fb51e17e6d, type: 3}
+--- !u!84 &235459292
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 1920
+  m_Height: 1080
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 90
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &240423365
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14012,44 +14050,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2075108709}
   m_PrefabAsset: {fileID: 0}
---- !u!84 &1603237351
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 1920
-  m_Height: 1080
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 90
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!4 &1604912035 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3015142490238510861, guid: aa5a8884fc0158c4c80a271ce3e1aa92,
@@ -14811,7 +14811,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 1603237351}
+      objectReference: {fileID: 235459292}
     - target: {fileID: 692421375649379052, guid: 15d636b15f71cdb419a4576373e3a3b0,
         type: 3}
       propertyPath: m_IsActive
@@ -16972,6 +16972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d41c5533e05e684e85fb3eb6f3397d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebug: 0
   parent: {fileID: 0}
   prefabs:
   - {fileID: 2172824284947859693, guid: 654d493e12e886341a92bdd05ec73f35, type: 3}
@@ -16983,9 +16984,9 @@ MonoBehaviour:
   spawnPoint: {fileID: 2086569221}
   distanceFromGround: 1
   spawnInRadius: 1
-  spawnRadius: 20
+  spawnRadius: 10
   spawnConstant: 1
-  maxSpawnAmount: 25
+  maxSpawnAmount: 10
   spawnedObjects: []
   spawnRate: 5
   fluctuateSpawnRate: 1

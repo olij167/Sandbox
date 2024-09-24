@@ -36,7 +36,7 @@ public class ProjectileEffect : MonoBehaviour
         }
         else if (other.GetComponent<Rigidbody>())
         {
-            StartCoroutine(playerAttack.DamageEffects(other.GetComponent<Rigidbody>(), playerAttack.knockbackDelay, false));
+            StartCoroutine(playerAttack.DamageEffects(other, playerAttack.knockbackDelay, false));
         }
 
        
@@ -55,7 +55,7 @@ public class ProjectileEffect : MonoBehaviour
         }
         else if (other.transform.GetComponent<Rigidbody>())
         {
-            StartCoroutine(playerAttack.DamageEffects(other.transform.GetComponent<Rigidbody>(), playerAttack.knockbackDelay, false));
+            StartCoroutine(playerAttack.DamageEffects(other.gameObject, playerAttack.knockbackDelay, false));
         }
 
         Destroy(gameObject);

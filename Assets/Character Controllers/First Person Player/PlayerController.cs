@@ -635,7 +635,7 @@ public class PlayerController : NetworkBehaviour
 
             if (!animator.GetBool("isRunning") && !isClimbing && !isDodging && !isJumping && !isClimbing && !isSwimming && !isUsingRight && !isUsingLeft && !isUsingBoth)
             {
-                stats.RegenerateStamina();
+                stats.IncreaseStatConsistent(stats.stamina, stats.maxStamina.GetValue(), stats.staminaIncreaseRate.GetValue());
             }
 
             controller.Move(moveDirection * Time.deltaTime);

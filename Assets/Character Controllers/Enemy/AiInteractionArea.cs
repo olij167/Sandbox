@@ -9,6 +9,8 @@ public class AiInteractionArea : MonoBehaviour
 
     public List<GameObject> objectsInTrigger;
 
+    private EntityStats entityToEat;
+
     private void Awake()
     {
         entityController = transform.parent.root.GetComponent<EntityController>();
@@ -18,23 +20,27 @@ public class AiInteractionArea : MonoBehaviour
     {
         if (objectsInTrigger != null && objectsInTrigger.Count > 0)
         {
-            foreach(GameObject obj in objectsInTrigger)
-            //for (int oIT = 0; oIT < objectsInTrigger.Count; oIT++)
+            //for (int objectsInTrigger[oIT] = 0; objectsInTrigger[oIT] < objectsInTrigger.Count; objectsInTrigger[oIT]++)
+            //{
+
+            //}
+            //foreach(GameObject objectsInTrigger[oIT] in objectsInTrigger)
+            for (int oIT = 0; oIT < objectsInTrigger.Count; oIT++)
             {
-                if (obj == null)
+                if (objectsInTrigger[oIT] == null)
                 {
-                    objectsInTrigger.Remove(obj);
+                    objectsInTrigger.Remove(objectsInTrigger[oIT]);
                     break;
                 }
 
 
-                if (entityController.target != null && entityController.target.interestingObject == obj.transform)
+                if (entityController.target != null && entityController.target.interestingObject == objectsInTrigger[oIT].transform)
                 {
-                    if (obj.GetComponent<EntityController>() && obj.GetComponent<EntityController>().entityID == entityController.entityID)
+                    if (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID == entityController.entityID) //if they are the same species
                     {
-                        EntityController entity = obj.GetComponent<EntityController>();
+                        EntityController entity = objectsInTrigger[oIT].GetComponent<EntityController>();
 
-                        if (entityController.gender == EntityController.Gender.female && entity.gender == EntityController.Gender.male)
+                        if (entityController.gender == EntityController.Gender.female && entity.gender == EntityController.Gender.male) // if they are opposite genders
                         {
                             if (entityController.canReproduce && entity.canReproduce
                                 && entity.mother != entityController && entityController.father != entity
@@ -42,43 +48,50 @@ public class AiInteractionArea : MonoBehaviour
                                 && !entity.children.Contains(entityController) && !entity.siblings.Contains(entityController)) // Prevent pedophilia and incest 
                             {
                                 entityController.canReproduce = false;
-                                StartCoroutine(Reproduce(entityController.reproductionTime, entityController, entity));
+                                entityController.stats.sexDrive = 0f;
+                                entity.stats.sexDrive = 0f;
+                                StartCoroutine(Reproduce(entityController.reproductionTime, entityController, entity)); // start incubation
                             }
                         }
 
                     }
                     else
                     {
-                        if (obj.gameObject.GetComponent<PlayerController>() || (obj.GetComponent<EntityController>() && obj.GetComponent<EntityController>().entityID != entityController.entityID))
+                        if (objectsInTrigger[oIT].gameObject.GetComponent<PlayerController>() || (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID != entityController.entityID)) //if it's the player or another creature - attack
                         {
                             entityController.animator.SetBool("isAttacking", true);
                         }
-                        else
-                        {
-                            for (int i = 0; i < entityController.foodList.Count; i++)
-                            {
-                                if (obj.name.Contains(entityController.foodList[i].foodObject.name))
-                                {
-                                    if (obj.GetComponent<EntityStats>())
-                                    {
-                                        if (obj.GetComponent<EntityStats>().isDead)
-                                        {
-                                            GetComponent<EntityStats>().IncreaseHealth(entityController.foodList[i].healthRecovery);
-                                            Debug.Log(gameObject.name + " has eaten " + obj.name + " for " + entityController.foodList[i].healthRecovery + " health recovery");
-                                            objectsInTrigger.Remove(obj);
-                                        }
-                                    }
-                                    else if (!entityController.isEating)
-                                    {
-                                        //consume non-living object
 
-                                        StartCoroutine(EatInanimateFood(entityController.foodList[i].eatingTime, obj, i));
-                                        entityController.isEating = true;
-                                        break;
+                        for (int i = 0; i < entityController.foodList.Count; i++) 
+                        {
+                            if (objectsInTrigger[oIT].name.Contains(entityController.foodList[i].foodObject.name))// if you can eat the other object
+                            {
+                               // Debug.Log(entityController.name + " is going after " + objectsInTrigger[oIT].name + " (food)");
+                                if (objectsInTrigger[oIT].GetComponent<EntityStats>()) // if it is another enity
+                                {
+                                    entityToEat = objectsInTrigger[oIT].GetComponent<EntityStats>();
+                                    entityController.isEating = true;
+                                    if (entityToEat.isDead)
+                                    {
+                                        EatOtherEntity(objectsInTrigger[oIT], i);
+                                        //GetComponent<EntityStats>().IncreaseHealth(healthRecovery);
+                                        //Debug.Log(entityController.name + " has eaten " + objName + " for " + entityController.foodList[i].healthRecovery + " health recovery");
+                                        //objectsInTrigger.Remove(objectsInTrigger[oIT]);
                                     }
                                 }
+                                else if (!entityController.isEating)
+                                {
+                                    //consume non-living object
+                                    entityToEat = null;
+                                    StartCoroutine(EatInanimateFood(entityController.foodList[i].eatingTime, objectsInTrigger[oIT], i));
+                                    entityController.isEating = true;
+                                    break;
+                                }
+                                else entityToEat = null;
+                                
                             }
                         }
+
                     }
                 }
             }
@@ -99,16 +112,40 @@ public class AiInteractionArea : MonoBehaviour
 
     public IEnumerator EatInanimateFood(float eatingTime, GameObject food, int foodListIndex)
     {
-        Debug.Log(gameObject.name + " has begun eating " + food.name );
+        //Debug.Log(gameObject.name + " has begun eating " + food.name );
 
         yield return new WaitForSeconds(eatingTime);
 
-        GetComponent<EntityStats>().IncreaseHealth(entityController.foodList[foodListIndex].healthRecovery);
-        Debug.Log(gameObject.name + " has eaten " + food.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
-        
-        objectsInTrigger.Remove(food);
+        if (food != null)
+        {
+            GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.currentHealth, entityController.stats.maxHealth.GetValue(), entityController.foodList[foodListIndex].healthRecovery);
+            GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.hunger, entityController.stats.maxHunger.GetValue(), entityController.foodList[foodListIndex].healthRecovery * 2);
+            Debug.Log(entityController.name + " has eaten " + food.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
 
-        Destroy(food);
+            objectsInTrigger.Remove(food);
+
+            Destroy(food);
+        }
+        else Debug.Log("Food disappeared before eating was finished");
+
+        entityController.isEating = false;
+    }
+
+    public void EatOtherEntity(GameObject entity, int foodListIndex)
+    {
+        //GetComponentInParent<EntityStats>().IncreaseHealth(entityController.foodList[foodListIndex].healthRecovery);
+        GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.currentHealth, entityController.stats.maxHealth.GetValue(), entityController.foodList[foodListIndex].healthRecovery);
+        GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.hunger, entityController.stats.maxHunger.GetValue(), entityController.foodList[foodListIndex].healthRecovery * 2);
+
+        if (entity != null)
+        {
+            Debug.Log(entityController.name + " has eaten " + entity.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
+
+            objectsInTrigger.Remove(entity);
+        }
+        else
+            Debug.Log(entityController.name + " has eaten " + entityController.foodList[foodListIndex].foodObject.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
+
         entityController.isEating = false;
     }
 

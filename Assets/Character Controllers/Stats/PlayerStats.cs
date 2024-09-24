@@ -72,47 +72,47 @@ public class PlayerStats : CharacterStats
 
     }
 
-    public void RegenerateStamina()
-    {
-        if (stamina <= maxStamina.GetValue())
-        {
-            stamina += Time.deltaTime * staminaIncreaseRate.GetValue();
-        }
-    }
+    //public void RegenerateStamina()
+    //{
+    //    if (stamina <= maxStamina.GetValue())
+    //    {
+    //        stamina += Time.deltaTime * staminaIncreaseRate.GetValue();
+    //    }
+    //}
 
-    public float IncreaseStamina(float increaseAmount)
-    {
-        Debug.Log("Increasing stamina by " + increaseAmount);
-        return stamina = Mathf.Clamp(stamina + Mathf.Abs(increaseAmount), stamina, maxStamina.GetValue());
-    }
+    //public float IncreaseStamina(float increaseAmount)
+    //{
+    //    Debug.Log("Increasing stamina by " + increaseAmount);
+    //    return stamina = Mathf.Clamp(stamina + Mathf.Abs(increaseAmount), stamina, maxStamina.GetValue());
+    //}
 
-    public void DecreaseStamina(float decreaseAmount)
-    {
-        Debug.Log("Decreasing " + decreaseAmount + " stamina");
-        //isTakingDamage = true;
-        stamina = Mathf.Clamp(stamina - Mathf.Abs(decreaseAmount), 0, stamina);
-    } 
+    //public void DecreaseStamina(float decreaseAmount)
+    //{
+    //    Debug.Log("Decreasing " + decreaseAmount + " stamina");
+    //    //isTakingDamage = true;
+    //    stamina = Mathf.Clamp(stamina - Mathf.Abs(decreaseAmount), 0, stamina);
+    //} 
     
-    public void RegeneratePower()
-    {
-        if (power <= maxPower.GetValue())
-        {
-            power += Time.deltaTime * powerIncreaseRate.GetValue();
-        }
-    }
+    //public void RegeneratePower()
+    //{
+    //    if (power <= maxPower.GetValue())
+    //    {
+    //        power += Time.deltaTime * powerIncreaseRate.GetValue();
+    //    }
+    //}
 
-    public float IncreasePower(float increaseAmount)
-    {
-        Debug.Log("Increasing power by " + increaseAmount);
-        return power = Mathf.Clamp(power + Mathf.Abs(increaseAmount), power, maxPower.GetValue());
-    }
+    //public float IncreasePower(float increaseAmount)
+    //{
+    //    Debug.Log("Increasing power by " + increaseAmount);
+    //    return power = Mathf.Clamp(power + Mathf.Abs(increaseAmount), power, maxPower.GetValue());
+    //}
 
-    public void DecreasePower(float decreaseAmount)
-    {
-        Debug.Log("Decreasing " + decreaseAmount + " power");
-        //isTakingDamage = true;
-        power = Mathf.Clamp(power - Mathf.Abs(decreaseAmount), 0, power);
-    }
+    //public void DecreasePower(float decreaseAmount)
+    //{
+    //    Debug.Log("Decreasing " + decreaseAmount + " power");
+    //    //isTakingDamage = true;
+    //    power = Mathf.Clamp(power - Mathf.Abs(decreaseAmount), 0, power);
+    //}
 
     public void AddExperience(float xp)
     {

@@ -87,13 +87,13 @@ public class PlayerAbilities : MonoBehaviour
             if (Input.GetKeyDown(abilityInput))
             {
                 activeAbility.ActivateEffect(player, this);
-                player.stats.DecreasePower(activeAbility.energyCost);
+                player.stats.power = player.stats.DecreaseStatInstant(player.stats.power, 0f, activeAbility.energyCost);
                 StartCoroutine(activeAbility.DeactivateEffect(player, this));
             }
         }
 
         if (!effectActive)
-            player.stats.RegeneratePower();
+            player.stats.power = player.stats.IncreaseStatConsistent(player.stats.power, player.stats.maxPower.GetValue(), player.stats.powerIncreaseRate.GetValue());
 
         if (abilityUI.activeSelf)
         {

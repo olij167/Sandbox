@@ -783,6 +783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityID: 1
+  stats: {fileID: 0}
   gender: 0
   age: 0
   agingSpeed: 1
@@ -792,30 +793,29 @@ MonoBehaviour:
   reproductionTime: 15
   canReproduce: 0
   childPrefab: {fileID: 2172824284947859693}
-  mother: {fileID: 0}
-  father: {fileID: 0}
-  children: []
-  siblings: []
-  rMin: 0
-  rMax: 0
-  minSize: {x: 0, y: 0, z: 0}
-  maxSize: {x: 0, y: 0, z: 0}
   eyes: {fileID: 4897835156226692355}
   lookDistance: 10
   animator: {fileID: 8353854772379105850}
   wanderTarget: {fileID: 3129535886886211565}
   wanderShiftSpeed: 20
   followBehind: 0
+  followDistance: 6
+  currentFocus: 0
   target:
     interestingObject: {fileID: 0}
     priority: 0
     shouldAvoid: 0
+    focusType: 0
   isPaused: 0
+  isAsleep: 0
   isEating: 0
   eatingTimer: 0
+  isDrinking: 0
+  isMating: 0
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 1142
+  detectedObjects: []
   foodList:
   - foodObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
       type: 3}
@@ -826,18 +826,29 @@ MonoBehaviour:
       type: 3}
     priority: 1
     shouldAvoid: 1
+    focusType: 4
   - interestingObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
       type: 3}
     priority: 1.5
     shouldAvoid: 0
+    focusType: 0
   - interestingObject: {fileID: 4912476555309126663, guid: 156263a8b65c51a469351b062ff7e4a9,
       type: 3}
     priority: 2
     shouldAvoid: 1
+    focusType: 4
   - interestingObject: {fileID: 2172824284947859688}
     priority: 3
     shouldAvoid: 0
-  detectedObjects: []
+    focusType: 2
+  mother: {fileID: 0}
+  father: {fileID: 0}
+  children: []
+  siblings: []
+  rMin: 0
+  rMax: 0
+  minSize: {x: 0, y: 0, z: 0}
+  maxSize: {x: 0, y: 0, z: 0}
   viewRays: 32
 --- !u!114 &2172824284947859691
 MonoBehaviour:
@@ -890,6 +901,58 @@ MonoBehaviour:
     baseValue: 0
     modifiers: []
   entityName: 
+  energy: 50
+  maxEnergy:
+    modifiedValue: 0
+    baseValue: 100
+    modifiers: []
+  energyIncreaseRate:
+    modifiedValue: 0
+    baseValue: 2
+    modifiers: []
+  energyDecreaseRate:
+    modifiedValue: 0
+    baseValue: 0.2
+    modifiers: []
+  hunger: 100
+  maxHunger:
+    modifiedValue: 0
+    baseValue: 100
+    modifiers: []
+  hungerIncreaseRate:
+    modifiedValue: 0
+    baseValue: 1
+    modifiers: []
+  hungerDecreaseRate:
+    modifiedValue: 0
+    baseValue: 0.05
+    modifiers: []
+  thirst: 100
+  maxThirst:
+    modifiedValue: 0
+    baseValue: 0
+    modifiers: []
+  thirstIncreaseRate:
+    modifiedValue: 0
+    baseValue: 1
+    modifiers: []
+  thirstDecreaseRate:
+    modifiedValue: 0
+    baseValue: 0
+    modifiers: []
+  sexDrive: 0
+  maxSexDrive:
+    modifiedValue: 0
+    baseValue: 100
+    modifiers: []
+  sexDriveIncreaseRate:
+    modifiedValue: 0
+    baseValue: 0.05
+    modifiers: []
+  sexDriveDecreaseRate:
+    modifiedValue: 0
+    baseValue: 1
+    modifiers: []
   experienceItem: {fileID: 969995495694254771, guid: 5da0f558efa612948bf4d612b73db09f,
     type: 3}
   isDead: 0

@@ -7,6 +7,8 @@ using UnityEngine.AI;
 // requires a nav mesh in the scene
 public class SpawnObjects : MonoBehaviour
 {
+    public bool showDebug;
+
     public Transform parent;
     public List<GameObject> prefabs;
 
@@ -104,7 +106,8 @@ public class SpawnObjects : MonoBehaviour
             {
                 spawnedObjects.RemoveAt(i);
 
-                Debug.Log("Spawned Item " + i + " has been destroyed");
+                if (showDebug)
+                    Debug.Log("Spawned Item " + i + " has been destroyed");
             }
         }
     }
