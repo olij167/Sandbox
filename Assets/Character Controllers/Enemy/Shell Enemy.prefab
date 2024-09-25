@@ -477,7 +477,7 @@ MonoBehaviour:
     modifiers: []
   energyIncreaseRate:
     modifiedValue: 0
-    baseValue: 1
+    baseValue: 0.3
     modifiers: []
   energyDecreaseRate:
     modifiedValue: 0

@@ -212,7 +212,7 @@ public class EntityController : MonoBehaviour
 
             if (distance <= lookDistance)
             {
-                if (!isPaused)
+                if (!isPaused && !isAsleep)
                 {
                     isAsleep = false;
                     agent.isStopped = false;
@@ -244,6 +244,8 @@ public class EntityController : MonoBehaviour
                 }
                 else if (isAsleep)
                 {
+                    agent.isStopped = true;
+
                     if (stats.energy >= stats.maxEnergy.GetValue())
                     {
                         isAsleep = false;
@@ -251,7 +253,7 @@ public class EntityController : MonoBehaviour
                         agent.isStopped = false;
                     }
                 }
-                else agent.isStopped = true;
+                else if (isPaused && !isAsleep) agent.isStopped = true;
 
 
                 //if (distance <= agent.stoppingDistance)
