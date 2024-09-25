@@ -59,7 +59,7 @@ public class AiInteractionArea : MonoBehaviour
                     {
                         if (objectsInTrigger[oIT].gameObject.GetComponent<PlayerController>() || (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID != entityController.entityID)) //if it's the player or another creature - attack
                         {
-                            entityController.animator.SetBool("isAttacking", true);
+                            entityController.isAttacking = true;
                         }
 
                         for (int i = 0; i < entityController.foodList.Count; i++) 
@@ -206,8 +206,13 @@ public class AiInteractionArea : MonoBehaviour
         {
             if (other.gameObject.GetComponent<PlayerController>() || (other.GetComponent<EntityController>() && other.GetComponent<EntityController>().entityID != entityController.entityID))
             {
-                entityController.animator.SetBool("isAttacking", false);
+                entityController.isAttacking = true;
             }
+        }
+        else if (entityController.target == null || entityController.target.focusType != EntityController.Focus.Food)
+        {
+            entityController.isAttacking = false;
+
         }
 
         if (objectsInTrigger.Contains(other.gameObject))

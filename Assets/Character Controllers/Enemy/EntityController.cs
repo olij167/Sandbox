@@ -43,6 +43,7 @@ public class EntityController : MonoBehaviour
     //CharacterCombat combat;
     Rigidbody rb;
 
+    public bool isAttacking;
     public bool isPaused;
     public bool isAsleep;
 
@@ -145,7 +146,7 @@ public class EntityController : MonoBehaviour
         }
         else followBehind = false;
 
-        if (animator.GetBool("takeDamage"))
+        if (animator.GetBool("TakeDamage"))
         {
             AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(0);
             AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -162,7 +163,7 @@ public class EntityController : MonoBehaviour
 
                 if (currentTime >= clipInfo[0].clip.length)
                 {
-                    animator.SetBool("takeDamage", false);
+                    animator.SetBool("TakeDamage", false);
 
                     EndDamageEffects();
                     //isEmoting = false;
@@ -175,13 +176,16 @@ public class EntityController : MonoBehaviour
 
         if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].interestingObject != null)
         {
+            int count = detectedObjects.Count;
             for (int i = 0; i < detectedObjects.Count; i++)
             {
+                if (count != detectedObjects.Count) break;
+
                 if (detectedObjects[i].focusType == currentFocus)
                 {
-                    if (detectedObjects[i].focusType == Focus.Companion )
+                    if (detectedObjects[i].focusType == Focus.Companion)
                     {
-                        if (age < ageOfMaturity )
+                        if (age < ageOfMaturity)
                         {
                             //follow for protection
                             followBehind = true;
@@ -191,15 +195,18 @@ public class EntityController : MonoBehaviour
                         {
                             i++;
                         }
-                       
+
                     }
-                   
-                    target = detectedObjects[i];
-                    break;
+                    if (detectedObjects[i] != null && detectedObjects[i].interestingObject != null)
+                    {
+                        target = detectedObjects[i];
+                        break;
+                    }
                 }
                 else if (i + 1 >= detectedObjects.Count)
                 {
                     target = null;
+
                 }
             }
            
@@ -269,6 +276,7 @@ public class EntityController : MonoBehaviour
         }
         else if (!isPaused)
         {
+            isAttacking = false;
 
             isAsleep = false;
             //Wander
@@ -281,6 +289,8 @@ public class EntityController : MonoBehaviour
         }
         else if (isAsleep)
         {
+            isAttacking = false;
+
             if (stats.energy >= stats.maxEnergy.GetValue())
             {
                 isAsleep = false;
@@ -289,8 +299,13 @@ public class EntityController : MonoBehaviour
             }
         }
         else if (isPaused && !isAsleep)
+        {
             agent.isStopped = true;
+            isAttacking = false;
 
+        }
+
+        animator.SetBool("isAttacking", isAttacking);
 
         wanderTarget.transform.RotateAround(wanderTarget.parent.position, Vector3.up, wanderShiftSpeed * Time.deltaTime);
         //wanderTarget.transform.position = new Vector3(wanderTarget.parent.position.x + Mathf.PingPong(wanderShiftSpeed * Time.deltaTime, wanderShiftDistance), wanderTarget.parent.position.y, wanderTarget.parent.position.z + Mathf.PingPong(wanderShiftSpeed * Time.deltaTime, wanderShiftDistance));

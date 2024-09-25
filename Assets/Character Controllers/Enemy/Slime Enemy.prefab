@@ -901,7 +901,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: []
   entityName: 
-  energy: 50
+  energy: 100
   maxEnergy:
     modifiedValue: 0
     baseValue: 100

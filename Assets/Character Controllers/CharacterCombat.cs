@@ -101,7 +101,7 @@ public class CharacterCombat : MonoBehaviour
 
                     enemy.isPaused = true;
 
-                    enemy.animator.SetBool("takeDamage", true);
+                    enemy.animator.SetBool("TakeDamage", true);
 
                     targetRB.isKinematic = false;
 

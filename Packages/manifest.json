@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.kink3d.mirrors": "file:C:/Users/61426/Desktop/Unity Packages/kMirrors-master",
+    "com.kink3d.mirrors": "https://github.com/Kink3d/kMirrors.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "1.1.5",
     "com.unity.animation.rigging": "1.2.1",

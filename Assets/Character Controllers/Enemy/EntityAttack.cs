@@ -31,7 +31,7 @@ public class EntityAttack : CharacterCombat
             player = other.gameObject.GetComponent<PlayerController>();
             Debug.Log(gameObject.name + " Hit the Player");
 
-            if (GetComponent<EntityController>().animator.GetBool("isAttacking"))
+            if (GetComponent<EntityController>().isAttacking)
                 Attack(player.GetComponent<CharacterStats>(), GetComponent<EntityStats>().attackDamage.GetValue(), false);
             else
                 Attack(player.GetComponent<CharacterStats>(), GetComponent<EntityStats>().passiveDamage.GetValue(), true);
@@ -44,7 +44,7 @@ public class EntityAttack : CharacterCombat
         {
             Debug.Log(gameObject.name + " Hit another entity");
 
-            if (GetComponent<EntityController>().animator.GetBool("isAttacking"))
+            if (GetComponent<EntityController>().isAttacking)
                 Attack(other.gameObject.GetComponent<EntityStats>(), GetComponent<EntityStats>().attackDamage.GetValue(), false);
             else if (other.gameObject.GetComponent<EntityController>().entityID != GetComponent<EntityController>().entityID)
                 Attack(other.gameObject.GetComponent<EntityStats>(), GetComponent<EntityStats>().passiveDamage.GetValue(), true);
