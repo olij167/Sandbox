@@ -85,8 +85,6 @@ public class CharacterCombat : MonoBehaviour
     public IEnumerator DamageEffects(GameObject target, float delay, bool isPassive)
     {
 
-        while (target != null)
-        {
             Vector3 head = target.transform.position - transform.position;
             Vector3 dir = head / head.magnitude;
 
@@ -125,7 +123,7 @@ public class CharacterCombat : MonoBehaviour
 
 
             }
-        }
+        
 
 
 

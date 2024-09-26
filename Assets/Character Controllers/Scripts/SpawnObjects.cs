@@ -29,7 +29,7 @@ public class SpawnObjects : MonoBehaviour
 
     public bool spawnConstant;
 
-    public int maxSpawnAmount = 10;
+    //public int maxSpawnAmount = 10;
     public List<GameObject> spawnedObjects;
 
     public float spawnRate = 30f;
@@ -40,7 +40,7 @@ public class SpawnObjects : MonoBehaviour
 
     public void Update()
     {
-        if ((spawnConstant && spawnedObjects.Count < maxSpawnAmount) || (!spawnConstant && (randomPrefabs && spawnedObjects.Count < totalSpawnNum || !randomPrefabs && spawnedObjects.Count < spawnNumPerPrefab * prefabs.Count) ))
+        if ((spawnConstant && spawnedObjects.Count < totalSpawnNum) || (!spawnConstant && (randomPrefabs && spawnedObjects.Count < totalSpawnNum || !randomPrefabs && spawnedObjects.Count < spawnNumPerPrefab * prefabs.Count) ))
         {
             SpawnPrefabs(randomPrefabs, spawnInRadius);
         }
