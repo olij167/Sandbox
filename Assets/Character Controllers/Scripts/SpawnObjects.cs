@@ -38,6 +38,12 @@ public class SpawnObjects : MonoBehaviour
 
     private float timer;
 
+    private void Awake()
+    {
+        if (spawnPoint == null)
+            spawnPoint = transform;
+    }
+
     public void Update()
     {
         if ((spawnConstant && spawnedObjects.Count < totalSpawnNum) || (!spawnConstant && (randomPrefabs && spawnedObjects.Count < totalSpawnNum || !randomPrefabs && spawnedObjects.Count < spawnNumPerPrefab * prefabs.Count) ))
@@ -48,7 +54,7 @@ public class SpawnObjects : MonoBehaviour
         CheckIfDestroyed();
     }
 
-    public void SpawnPrefabs(bool randomPrefabs, bool inRadius)
+    public virtual void SpawnPrefabs(bool randomPrefabs, bool inRadius)
     {
         if (!randomPrefabs)
         {

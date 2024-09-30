@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TimeWeather;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -44,6 +45,7 @@ public class EntityController : MonoBehaviour
     NavMeshAgent agent;
     //CharacterCombat combat;
     Rigidbody rb;
+    public PointOfInterest home;
 
     public bool isAttacking;
     public bool isPaused;
@@ -188,6 +190,10 @@ public class EntityController : MonoBehaviour
                 target = detectedObjects[0];
 
             }
+            else if (currentFocus == Focus.Sleep)
+            {
+                target = home; 
+            }
             else
             {
 
@@ -222,7 +228,7 @@ public class EntityController : MonoBehaviour
                     }
                     else if (i + 1 >= detectedObjects.Count)
                     {
-                        target = null;
+                        target = detectedObjects[0]; // if you can't see your focus go to the next best thing
 
                     }
                 }
@@ -231,8 +237,14 @@ public class EntityController : MonoBehaviour
         }
         else target = null;
 
-        if (target != null && target.interestingObject != null)
+        if (target != null && target.interestingObject != null) // if they have a target
         {
+            if (target == home && Vector3.Distance(transform.position, target.interestingObject.position) <= agent.stoppingDistance)
+            {
+                isAsleep = true;
+                isPaused = true;
+            }
+
             float distance = Vector3.Distance(target.interestingObject.position, transform.position);
 
             if (distance <= lookDistance)
@@ -257,7 +269,7 @@ public class EntityController : MonoBehaviour
                         FaceTarget(target.interestingObject.position);
 
                     }
-                    else
+                    else if (target.focusType == Focus.Avoid)
                     {
    
                             agent.SetDestination(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
@@ -276,7 +288,8 @@ public class EntityController : MonoBehaviour
                     isAttacking = false;
                     isEating = false;
 
-                    if (stats.energy >= stats.maxEnergy.GetValue())
+                    //if (stats.energy >= stats.maxEnergy.GetValue())
+                    if (TimeController.instance.timeOfDay > stats.awakeHours.x && TimeController.instance.timeOfDay < stats.awakeHours.y)
                     {
                         isAsleep = false;
                         isPaused = false;
@@ -298,7 +311,7 @@ public class EntityController : MonoBehaviour
                 //}
             }
         }
-        else if (!isPaused)
+        else if (!isPaused) // otherwise make sure they aren't still trying to interact with something
         {
             isAttacking = false;
             isEating = false;
@@ -320,7 +333,8 @@ public class EntityController : MonoBehaviour
             isAttacking = false;
             agent.isStopped = true;
 
-            if (stats.energy >= stats.maxEnergy.GetValue())
+            //if (stats.energy >= stats.maxEnergy.GetValue())
+            if (TimeController.instance.timeOfDay > stats.awakeHours.x && TimeController.instance.timeOfDay < stats.awakeHours.y)
             {
                 isAsleep = false;
                 deepSleep = false;
@@ -358,12 +372,24 @@ public class EntityController : MonoBehaviour
         //else agent.isStopped = true;
     }
 
+    public PointOfInterest SetHome(Transform homeGO, float priority)
+    {
+        PointOfInterest newHome = new PointOfInterest();
+
+        newHome.interestingObject = homeGO;
+        newHome.priority = priority;
+        newHome.focusType = Focus.Sleep;
+
+        return home = newHome;
+
+    }
+
     public void ManageStats()
     {
-        if (!isAsleep)
-            stats.energy = stats.DecreaseStatInstant(stats.energy, 0, stats.energyDecreaseRate.GetValue());
-        else
-            stats.energy = stats.IncreaseStatInstant(stats.energy, stats.maxEnergy.GetValue(), stats.energyIncreaseRate.GetValue());
+        //if (!isAsleep)
+        //    stats.energy = stats.DecreaseStatInstant(stats.energy, 0, stats.energyDecreaseRate.GetValue());
+        //else
+        //    stats.energy = stats.IncreaseStatInstant(stats.energy, stats.maxEnergy.GetValue(), stats.energyIncreaseRate.GetValue());
         
         if (!isDrinking)
         stats.thirst = stats.DecreaseStatInstant(stats.thirst, 0, stats.thirstDecreaseRate.GetValue());
@@ -377,8 +403,8 @@ public class EntityController : MonoBehaviour
 
     public void InterpretStats()
     {
-        if (stats.energy > 0f && !deepSleep) // go to sleep
-        {
+        //if (stats.energy > 0f && !deepSleep) // go to sleep
+        //{
             //Debug.Log("Sex Drive: " + (stats.maxSexDrive.GetValue() - stats.sexDrive));
             if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].focusType == Focus.Avoid)
                 currentFocus = Focus.Avoid;
@@ -387,26 +413,27 @@ public class EntityController : MonoBehaviour
             else if (detectedObjects == null || detectedObjects.Count == 0 || (detectedObjects[0].focusType != Focus.Avoid && detectedObjects[0].focusType != Focus.Attack))
             {
 
-                if (stats.hunger < stats.maxHunger.GetValue() / 2 && (stats.hunger <= stats.thirst && stats.hunger <= (stats.maxSexDrive.GetValue() - stats.sexDrive) && stats.hunger <= stats.energy))
+                if (stats.hunger < stats.maxHunger.GetValue() / 2 && (stats.hunger <= stats.thirst && stats.hunger <= (stats.maxSexDrive.GetValue() - stats.sexDrive) /*&& stats.hunger <= stats.energy*/))
                 {
                     //look for food
                     currentFocus = Focus.Food;
                 }
-                else if (stats.thirst < stats.maxThirst.GetValue() / 2 && (stats.thirst < stats.hunger && stats.thirst <= (stats.maxSexDrive.GetValue() - stats.sexDrive) && stats.thirst <= stats.energy))
+                else if (stats.thirst < stats.maxThirst.GetValue() / 2 && (stats.thirst < stats.hunger && stats.thirst <= (stats.maxSexDrive.GetValue() - stats.sexDrive) /*&& stats.thirst <= stats.energy*/))
                 {
                     //look for water
                     currentFocus = Focus.Water;
                 }
-                else if (stats.sexDrive > stats.maxSexDrive.GetValue() / 2 && ((stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.hunger && (stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.thirst && (stats.maxSexDrive.GetValue() - stats.sexDrive) <= stats.energy))
+                else if (stats.sexDrive > stats.maxSexDrive.GetValue() / 2 && ((stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.hunger && (stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.thirst /*&& (stats.maxSexDrive.GetValue() - stats.sexDrive) <= stats.energy*/))
                 {
                     //look for a mate
                     currentFocus = Focus.Companion;
 
                 }
-                else if (stats.energy < stats.maxEnergy.GetValue() / 2 && (stats.energy < stats.hunger && stats.energy < stats.thirst && stats.energy < (stats.maxSexDrive.GetValue() - stats.sexDrive))) // go to sleep
+                //else if (stats.energy < stats.maxEnergy.GetValue() / 2 && (stats.energy < stats.hunger && stats.energy < stats.thirst && stats.energy < (stats.maxSexDrive.GetValue() - stats.sexDrive))) // go to sleep
+                else if (TimeController.instance.timeOfDay < stats.awakeHours.x || TimeController.instance.timeOfDay > stats.awakeHours.y) // go home out of awake hours
                 {
-                    isPaused = true;
-                    isAsleep = true;
+                    //isPaused = true;
+                    //isAsleep = true;
                     currentFocus = Focus.Sleep;
 
                 }
@@ -442,15 +469,15 @@ public class EntityController : MonoBehaviour
             //    }
             //}
 
-        }
-        else
-        {
-            isPaused = true;
-            isAsleep = true;
-            deepSleep = true;
-            currentFocus = Focus.Sleep;
+        //}
+        //else
+        //{
+        //    isPaused = true;
+        //    isAsleep = true;
+        //    deepSleep = true;
+        //    currentFocus = Focus.Sleep;
 
-        }
+        //}
     }
 
     public int viewRays = 24;
@@ -565,10 +592,10 @@ public class EntityController : MonoBehaviour
     }
 
 
-    public IEnumerator DeepSleep()
-    {
-        yield return new WaitUntil(() => stats.energy > stats.energy / 2);
-    }
+    //public IEnumerator DeepSleep()
+    //{
+    //    yield return new WaitUntil(() => stats.energy > stats.energy / 2);
+    //}
     public Vector3 GenerateRandomPointWithinRadius()
     {
         wanderPoint = transform.position + (lookDistance * Random.onUnitSphere);

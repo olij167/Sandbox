@@ -80,30 +80,45 @@ public class AiInteractionArea : MonoBehaviour
 
                                     break;
 
+                               
                                 case EntityController.Focus.Companion:
                                     if (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID == entityController.entityID) //if they are the same species
                                     {
                                         EntityController entity = objectsInTrigger[oIT].GetComponent<EntityController>();
 
-                                        if (entityController.gender == EntityController.Gender.female && entity.gender == EntityController.Gender.male) // if they are opposite genders
-                                        {
-                                            if (entityController.canReproduce && entity.canReproduce
+                                        if (entityController.canReproduce && entity.canReproduce
                                                 && entity.mother != entityController && entityController.father != entity
                                                 && !entityController.children.Contains(entity) && !entityController.siblings.Contains(entity)
                                                 && !entity.children.Contains(entityController) && !entity.siblings.Contains(entityController)) // Make sure they have both reached maturity & arent relatives
+                                        {
+                                            if (entityController.gender == EntityController.Gender.female && entity.gender == EntityController.Gender.male) // female perspective
                                             {
+
                                                 entityController.canReproduce = false;
-                                                //entityController.isMating = true;
-                                                //entity.isMating = true;
+                                                entity.canReproduce = false;
+                                                entityController.isMating = true;
+                                                entity.isMating = true;
                                                 entityController.stats.sexDrive = 0f;
                                                 entity.stats.sexDrive = 0f;
                                                 StartCoroutine(Reproduce(entityController.reproductionTime, entityController, entity)); // start incubation
                                             }
                                         }
+                                        else if (entityController.gender == EntityController.Gender.male && entity.gender == EntityController.Gender.female) // male perspective
+                                        {
+                                            entityController.canReproduce = false;
+                                            entity.canReproduce = false;
+                                            entityController.isMating = true;
+                                            entity.isMating = true;
+                                            entityController.stats.sexDrive = 0f;
+                                            entity.stats.sexDrive = 0f;
+
+                                            StartCoroutine(ReproductionCooldown(entityController.reproductionTime));
+
+                                        }
 
                                     }
-                                    else  if (!objectsInTrigger[oIT].GetComponent<EntityController>() || (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID != entityController.entityID)) // otherwise just follow
-                                            entityController.followBehind = true;
+                                    else if (!objectsInTrigger[oIT].GetComponent<EntityController>() || (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID != entityController.entityID)) // otherwise just follow
+                                        entityController.followBehind = true;
                                     break;
                                 case EntityController.Focus.Attack:
                                     entityController.isAttacking = true;
@@ -151,7 +166,7 @@ public class AiInteractionArea : MonoBehaviour
         {
             GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.currentHealth, entityController.stats.maxHealth.GetValue(), entityController.foodList[foodListIndex].healthRecovery);
             GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.hunger, entityController.stats.maxHunger.GetValue(), entityController.foodList[foodListIndex].healthRecovery * 2);
-            GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.energy, entityController.stats.maxEnergy.GetValue(), entityController.foodList[foodListIndex].healthRecovery / 2);
+            //GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.energy, entityController.stats.maxEnergy.GetValue(), entityController.foodList[foodListIndex].healthRecovery / 2);
 
             Debug.Log(entityController.name + " has eaten " + food.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
 
@@ -169,7 +184,7 @@ public class AiInteractionArea : MonoBehaviour
         //GetComponentInParent<EntityStats>().IncreaseHealth(entityController.foodList[foodListIndex].healthRecovery);
         GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.currentHealth, entityController.stats.maxHealth.GetValue(), entityController.foodList[foodListIndex].healthRecovery);
         GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.hunger, entityController.stats.maxHunger.GetValue(), entityController.foodList[foodListIndex].healthRecovery * 2);
-        GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.energy, entityController.stats.maxEnergy.GetValue(), entityController.foodList[foodListIndex].healthRecovery / 2);
+        //GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.energy, entityController.stats.maxEnergy.GetValue(), entityController.foodList[foodListIndex].healthRecovery / 2);
 
         if (entity != null)
         {
@@ -231,6 +246,13 @@ public class AiInteractionArea : MonoBehaviour
         }
 
         mother.canReproduce = true;
+    }
+
+    public IEnumerator ReproductionCooldown(float cooldown)
+    {
+        yield return new WaitForSeconds(cooldown);
+
+        entityController.canReproduce = true;
     }
 
     private void OnTriggerExit(Collider other)

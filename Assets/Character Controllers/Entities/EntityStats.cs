@@ -6,10 +6,13 @@ public class EntityStats : CharacterStats
 {
     public string entityName;
 
-    public float energy;
-    public Stat maxEnergy;
-    public Stat energyIncreaseRate;
-    public Stat energyDecreaseRate;
+    //public float energy;
+    //public Stat maxEnergy;
+    //public Stat energyIncreaseRate;
+    //public Stat energyDecreaseRate;
+
+    public Vector2 awakeHours;
+    //public bool isNocturnal;
 
     public float hunger;
     public Stat maxHunger;
