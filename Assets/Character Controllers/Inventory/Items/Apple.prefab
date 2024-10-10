@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 5735340910384305180}
   - component: {fileID: 1886617}
   - component: {fileID: 1267758734}
+  - component: {fileID: 6071189638751353477}
   m_Layer: 0
   m_Name: Apple
   m_TagString: Untagged
@@ -196,7 +197,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 671.8202, y: 77.837616, z: 525.74756}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4009023282067140629}
@@ -279,3 +280,33 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6071189638751353477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4009023282067434551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf684a1af576694aa2cec5c6ca652d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeSizeRange: {x: 0, y: 0}
+  minSize: {x: 0, y: 0, z: 0}
+  maxSize: {x: 0, y: 0, z: 0}
+  spoiledSize: {x: 0, y: 0, z: 0}
+  producePosition: {fileID: 0}
+  parentPlant: {fileID: 0}
+  birthSizeRange: {x: 0.2, y: 0.4}
+  maturitySizeRange: {x: 0.8, y: 1.6}
+  growthSpeed: 5
+  age: 0
+  ageOfMaturity: 30
+  ageOfDecline: 60
+  ageOfSpoilage: 90
+  stillPlanted: 0
+  produceRenderer: {fileID: 4009023282065240819}
+  unRipeColour: {r: 0, g: 1, b: 0.057803392, a: 1}
+  ripeColour: {r: 0, g: 0, b: 0, a: 0}
+  spoiledColour: {r: 0.33947194, g: 0.076025344, b: 0.7798742, a: 0}

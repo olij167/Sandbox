@@ -1,0 +1,1005 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8277582075877833320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5671805736256516385}
+  - component: {fileID: 5570354091070204339}
+  m_Layer: 0
+  m_Name: Vegetation Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5671805736256516385
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8277582075877833320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 100.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5570354091070204339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8277582075877833320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f710250abab6f24a954bdf3c3c1ac64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seed: 29164
+  terrains:
+  - {fileID: 0}
+  visibleTerrainsOnly: 0
+  treeTypes:
+  - enabled: 1
+    name: BroadleafTree_Green
+    seed: 73573
+    probability: 25
+    collisionCheck: 1
+    rejectUnderwater: 0
+    heightRange: {x: 55, y: 1000}
+    slopeRange: {x: 0, y: 42.096764}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    instanceCount: 831
+    prefabs:
+    - index: 0
+      probability: 20
+      prefab: {fileID: 269750320397101300, guid: 776d6e523eb60be41abbfa8427ee472a,
+        type: 3}
+    - index: 1
+      probability: 20
+      prefab: {fileID: 8509515907140916961, guid: cd70cd855f71078438d51c2883795a0e,
+        type: 3}
+    - index: 2
+      probability: 20
+      prefab: {fileID: 7755859256941194996, guid: 04edc0bffc5bee54eb107fcc8ce4385a,
+        type: 3}
+    - index: 3
+      probability: 20
+      prefab: {fileID: 4314097512950914008, guid: 5d6ff116fb5dd6343a053c078b5cdc2b,
+        type: 3}
+    - index: 4
+      probability: 20
+      prefab: {fileID: 7736027864159789925, guid: 743b50117cc380a4f8f6871e04789159,
+        type: 3}
+    distance: 8
+    scaleRange: {x: 1.7075999, y: 2}
+    sinkAmount: 0
+  - enabled: 1
+    name: BroadleafTree_03_Yellow
+    seed: 25733
+    probability: 50
+    collisionCheck: 1
+    rejectUnderwater: 0
+    heightRange: {x: 55, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 316
+    prefabs:
+    - index: 5
+      probability: 20
+      prefab: {fileID: 5595323473854503343, guid: 79e84d57f227c344ebb816165875c745,
+        type: 3}
+    - index: 6
+      probability: 20
+      prefab: {fileID: 5250618785924401589, guid: 2e0031b15f6b13240ba1627435842866,
+        type: 3}
+    - index: 7
+      probability: 20
+      prefab: {fileID: 8450013131937564207, guid: c9c1bfe751aa0524f9aad0a8d98fa432,
+        type: 3}
+    - index: 8
+      probability: 20
+      prefab: {fileID: 6193453659618800568, guid: 019ea3ba14c2c394dbf0e7bb09fd8905,
+        type: 3}
+    - index: 9
+      probability: 20
+      prefab: {fileID: 863322927964328203, guid: f863040d62e83a04e928d3112e96927b,
+        type: 3}
+    distance: 15
+    scaleRange: {x: 1.6003189, y: 2}
+    sinkAmount: 0
+  - enabled: 1
+    name: BroadleafTree_04_Red
+    seed: 55464
+    probability: 50
+    collisionCheck: 1
+    rejectUnderwater: 0
+    heightRange: {x: 55, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 309
+    prefabs:
+    - index: 10
+      probability: 20
+      prefab: {fileID: 5250618785924401589, guid: 7bc62276af2584844ac37b94286d4e3f,
+        type: 3}
+    - index: 11
+      probability: 20
+      prefab: {fileID: 8450013131937564207, guid: 69757ad24b3650244986c0d352d29163,
+        type: 3}
+    - index: 12
+      probability: 20
+      prefab: {fileID: 6193453659618800568, guid: 48787cd427c3d3f428ae28e6fef17b12,
+        type: 3}
+    - index: 13
+      probability: 20
+      prefab: {fileID: 863322927964328203, guid: aec7bcbf20e5d5f4fa566cabacc811c9,
+        type: 3}
+    - index: 14
+      probability: 20
+      prefab: {fileID: 5595323473854503343, guid: 03e2340891d61e94b93df31e86c00f99,
+        type: 3}
+    distance: 15
+    scaleRange: {x: 0.8, y: 2}
+    sinkAmount: 0
+  - enabled: 1
+    name: BroadleafTree_02_Orange
+    seed: 9491
+    probability: 50
+    collisionCheck: 1
+    rejectUnderwater: 0
+    heightRange: {x: 55, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 284
+    prefabs:
+    - index: 15
+      probability: 20
+      prefab: {fileID: 863322927964328203, guid: d9357099ca22f7f468c99988142643d5,
+        type: 3}
+    - index: 16
+      probability: 20
+      prefab: {fileID: 6193453659618800568, guid: e558c7c651531574c8134e0e8f8ca0a8,
+        type: 3}
+    - index: 17
+      probability: 20
+      prefab: {fileID: 5595323473854503343, guid: 9bfec0e7ef939134db0a4450766917d2,
+        type: 3}
+    - index: 18
+      probability: 20
+      prefab: {fileID: 5250618785924401589, guid: 171f73fedb19bbf4d9572909101dd9fd,
+        type: 3}
+    - index: 19
+      probability: 20
+      prefab: {fileID: 8450013131937564207, guid: 09ab37f94d95ed14f8894dc7bfaeb32a,
+        type: 3}
+    distance: 15
+    scaleRange: {x: 1.6474576, y: 2}
+    sinkAmount: 0
+  - enabled: 1
+    name: Fir_01
+    seed: 39857
+    probability: 25
+    collisionCheck: 1
+    rejectUnderwater: 0
+    heightRange: {x: 55, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 280
+    prefabs:
+    - index: 20
+      probability: 20
+      prefab: {fileID: 3519991192614501125, guid: 4aa7a928cc83c7d49819fe52f53ec261,
+        type: 3}
+    - index: 21
+      probability: 20
+      prefab: {fileID: 1502869466188940898, guid: 77e842542dc470c4cacb99376e9140d7,
+        type: 3}
+    - index: 22
+      probability: 20
+      prefab: {fileID: 3656882167978128256, guid: a5e5ef299cff96b43a90c8cfe59e376b,
+        type: 3}
+    - index: 23
+      probability: 20
+      prefab: {fileID: 7811622897032540034, guid: 9ee7cbf1161c07f43b5e74f14c2cd00a,
+        type: 3}
+    - index: 24
+      probability: 20
+      prefab: {fileID: 3189538578139757832, guid: ea4b22d3800ce0b46b7304dfd8f7ac78,
+        type: 3}
+    distance: 15
+    scaleRange: {x: 0.8, y: 2}
+    sinkAmount: 0
+  - enabled: 1
+    name: Bush_02_01
+    seed: 67198
+    probability: 1
+    collisionCheck: 1
+    rejectUnderwater: 0
+    heightRange: {x: 55, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    instanceCount: 57
+    prefabs:
+    - index: 25
+      probability: 50
+      prefab: {fileID: 233986929952047716, guid: d8470b2d9ac17874a8c59119201e6671,
+        type: 3}
+    - index: 26
+      probability: 50
+      prefab: {fileID: 3052515965135097726, guid: 8022ebd68cb5b6948be983bf7aa7b94e,
+        type: 3}
+    distance: 7
+    scaleRange: {x: 1.3593221, y: 1.9741938}
+    sinkAmount: 0
+  - enabled: 1
+    name: Bush_03_01
+    seed: 7085
+    probability: 2.5
+    collisionCheck: 1
+    rejectUnderwater: 0
+    heightRange: {x: 55, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 225
+    prefabs:
+    - index: 27
+      probability: 50
+      prefab: {fileID: 7390566949429054898, guid: 18665362feb1b494fbeda66c24a91d57,
+        type: 3}
+    - index: 28
+      probability: 50
+      prefab: {fileID: 676518420115694973, guid: c255a97f0f00f934fade030c353aff54,
+        type: 3}
+    distance: 5
+    scaleRange: {x: 0.8, y: 2}
+    sinkAmount: 0
+  - enabled: 1
+    name: Bush_02_01
+    seed: 36121
+    probability: 5
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 0, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 309
+    prefabs:
+    - index: 29
+      probability: 25
+      prefab: {fileID: 233986929952047716, guid: d8470b2d9ac17874a8c59119201e6671,
+        type: 3}
+    - index: 30
+      probability: 25
+      prefab: {fileID: 3052515965135097726, guid: 8022ebd68cb5b6948be983bf7aa7b94e,
+        type: 3}
+    - index: 31
+      probability: 25
+      prefab: {fileID: 744807394742405594, guid: 9af567e72a97f044297c5f8063f6a5f3,
+        type: 3}
+    - index: 32
+      probability: 25
+      prefab: {fileID: 1231459682092219524, guid: 0822ffcc2f3109548b8fabb01f0f2041,
+        type: 3}
+    distance: 5
+    scaleRange: {x: 1.240678, y: 1.6406779}
+    sinkAmount: 0
+  grassPrefabs:
+  - enabled: 1
+    name: GrassField Short
+    seed: 9728
+    probability: 50
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 379894
+    index: 0
+    type: 1
+    renderAsBillboard: 0
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: 409c39177d5ac5545bede68eed1c290b, type: 3}
+    mainColor: {r: 0.4692345, g: 0.5764706, b: 0.08627452, a: 1}
+    secondaryColor: {r: 0.3019608, g: 0.5764706, b: 0.08627451, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.031707466, y: 0.7091268}
+    minMaxWidth: {x: 2.0701613, y: 3}
+    noiseSize: 5
+  - enabled: 1
+    name: GrassField Long
+    seed: 80627
+    probability: 50
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 205954
+    index: 1
+    type: 1
+    renderAsBillboard: 0
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: 409c39177d5ac5545bede68eed1c290b, type: 3}
+    mainColor: {r: 0.45306122, g: 0.555, b: 0.08683672, a: 1}
+    secondaryColor: {r: 0.27628955, g: 0.4339623, b: 0.08460896, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.4196521, y: 1.254329}
+    minMaxWidth: {x: 1.1588706, y: 1.8830644}
+    noiseSize: 5
+  - enabled: 1
+    name: Grass_01
+    seed: 72278
+    probability: 50
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 206072
+    index: 2
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 2532886251314913023, guid: 954b7a467a8ef9341bd209a76d738cb9,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 0.2533482, y: 0.9065745}
+    minMaxWidth: {x: 0.8000002, y: 3}
+    noiseSize: 5
+  - enabled: 1
+    name: Grass_02
+    seed: 75675
+    probability: 50
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 207621
+    index: 3
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 7572530193493797500, guid: 28e7215f7f3d4af479961532235129be,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 0.14052808, y: 1.3098835}
+    minMaxWidth: {x: 0.8, y: 3}
+    noiseSize: 5
+  - enabled: 1
+    name: Grass_03
+    seed: 63459
+    probability: 50
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 377617
+    index: 4
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 2748314027582345112, guid: af43153991420fe4fac16a0543fd9e2d,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 0.18482223, y: 0.8848219}
+    minMaxWidth: {x: 1.5500002, y: 3}
+    noiseSize: 5
+  - enabled: 1
+    name: GrassField Very Short
+    seed: 20937
+    probability: 50
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 377670
+    index: 5
+    type: 1
+    renderAsBillboard: 1
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 2.4
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: 409c39177d5ac5545bede68eed1c290b, type: 3}
+    mainColor: {r: 0.32326528, g: 0.396, b: 0.06195917, a: 1}
+    secondaryColor: {r: 0.35686275, g: 0.5568628, b: 0.11764706, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.09251842, y: 0.769938}
+    minMaxWidth: {x: 2.0701613, y: 3}
+    noiseSize: 5
+  - enabled: 1
+    name: Grass01
+    seed: 9205
+    probability: 25
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 108720
+    index: 6
+    type: 1
+    renderAsBillboard: 1
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 8.8
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: 1fc3f8be4baf4ac48b10d918759e45a2, type: 3}
+    mainColor: {r: 0.45187518, g: 0.5754717, b: 0.16648865, a: 1}
+    secondaryColor: {r: 0.25490198, g: 0.4901961, b: 0.054901965, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.15745586, y: 0.99213403}
+    minMaxWidth: {x: 1.0862902, y: 1.9959681}
+    noiseSize: 5
+  - enabled: 1
+    name: Grass02
+    seed: 65256
+    probability: 25
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 109933
+    index: 7
+    type: 1
+    renderAsBillboard: 0
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: caa550437d58b4d4b97164adaae954f1, type: 3}
+    mainColor: {r: 0.52880025, g: 0.7264151, b: 0.16903995, a: 1}
+    secondaryColor: {r: 0.35686275, g: 0.5568628, b: 0.11764706, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.14694649, y: 0.98162395}
+    minMaxWidth: {x: 1.3312343, y: 2.0554276}
+    noiseSize: 5
+  - enabled: 1
+    name: Grass03
+    seed: 26131
+    probability: 25
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 103024
+    index: 8
+    type: 1
+    renderAsBillboard: 0
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: add9db1e4f4dd694ca64187a4da5d757, type: 3}
+    mainColor: {r: 0.6184131, g: 0.6509804, b: 0.2117647, a: 1}
+    secondaryColor: {r: 0.35686275, g: 0.5568628, b: 0.11764706, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.10083395, y: 0.9355114}
+    minMaxWidth: {x: 1.2233869, y: 1.9475802}
+    noiseSize: 5
+  - enabled: 1
+    name: Flower_Yellow
+    seed: 49377
+    probability: 0.5
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 3589
+    index: 9
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 1793841155696690611, guid: 6cbc1a6123e1a5f42b589f21ac531d94,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 1.25, y: 1.75}
+    minMaxWidth: {x: 0.8, y: 1.2}
+    noiseSize: 0.1
+  - enabled: 1
+    name: Flower_Pink
+    seed: 31102
+    probability: 0.1
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 336
+    index: 10
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 2080254620369348174, guid: 3f69ce91617ada5408f4e710ccb230eb,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 1.25, y: 1.7499999}
+    minMaxWidth: {x: 0.8, y: 1.2}
+    noiseSize: 0.1
+  - enabled: 1
+    name: Flower_White
+    seed: 80851
+    probability: 0.3
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 2227
+    index: 11
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 5127406509901702237, guid: 8c7bc13b48e07624cbeab19070eac416,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 1.25, y: 1.7499999}
+    minMaxWidth: {x: 0.8, y: 1.2}
+    noiseSize: 0.1
+  - enabled: 1
+    name: Flower_Blue
+    seed: 50818
+    probability: 0.1
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 422
+    index: 12
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 7733339445370539976, guid: eae282ced33b74140b668fb902af6d44,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 1.25, y: 1.7499999}
+    minMaxWidth: {x: 0.8, y: 1.2}
+    noiseSize: 0.1
+  - enabled: 1
+    name: Flower_Red
+    seed: 61073
+    probability: 0.1
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 0, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 423
+    index: 13
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 329369609626562540, guid: c91f6136c646d894b86e255f5327a7ce, type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 1.25, y: 1.7499999}
+    minMaxWidth: {x: 0.8, y: 1.2}
+    noiseSize: 0.1
+  - enabled: 1
+    name: Flower_Orange
+    seed: 56892
+    probability: 0.15
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Grass_Layer
+      layerID: 4
+      threshold: 0
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    - name: Treeless Grass
+      layerID: 7
+      threshold: 0
+    instanceCount: 1158
+    index: 14
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 3020180637102020936, guid: 2e5167dccc642314c842bf62085fdd7f,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 1.25, y: 1.7499999}
+    minMaxWidth: {x: 0.8, y: 1.2}
+    noiseSize: 0.1
+  - enabled: 0
+    name: FlowerMeadow_RedOrange
+    seed: 24086
+    probability: 0.15
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 0
+    index: 15
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 681654301592259601, guid: a173b161a3d8ac344bf13cbd33b7aeec, type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 2.2217736, y: 2.7217739}
+    minMaxWidth: {x: 2.6, y: 3}
+    noiseSize: 0.1
+  - enabled: 0
+    name: FlowerMeadow_AllColours
+    seed: 52216
+    probability: 0.15
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 0
+    index: 16
+    type: 0
+    renderAsBillboard: 0
+    prefab: {fileID: 5684919319715950946, guid: 225185975765e704faab6a0093ff4290,
+      type: 3}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 0}
+    mainColor: {r: 1, g: 1, b: 1, a: 1}
+    secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    linkColors: 1
+    minMaxHeight: {x: 2.4395158, y: 2.939516}
+    minMaxWidth: {x: 2.6, y: 3}
+    noiseSize: 0.1
+  - enabled: 1
+    name: Grass01
+    seed: 9205
+    probability: 25
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 103334
+    index: 17
+    type: 1
+    renderAsBillboard: 1
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 8.8
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: 1fc3f8be4baf4ac48b10d918759e45a2, type: 3}
+    mainColor: {r: 0.38149253, g: 0.49056602, b: 0.13266875, a: 1}
+    secondaryColor: {r: 0.20764339, g: 0.3962264, b: 0.047347773, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.19195521, y: 1.0266335}
+    minMaxWidth: {x: 1.0862902, y: 1.9959681}
+    noiseSize: 5
+  - enabled: 1
+    name: Grass02
+    seed: 65256
+    probability: 25
+    collisionCheck: 0
+    rejectUnderwater: 0
+    heightRange: {x: 50, y: 1000}
+    slopeRange: {x: 0, y: 60}
+    curvatureRange: {x: 0, y: 1}
+    layerMasks:
+    - name: Forest_Layer
+      layerID: 3
+      threshold: 0
+    instanceCount: 103271
+    index: 18
+    type: 1
+    renderAsBillboard: 0
+    prefab: {fileID: 0}
+    gpuInstancing: 1
+    holeEdgePadding: 2
+    alignToGround: 100
+    positionJitter: 0
+    useDensityScaling: 1
+    density: 0
+    billboard: {fileID: 2800000, guid: caa550437d58b4d4b97164adaae954f1, type: 3}
+    mainColor: {r: 0.42784134, g: 0.5943396, b: 0.12148447, a: 1}
+    secondaryColor: {r: 0.24927685, g: 0.3962264, b: 0.07351368, a: 1}
+    linkColors: 0
+    minMaxHeight: {x: 0.22453678, y: 1.0592142}
+    minMaxWidth: {x: 1.3312343, y: 2.0554276}
+    noiseSize: 5
+  terrainSettings:
+    drawTreesAndFoliage: 1
+    preservePrefabLayer: 1
+    treeLightProbes: 0
+    treeDistance: 200
+    billboardStart: 100
+    maxMeshTrees: 20
+    detailScattermode: 0
+    grassDistance: 300
+    grassDensity: 1
+    windStrength: 0.15
+    windSpeed: 0.5
+    windFrequency: 1
+    wintTint: {r: 0.43921572, g: 0.61960787, b: 0.20000002, a: 1}
+  cellSize: 64
+  cellDivisions: 4
+  highPrecisionCollision: 1
+  collisionLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  terrainMinMaxHeight: {x: 0, y: 118.27504}
+  detailResolution: 1024
+  detailResolutionIndex: 3
+  grassPatchSize: 128
+  grassPatchSizeIndex: 4
+  tempColliders: []
+  waterHeight: 0
+  autoRespawnTrees: 1

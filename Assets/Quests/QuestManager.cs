@@ -21,7 +21,7 @@ public class QuestManager : MonoBehaviour
 
     private void Awake()
     {
-        AddItemQuest(testQuest);
+       // AddItemQuest(testQuest);
     }
 
     private void Update()

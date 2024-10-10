@@ -46,7 +46,7 @@ public class EntityAttack : CharacterCombat
 
             if (GetComponent<EntityController>().isAttacking)
                 Attack(other.gameObject.GetComponent<EntityStats>(), GetComponent<EntityStats>().attackDamage.GetValue(), false);
-            else if (other.gameObject.GetComponent<EntityController>().entityID != GetComponent<EntityController>().entityID)
+            else if (other.gameObject.GetComponent<EntityController>().entityInfo.entityID != GetComponent<EntityController>().entityInfo.entityID)
                 Attack(other.gameObject.GetComponent<EntityStats>(), GetComponent<EntityStats>().passiveDamage.GetValue(), true);
 
             if (!hitEffect.isPlaying)

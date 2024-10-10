@@ -1074,9 +1074,10 @@ public class PlayerInventory : MonoBehaviour
 
                 selectedInventoryItem.physicalItem = selectedPhysicalItem;
 
-                selectedPhysicalItem.GetComponent<ItemInWorld>().enabled = false;
+                if (selectedPhysicalItem.GetComponent<ItemInWorld>())
+                    selectedPhysicalItem.GetComponent<ItemInWorld>().enabled = false;
 
-                if (!selectedPhysicalItem.GetComponent<Collider>().isTrigger)
+                if (selectedPhysicalItem.GetComponent<Collider>() && !selectedPhysicalItem.GetComponent<Collider>().isTrigger)
                     selectedPhysicalItem.GetComponent<Collider>().enabled = false;
 
                 if (selectedPhysicalItem.GetComponent<Rigidbody>() && selectedPhysicalItem.GetComponent<Rigidbody>().useGravity != false)

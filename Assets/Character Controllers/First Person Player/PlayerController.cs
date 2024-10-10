@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+//using Unity.Netcode;
 using UnityEngine;
 using UnityEditor;
 
@@ -8,7 +8,7 @@ using UnityEditor;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerStats))]
 [RequireComponent(typeof(AudioSource))]
-public class PlayerController : NetworkBehaviour
+public class PlayerController : MonoBehaviour
 {
     [HideInInspector] public CharacterController controller;
 
@@ -154,7 +154,7 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
 
         if (Input.GetButtonDown("Emote"))
         {

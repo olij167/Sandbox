@@ -911,7 +911,7 @@ Transform:
   m_GameObject: {fileID: 9057722755411291407}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.207, y: -11.45, z: 327.88696}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -969,7 +969,7 @@ NavMeshAgent:
   m_Acceleration: 4
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.9
+  m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -989,21 +989,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4362f9e0a3103c448b0087839596b17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityID: 5
+  entityInfo:
+    entityID: 1
+    gender: 0
+    age: 0
+    agingSpeed: 0.2
+    birthSizeRange: {x: 0.2, y: 0.4}
+    ageOfMaturity: 30
+    maturitySizeRange: {x: 0.8, y: 1.6}
+    reproductionTime: 30
+    childPrefab: {fileID: 9057722755411291407}
+    mother: {fileID: 0}
+    father: {fileID: 0}
+    children: []
+    siblings: []
+  lifeSizeRange: {x: 0, y: 0}
   stats: {fileID: 0}
-  gender: 0
-  age: 0
-  agingSpeed: 1
-  birthSizeRange: {x: 0.1, y: 0.2}
-  ageOfMaturity: 30
-  maturitySizeRange: {x: 0.6, y: 1.2}
-  reproductionTime: 10
-  canReproduce: 0
-  childPrefab: {fileID: 9057722755411291407}
   eyes: {fileID: 6267059484766404684}
-  lookDistance: 50
+  lookDistance: 15
+  viewRays: 24
   animator: {fileID: 6464021384255738847}
   wanderPoint: {x: 0, y: 0, z: 0}
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 1126
   followBehind: 0
   followDistance: 1
   currentFocus: 0
@@ -1011,21 +1020,6 @@ MonoBehaviour:
     interestingObject: {fileID: 0}
     priority: 0
     focusType: 0
-  home:
-    interestingObject: {fileID: 0}
-    priority: 0
-    focusType: 0
-  isAttacking: 0
-  isPaused: 0
-  isAsleep: 0
-  deepSleep: 0
-  isEating: 0
-  eatingTimer: 0
-  isDrinking: 0
-  isMating: 0
-  ignoreLayers:
-    serializedVersion: 2
-    m_Bits: 1126
   detectedObjects: []
   foodList:
   - foodObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
@@ -1053,6 +1047,10 @@ MonoBehaviour:
       type: 3}
     priority: 2
     focusType: 4
+  - interestingObject: {fileID: 4912476555309126663, guid: 156263a8b65c51a469351b062ff7e4a9,
+      type: 3}
+    priority: 2
+    focusType: 4
   - interestingObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
       type: 3}
     priority: 3
@@ -1064,15 +1062,27 @@ MonoBehaviour:
   - interestingObject: {fileID: 7960500402485515975}
     priority: 3
     focusType: 2
-  mother: {fileID: 0}
-  father: {fileID: 0}
-  children: []
-  siblings: []
-  rMin: 0
-  rMax: 0
-  minSize: {x: 0, y: 0, z: 0}
-  maxSize: {x: 0, y: 0, z: 0}
-  viewRays: 24
+  - interestingObject: {fileID: 2172824284947859688, guid: 654d493e12e886341a92bdd05ec73f35,
+      type: 3}
+    priority: 3
+    focusType: 2
+  - interestingObject: {fileID: 8654311611020469116, guid: 037a8989feab98645a154e5ba1ca68c4,
+      type: 3}
+    priority: 3
+    focusType: 2
+  home:
+    interestingObject: {fileID: 0}
+    priority: 0
+    focusType: 0
+  isAttacking: 0
+  isPaused: 0
+  isAsleep: 0
+  deepSleep: 0
+  isEating: 0
+  eatingTimer: 0
+  isDrinking: 0
+  canReproduce: 0
+  isMating: 0
 --- !u!114 &8117231786371183962
 MonoBehaviour:
   m_ObjectHideFlags: 0

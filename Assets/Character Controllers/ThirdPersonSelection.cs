@@ -432,6 +432,12 @@ public class ThirdPersonSelection : MonoBehaviour
     {
         InventoryItem item = selectedObject.GetComponent<ItemInWorld>().item;
 
+        if (selectedObject.GetComponent<PlacedObject>())
+        {
+            GridBuildingSystem gBS = FindObjectOfType<GridBuildingSystem>();
+            gBS.grid.GetGridObject(gBS.x, gBS.z).ClearPlacedObject();
+        }
+
         inventorySystem.AddItemToInventory(item, selectedObject);
     }
 

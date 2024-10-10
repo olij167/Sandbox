@@ -6,6 +6,7 @@ public class AiInteractionArea : MonoBehaviour
 {
 
     private EntityController entityController;
+    private EntityInfo entityInfo;
 
     public List<GameObject> objectsInTrigger;
 
@@ -14,6 +15,7 @@ public class AiInteractionArea : MonoBehaviour
     private void Awake()
     {
         entityController = transform.parent.root.GetComponent<EntityController>();
+        entityInfo = entityController.entityInfo;
     }
 
     private void Update()
@@ -82,16 +84,17 @@ public class AiInteractionArea : MonoBehaviour
 
                                
                                 case EntityController.Focus.Companion:
-                                    if (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID == entityController.entityID) //if they are the same species
+                                    if (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityInfo.entityID == entityInfo.entityID) //if they are the same species
                                     {
                                         EntityController entity = objectsInTrigger[oIT].GetComponent<EntityController>();
+                                        EntityInfo entInfo = entity.entityInfo;
 
                                         if (entityController.canReproduce && entity.canReproduce
-                                                && entity.mother != entityController && entityController.father != entity
-                                                && !entityController.children.Contains(entity) && !entityController.siblings.Contains(entity)
-                                                && !entity.children.Contains(entityController) && !entity.siblings.Contains(entityController)) // Make sure they have both reached maturity & arent relatives
+                                                && entInfo.mother != entityController && entityInfo.father != entity
+                                                && !entityInfo.children.Contains(entity) && !entityInfo.siblings.Contains(entity)
+                                                && !entInfo.children.Contains(entityController) && !entInfo.siblings.Contains(entityController)) // Make sure they have both reached maturity & arent relatives
                                         {
-                                            if (entityController.gender == EntityController.Gender.female && entity.gender == EntityController.Gender.male) // female perspective
+                                            if (entityInfo.gender == EntityInfo.Gender.female && entInfo.gender == EntityInfo.Gender.male) // female perspective
                                             {
 
                                                 entityController.canReproduce = false;
@@ -100,10 +103,10 @@ public class AiInteractionArea : MonoBehaviour
                                                 entity.isMating = true;
                                                 entityController.stats.sexDrive = 0f;
                                                 entity.stats.sexDrive = 0f;
-                                                StartCoroutine(Reproduce(entityController.reproductionTime, entityController, entity)); // start incubation
+                                                StartCoroutine(Reproduce(entityInfo.reproductionTime, entityController, entity)); // start incubation
                                             }
                                         }
-                                        else if (entityController.gender == EntityController.Gender.male && entity.gender == EntityController.Gender.female) // male perspective
+                                        else if (entityInfo.gender == EntityInfo.Gender.male && entInfo.gender == EntityInfo.Gender.female) // male perspective
                                         {
                                             entityController.canReproduce = false;
                                             entity.canReproduce = false;
@@ -112,12 +115,12 @@ public class AiInteractionArea : MonoBehaviour
                                             entityController.stats.sexDrive = 0f;
                                             entity.stats.sexDrive = 0f;
 
-                                            StartCoroutine(ReproductionCooldown(entityController.reproductionTime));
+                                            StartCoroutine(ReproductionCooldown(entityInfo.reproductionTime));
 
                                         }
 
                                     }
-                                    else if (!objectsInTrigger[oIT].GetComponent<EntityController>() || (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityID != entityController.entityID)) // otherwise just follow
+                                    else if (!objectsInTrigger[oIT].GetComponent<EntityController>() || (objectsInTrigger[oIT].GetComponent<EntityController>() && objectsInTrigger[oIT].GetComponent<EntityController>().entityInfo.entityID != entityInfo.entityID)) // otherwise just follow
                                         entityController.followBehind = true;
                                     break;
                                 case EntityController.Focus.Attack:
@@ -162,19 +165,19 @@ public class AiInteractionArea : MonoBehaviour
 
         yield return new WaitForSeconds(eatingTime);
 
+        GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.currentHealth, entityController.stats.maxHealth.GetValue(), entityController.foodList[foodListIndex].healthRecovery);
+        GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.hunger, entityController.stats.maxHunger.GetValue(), entityController.foodList[foodListIndex].healthRecovery * 2);
+
+        Debug.Log(entityController.name + " has eaten " + entityController.foodList[foodListIndex].foodObject.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
+
+
         if (food != null)
         {
-            GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.currentHealth, entityController.stats.maxHealth.GetValue(), entityController.foodList[foodListIndex].healthRecovery);
-            GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.hunger, entityController.stats.maxHunger.GetValue(), entityController.foodList[foodListIndex].healthRecovery * 2);
-            //GetComponentInParent<EntityStats>().IncreaseStatInstant(entityController.stats.energy, entityController.stats.maxEnergy.GetValue(), entityController.foodList[foodListIndex].healthRecovery / 2);
-
-            Debug.Log(entityController.name + " has eaten " + food.name + " for " + entityController.foodList[foodListIndex].healthRecovery + " health recovery");
-
             objectsInTrigger.Remove(food);
 
             Destroy(food);
         }
-        else Debug.Log("Food disappeared before eating was finished");
+        else Debug.Log("Food disappeared before eating was finished " );
 
         entityController.isEating = false;
     }
@@ -207,42 +210,42 @@ public class AiInteractionArea : MonoBehaviour
 
         Debug.Log("Reproduction Complete");
 
-        EntityController baby = Instantiate(entityController.childPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z - 1), Quaternion.identity).GetComponent<EntityController>();
-        baby.mother = mother;
-        baby.father = father;
+        EntityController baby = Instantiate(entityInfo.childPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z - 1), Quaternion.identity).GetComponent<EntityController>();
+        baby.entityInfo.mother = mother;
+        baby.entityInfo.father = father;
 
 
-        if (mother.children == null) mother.children = new List<EntityController>();
-        if (father.children == null) father.children = new List<EntityController>();
+        if (mother.entityInfo.children == null) mother.entityInfo.children = new List<EntityController>();
+        if (father.entityInfo.children == null) father.entityInfo.children = new List<EntityController>();
 
-        mother.children.Add(baby);
-        father.children.Add(baby);
+        mother.entityInfo.children.Add(baby);
+        father.entityInfo.children.Add(baby);
 
-        for (int i = 0; i < mother.children.Count; i++)
+        for (int i = 0; i < mother.entityInfo.children.Count; i++)
         {
-            if (mother.children[i].siblings == null) mother.children[i].siblings = new List<EntityController>();
+            if (mother.entityInfo.children[i].entityInfo.siblings == null) mother.entityInfo.children[i].entityInfo.siblings = new List<EntityController>();
 
-            if (mother.children[i] == baby)
+            if (mother.entityInfo.children[i] == baby)
             {
-                foreach (EntityController child in mother.children)
-                    if (!baby.siblings.Contains(child) && baby != child)
-                        baby.siblings.Add(child);
+                foreach (EntityController child in mother.entityInfo.children)
+                    if (!baby.entityInfo.siblings.Contains(child) && baby != child)
+                        baby.entityInfo.siblings.Add(child);
             }
-            else if (!mother.children[i].siblings.Contains(baby))
-                mother.children[i].siblings.Add(baby);
+            else if (!mother.entityInfo.children[i].entityInfo.siblings.Contains(baby))
+                mother.entityInfo.children[i].entityInfo.siblings.Add(baby);
         }
 
-        for (int i = 0; i < father.children.Count; i++)
+        for (int i = 0; i < father.entityInfo.children.Count; i++)
         {
-            if (father.children[i].siblings == null) father.children[i].siblings = new List<EntityController>();
+            if (father.entityInfo.children[i].entityInfo.siblings == null) father.entityInfo.children[i].entityInfo.siblings = new List<EntityController>();
 
-            if (father.children[i] == baby)
+            if (father.entityInfo.children[i] == baby)
             {
-                foreach (EntityController child in father.children)
-                    if (!baby.siblings.Contains(child) && baby != child)
-                        baby.siblings.Add(child);
+                foreach (EntityController child in father.entityInfo.children)
+                    if (!baby.entityInfo.siblings.Contains(child) && baby != child)
+                        baby.entityInfo.siblings.Add(child);
             }
-            else if (!father.children[i].siblings.Contains(baby)) father.children[i].siblings.Add(baby);
+            else if (!father.entityInfo.children[i].entityInfo.siblings.Contains(baby)) father.entityInfo.children[i].entityInfo.siblings.Add(baby);
         }
 
         mother.canReproduce = true;
@@ -260,7 +263,7 @@ public class AiInteractionArea : MonoBehaviour
 
         if (entityController.target != null && entityController.target.interestingObject == other.transform)
         {
-            if (other.gameObject.GetComponent<PlayerController>() || (other.GetComponent<EntityController>() && other.GetComponent<EntityController>().entityID != entityController.entityID))
+            if (other.gameObject.GetComponent<PlayerController>() || (other.GetComponent<EntityController>() && other.GetComponent<EntityController>().entityInfo.entityID != entityInfo.entityID))
             {
                 entityController.isAttacking = true;
             }

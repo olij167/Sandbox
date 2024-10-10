@@ -4,9 +4,10 @@ using UnityEngine;
 
 
 //To create: Right click in project window -> Create -> Inventory item
-[CreateAssetMenu(menuName ="Item/Inventory")]
+[CreateAssetMenu(menuName = "Item/Inventory")]
 public class InventoryItem : Item
 {
+
     public string itemDescription;
     //the inventory item model
     public GameObject prefab;
@@ -16,8 +17,8 @@ public class InventoryItem : Item
     public float heldRigWeight;
 
     public ItemType itemType;
-   // public SkinnedMeshRenderer mesh;
-
+    // public SkinnedMeshRenderer mesh;
+    public PlacedObjectTypeSO placedObject;
     public float itemValue;
 
     public float weight;
@@ -55,6 +56,8 @@ public class InventoryItem : Item
 
     //public int attackAnimationIndex;
     //public AnimationCombo attackAnimationCombo;
+
+   
 
 }
 

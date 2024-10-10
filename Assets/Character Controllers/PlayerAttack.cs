@@ -442,7 +442,12 @@ public class PlayerAttack : CharacterCombat
             if (collider.GetComponent<EntityStats>() && !enemiesInRange.Contains(collider.gameObject))
             {
                 enemiesInRange.Add(collider.gameObject);
-                lookTargets.AddMember(collider.transform, 0, collider.GetComponent<CapsuleCollider>().radius);
+
+                if (collider.GetComponent<CapsuleCollider>())
+                    lookTargets.AddMember(collider.transform, 0, collider.GetComponent<CapsuleCollider>().radius);
+                else if (collider.GetComponent<BoxCollider>())
+                    lookTargets.AddMember(collider.transform, 0, collider.GetComponent<BoxCollider>().size.magnitude);
+
             }
         }
 

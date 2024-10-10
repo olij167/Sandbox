@@ -6,26 +6,21 @@ using UnityEngine.AI;
 
 public class EntityController : MonoBehaviour
 {
-    [Header("Entity Info")]
+    public EntityInfo entityInfo;
 
-    public int entityID;
+    [field: ReadOnlyField, SerializeField] private Vector2 lifeSizeRange;
+    private Vector3 minSize, maxSize;
 
     [HideInInspector] public EntityStats stats;
-    public enum Gender { male, female }
-    public Gender gender;
-    public float age;
-    public float agingSpeed;
-    public Vector2 birthSizeRange;
-    public float ageOfMaturity;
-    public Vector2 maturitySizeRange;
-    public float reproductionTime;
-    public bool canReproduce;
-    public GameObject childPrefab;
+    NavMeshAgent agent;
+    Rigidbody rb;
 
     [Header("Detection")]
     public Transform eyes;
    // public float lookRadius = 10f;
     public float lookDistance = 10f;
+    public int viewRays = 24;
+
     public Animator animator;
 
     //public Transform wanderTarget;
@@ -35,6 +30,7 @@ public class EntityController : MonoBehaviour
     private float distanceFromGround = 1f;
 
     //public float wanderShiftDistance = 5f;
+    public LayerMask ignoreLayers;
 
     public bool followBehind;
     public float followDistance = 6f;
@@ -42,11 +38,17 @@ public class EntityController : MonoBehaviour
     public Focus currentFocus;
 
     public PointOfInterest target;
-    NavMeshAgent agent;
-    //CharacterCombat combat;
-    Rigidbody rb;
+
+    public List<PointOfInterest> detectedObjects;
+
+    public List<Food> foodList;
+    public List<PointOfInterest> pointsOfInterest;
+
+
     public PointOfInterest home;
 
+
+    [Header("States")]
     public bool isAttacking;
     public bool isPaused;
     public bool isAsleep;
@@ -55,24 +57,12 @@ public class EntityController : MonoBehaviour
     public bool isEating;
     public float eatingTimer;
 
-      public bool isDrinking;
-      public bool isMating;
+    public bool isDrinking;
 
-    public LayerMask ignoreLayers;
-    public List<PointOfInterest> detectedObjects;
+    public bool canReproduce;
 
-    public List<Food> foodList;
-    public List<PointOfInterest> pointsOfInterest;
+    public bool isMating;
 
-
-    [Header("Family")]
-    public EntityController mother;
-    public EntityController father;
-    public List<EntityController> children;
-    public List<EntityController> siblings;
-
-    [field: ReadOnlyField, SerializeField] private float rMin, rMax;
-    [field: ReadOnlyField, SerializeField] private Vector3 minSize, maxSize;
 
     [System.Serializable]
     public class PointOfInterest
@@ -87,7 +77,7 @@ public class EntityController : MonoBehaviour
     {
         Food, Water, Companion, Sleep, Avoid, Attack, DetectedPriority
     }
-
+    // TO DO: ADD PROTECT STATE
 
     [System.Serializable]
     public class Food
@@ -104,12 +94,12 @@ public class EntityController : MonoBehaviour
         //    target = PlayerManager.instance.player.transform;
         stats = GetComponent<EntityStats>();
 
-        age = 0f;
+        entityInfo.age = 0f;
 
         //wanderShift = wanderShiftSpeed;
         //wanderShiftSpeed = Random.Range(wanderShift / 2, wanderShift);
 
-        children = new List<EntityController>();
+        entityInfo.children = new List<EntityController>();
 
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
@@ -117,14 +107,14 @@ public class EntityController : MonoBehaviour
         detectedObjects = new List<PointOfInterest>();
         //agent.Warp(transform.position);
 
-        rMin = Random.Range(birthSizeRange.x, birthSizeRange.y);
-        minSize = new Vector3(rMin, rMin, rMin);
-        rMax = Random.Range(maturitySizeRange.x, maturitySizeRange.y);
-        maxSize = new Vector3(rMax, rMax, rMax);
+        lifeSizeRange.x = Random.Range(entityInfo.birthSizeRange.x, entityInfo.birthSizeRange.y);
+        minSize = new Vector3(lifeSizeRange.x, lifeSizeRange.x, lifeSizeRange.x);
+        lifeSizeRange.y = Random.Range(entityInfo.maturitySizeRange.x, entityInfo.maturitySizeRange.y);
+        maxSize = new Vector3(lifeSizeRange.y, lifeSizeRange.y, lifeSizeRange.y);
 
         if (Chance.CoinFlip())
-            gender = Gender.male;
-        else gender = Gender.female;
+            entityInfo.gender = EntityInfo.Gender.male;
+        else entityInfo.gender = EntityInfo.Gender.female;
     }
 
     private void Update()
@@ -135,23 +125,16 @@ public class EntityController : MonoBehaviour
 
         if (stats.isDead) StopAllCoroutines();
 
-            age += agingSpeed * Time.deltaTime;
+        entityInfo.age += entityInfo.agingSpeed * Time.deltaTime;
 
-        if (age < ageOfMaturity)
+        if (entityInfo.age < entityInfo.ageOfMaturity)
         {
             canReproduce = false;
 
-            transform.localScale = Vector3.Lerp(minSize, maxSize, age / ageOfMaturity);
+            transform.localScale = Vector3.Lerp(minSize, maxSize, entityInfo.age / entityInfo.ageOfMaturity);
         }
-        else if (age > ageOfMaturity)
-        {
-            if (stats.sexDrive > (stats.maxSexDrive.GetValue() / 3) * 2)
-                canReproduce = true;
-
-            //followBehind = false;
-
-            //stats.sexDrive = stats.maxSexDrive.GetValue();
-        }
+        else if (stats.sexDrive > (stats.maxSexDrive.GetValue() / 3) * 2)
+            canReproduce = true;
 
         if (animator.GetBool("TakeDamage"))
         {
@@ -204,22 +187,6 @@ public class EntityController : MonoBehaviour
 
                     if (detectedObjects[i].focusType == currentFocus)
                     {
-                        if (detectedObjects[i].focusType == Focus.Companion)
-                        {
-                            if (age < ageOfMaturity || !detectedObjects[i].interestingObject.GetComponent<EntityController>() || detectedObjects[i].interestingObject.GetComponent<EntityController>() && detectedObjects[i].interestingObject.GetComponent<EntityController>().entityID != entityID)
-                            {
-                                //follow for protection
-                                followBehind = true;
-
-                            }
-                            else if (detectedObjects[i].interestingObject.GetComponent<EntityController>() && detectedObjects[i].interestingObject.GetComponent<EntityController>().gender == gender)
-                            {
-                                i++;
-                            }
-
-                        }
-                        else followBehind = false;
-
                         if (detectedObjects[i] != null && detectedObjects[i].interestingObject != null)
                         {
                             target = detectedObjects[i];
@@ -233,82 +200,122 @@ public class EntityController : MonoBehaviour
                     }
                 }
             }
-           
+
+            if (target.focusType == Focus.Companion && !canReproduce)
+            {
+                if (!target.interestingObject.GetComponent<EntityController>() || entityInfo.age < target.interestingObject.GetComponent<EntityController>().entityInfo.age)
+                {
+                    //follow for protection
+                    followBehind = true;
+
+                }
+                else followBehind = false;
+
+            }
+            else followBehind = false;
+
+        }
+        else if (currentFocus == Focus.Sleep)
+        {
+            target = home;
         }
         else target = null;
 
         if (target != null && target.interestingObject != null) // if they have a target
         {
-            if (target == home && Vector3.Distance(transform.position, target.interestingObject.position) <= agent.stoppingDistance)
+            if (target == home)
             {
-                isAsleep = true;
-                isPaused = true;
-            }
-
-            float distance = Vector3.Distance(target.interestingObject.position, transform.position);
-
-            if (distance <= lookDistance)
-            {
-                if (!isPaused) // if the agent isnt paused
+                if (Vector3.Distance(transform.position, target.interestingObject.position) <= agent.stoppingDistance + 1)
                 {
-                    isAsleep = false;
-                    agent.isStopped = false;
-
-                    if (target.focusType != Focus.Avoid)
-                    {
-                        if (followBehind)
-                        {
-                            Vector3 behindPos = new Vector3(target.interestingObject.position.x, target.interestingObject.position.y, target.interestingObject.position.z - target.interestingObject.localScale.magnitude * followDistance);
-                            agent.SetDestination(transform.position + (transform.position - behindPos) / (transform.position - behindPos).magnitude);
-
-                        }
-                        else
-                        {
-                            agent.SetDestination(target.interestingObject.position);
-                        }
-                        FaceTarget(target.interestingObject.position);
-
-                    }
-                    else if (target.focusType == Focus.Avoid)
-                    {
-   
-                            agent.SetDestination(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
-
-                        
-                        //Debug.Log(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
-
-                        FaceTarget(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
-                        //agent.SetDestination(-target.interestingObject.position);
-                    }
+                    isAsleep = true;
+                    isPaused = true;
                 }
-                else if (isAsleep) //if they are paused & asleep
+                else
                 {
-                    agent.isStopped = true;
+                    agent.SetDestination(target.interestingObject.position);
+                    FaceTarget(target.interestingObject.position);
+                }
+            }
+            else
+            {
+                float distance = Vector3.Distance(target.interestingObject.position, transform.position);
 
-                    isAttacking = false;
-                    isEating = false;
-
-                    //if (stats.energy >= stats.maxEnergy.GetValue())
-                    if (TimeController.instance.timeOfDay > stats.awakeHours.x && TimeController.instance.timeOfDay < stats.awakeHours.y)
+                if (distance <= lookDistance)
+                {
+                    if (!isPaused) // if the agent isnt paused
                     {
                         isAsleep = false;
-                        isPaused = false;
                         agent.isStopped = false;
+
+                        if (target.focusType != Focus.Avoid)
+                        {
+                            if (followBehind)
+                            {
+                                Vector3 behindPos = new Vector3(target.interestingObject.position.x, target.interestingObject.position.y, target.interestingObject.position.z - target.interestingObject.localScale.magnitude * followDistance);
+                                agent.SetDestination(behindPos);
+                                //agent.SetDestination(transform.position + (transform.position - behindPos) / (transform.position - behindPos).magnitude);
+                                FaceTarget(target.interestingObject.position);
+
+                            }
+                            else if (target.interestingObject.GetComponent<EntityController>() && target.interestingObject.GetComponent<EntityController>().followBehind)
+                            {
+                                if (wanderPoint == Vector3.zero || Vector3.Distance(transform.position, wanderPoint) <= agent.stoppingDistance + 1)
+                                    StartCoroutine(DelayWanderPoint(5f));
+
+                                agent.SetDestination(wanderPoint);
+                                FaceTarget(wanderPoint);
+
+                            }
+                            else
+                            {
+                                agent.SetDestination(target.interestingObject.position);
+                                FaceTarget(target.interestingObject.position);
+
+                            }
+
+
+                        }
+                        else if (target.focusType == Focus.Avoid)
+                        {
+
+                            agent.SetDestination(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
+
+
+                            //Debug.Log(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
+
+                            FaceTarget(transform.position + (transform.position - target.interestingObject.position) / (transform.position - target.interestingObject.position).magnitude);
+                            //agent.SetDestination(-target.interestingObject.position);
+                        }
                     }
+                    else if (isAsleep) //if they are paused & asleep
+                    {
+                        agent.isStopped = true;
+
+                        isAttacking = false;
+                        isEating = false;
+
+                        //if (stats.energy >= stats.maxEnergy.GetValue())
+                        if (TimeController.instance.timeOfDay > stats.awakeHours.x && TimeController.instance.timeOfDay < stats.awakeHours.y)
+                        {
+                            isAsleep = false;
+                            isPaused = false;
+                            agent.isStopped = false;
+                        }
+                    }
+                    else if (!isAsleep) //if they are paused and not asleep
+                        agent.isStopped = true;
+
+
+                    //if (distance <= agent.stoppingDistance)
+                    //{
+                    //    //CharacterStats targetStats = target.GetComponent<CharacterStats>();
+
+                    //    //if (targetStats != null)
+                    //    //    combat.Attack(targetStats);
+
+                    //    //FaceTarget();
+                    //}
                 }
-                else if (!isAsleep) //if they are paused and not asleep
-                    agent.isStopped = true;
-
-
-                //if (distance <= agent.stoppingDistance)
-                //{
-                //    //CharacterStats targetStats = target.GetComponent<CharacterStats>();
-
-                //    //if (targetStats != null)
-                //    //    combat.Attack(targetStats);
-
-                //    //FaceTarget();
-                //}
             }
         }
         else if (!isPaused) // otherwise make sure they aren't still trying to interact with something
@@ -321,11 +328,11 @@ public class EntityController : MonoBehaviour
             agent.isStopped = false;
 
             //agent.SetDestination(transform.position + (wanderTarget.position - transform.position) / (wanderTarget.position - transform.position).magnitude);
-            if (wanderPoint == Vector3.zero || Vector3.Distance(transform.position, wanderPoint) < lookDistance / 4)
-                wanderPoint = GenerateRandomPointWithinRadius();
+            if (wanderPoint == Vector3.zero || Vector3.Distance(transform.position, wanderPoint) <= agent.stoppingDistance + 1)
+                StartCoroutine(DelayWanderPoint(5f));
 
                 agent.SetDestination(wanderPoint);
-            //FaceTarget(wanderTarget.position);
+            FaceTarget(wanderPoint);
 
         }
         else if (isAsleep)
@@ -372,6 +379,15 @@ public class EntityController : MonoBehaviour
         //else agent.isStopped = true;
     }
 
+    public IEnumerator DelayWanderPoint(float delay)
+    {
+        Vector3 newPoint = GenerateRandomPointWithinRadius();
+
+        yield return new WaitForSeconds(delay);
+
+        wanderPoint = newPoint;
+
+    }
     public PointOfInterest SetHome(Transform homeGO, float priority)
     {
         PointOfInterest newHome = new PointOfInterest();
@@ -405,82 +421,55 @@ public class EntityController : MonoBehaviour
     {
         //if (stats.energy > 0f && !deepSleep) // go to sleep
         //{
-            //Debug.Log("Sex Drive: " + (stats.maxSexDrive.GetValue() - stats.sexDrive));
-            if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].focusType == Focus.Avoid)
-                currentFocus = Focus.Avoid;
-            else if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].focusType == Focus.Attack)
-                currentFocus = Focus.Attack;
-            else if (detectedObjects == null || detectedObjects.Count == 0 || (detectedObjects[0].focusType != Focus.Avoid && detectedObjects[0].focusType != Focus.Attack))
+        //Debug.Log("Sex Drive: " + (stats.maxSexDrive.GetValue() - stats.sexDrive));
+        if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].focusType == Focus.Avoid)
+            currentFocus = Focus.Avoid;
+        else if (detectedObjects != null && detectedObjects.Count > 0 && detectedObjects[0].focusType == Focus.Attack)
+            currentFocus = Focus.Attack;
+        else if (detectedObjects == null || detectedObjects.Count == 0 || (detectedObjects[0].focusType != Focus.Avoid && detectedObjects[0].focusType != Focus.Attack))
+        {
+            if (TimeController.instance.timeOfDay < stats.awakeHours.x || TimeController.instance.timeOfDay > stats.awakeHours.y) // go home out of awake hours
             {
+                //isPaused = true;
+                //isAsleep = true;
+                currentFocus = Focus.Sleep;
 
-                if (stats.hunger < stats.maxHunger.GetValue() / 2 && (stats.hunger <= stats.thirst && stats.hunger <= (stats.maxSexDrive.GetValue() - stats.sexDrive) /*&& stats.hunger <= stats.energy*/))
-                {
-                    //look for food
-                    currentFocus = Focus.Food;
-                }
-                else if (stats.thirst < stats.maxThirst.GetValue() / 2 && (stats.thirst < stats.hunger && stats.thirst <= (stats.maxSexDrive.GetValue() - stats.sexDrive) /*&& stats.thirst <= stats.energy*/))
-                {
-                    //look for water
-                    currentFocus = Focus.Water;
-                }
-                else if (stats.sexDrive > stats.maxSexDrive.GetValue() / 2 && ((stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.hunger && (stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.thirst /*&& (stats.maxSexDrive.GetValue() - stats.sexDrive) <= stats.energy*/))
-                {
-                    //look for a mate
-                    currentFocus = Focus.Companion;
-
-                }
-                //else if (stats.energy < stats.maxEnergy.GetValue() / 2 && (stats.energy < stats.hunger && stats.energy < stats.thirst && stats.energy < (stats.maxSexDrive.GetValue() - stats.sexDrive))) // go to sleep
-                else if (TimeController.instance.timeOfDay < stats.awakeHours.x || TimeController.instance.timeOfDay > stats.awakeHours.y) // go home out of awake hours
-                {
-                    //isPaused = true;
-                    //isAsleep = true;
-                    currentFocus = Focus.Sleep;
-
-                }
-                else currentFocus = Focus.DetectedPriority;
             }
-
-            if (detectedObjects != null)
+            else if (stats.hunger < stats.maxHunger.GetValue() / 2 && (stats.hunger <= stats.thirst && stats.hunger <= (stats.maxSexDrive.GetValue() - stats.sexDrive) /*&& stats.hunger <= stats.energy*/))
             {
-                for (int d = 0; d < detectedObjects.Count; d++)
-                {
-                    if (detectedObjects[d].interestingObject != null)
-                        if (detectedObjects[d].focusType == currentFocus || detectedObjects[d].focusType == Focus.Avoid)
-                        {
-                            detectedObjects[d].priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(detectedObjects[d].interestingObject.position, transform.position) / lookDistance);
-                        }
-                }
+                //look for food
+                currentFocus = Focus.Food;
             }
+            else if (stats.thirst < stats.maxThirst.GetValue() / 2 && (stats.thirst < stats.hunger && stats.thirst <= (stats.maxSexDrive.GetValue() - stats.sexDrive) /*&& stats.thirst <= stats.energy*/))
+            {
+                //look for water
+                currentFocus = Focus.Water;
+            }
+            else if (stats.sexDrive > stats.maxSexDrive.GetValue() / 2 && ((stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.hunger && (stats.maxSexDrive.GetValue() - stats.sexDrive) < stats.thirst /*&& (stats.maxSexDrive.GetValue() - stats.sexDrive) <= stats.energy*/))
+            {
+                //look for a mate
+                currentFocus = Focus.Companion;
 
-            //for (int p = 0; p < pointsOfInterest.Count; p++)
-            //{
-            //    if (pointsOfInterest[p].focusType == currentFocus)
-            //    {
-            //        pointsOfInterest[p].priority = pointsOfInterest[p].priority;
+            }
+            //else if (stats.energy < stats.maxEnergy.GetValue() / 2 && (stats.energy < stats.hunger && stats.energy < stats.thirst && stats.energy < (stats.maxSexDrive.GetValue() - stats.sexDrive))) // go to sleep
+            else currentFocus = Focus.DetectedPriority;
+        }
 
-            //        pointsOfInterest[p].priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(pointsOfInterest[p].interestingObject.position, transform.position) / lookDistance);
+        if (detectedObjects != null)
+        {
+            for (int d = 0; d < detectedObjects.Count; d++)
+            {
+                if (detectedObjects[d].interestingObject != null)
+                    if (detectedObjects[d].focusType == currentFocus || detectedObjects[d].focusType == Focus.Avoid)
+                    {
+                        detectedObjects[d].priority += Mathf.Lerp(-1f, 1f, Vector3.Distance(detectedObjects[d].interestingObject.position, transform.position) / lookDistance);
+                    }
+            }
+        }
 
-            //        break;
-            //    }
-            //    else if (p + 1 >= pointsOfInterest.Count)
-            //    {
-            //        //Debug.Log("Not an intersting object");
-            //        return;
-            //    }
-            //}
 
-        //}
-        //else
-        //{
-        //    isPaused = true;
-        //    isAsleep = true;
-        //    deepSleep = true;
-        //    currentFocus = Focus.Sleep;
-
-        //}
     }
 
-    public int viewRays = 24;
 
     public void DetectSurroundings(Transform npcEyes)
     {

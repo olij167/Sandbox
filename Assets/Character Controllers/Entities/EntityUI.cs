@@ -48,47 +48,50 @@ public class EntityUI : MonoBehaviour
             if (!sleepParticles.isPlaying)
                 sleepParticles.Play();
         }
-        else if (entityController.currentFocus == EntityController.Focus.Attack || entityController.currentFocus == EntityController.Focus.Avoid || entityController.isEating) // attack particles
+        else if (entityController.target != null)
         {
-            if (sleepParticles.isPlaying)
-                sleepParticles.Stop();
-            if (excitedParticles.isPlaying)
-                excitedParticles.Stop();
-            if (loveParticles.isPlaying)
-                loveParticles.Stop();
-            if (searchParticles.isPlaying)
-                searchParticles.Stop();
+            if (entityController.target.focusType == EntityController.Focus.Attack || entityController.target.focusType == EntityController.Focus.Avoid || entityController.isEating) // attack particles
+            {
+                if (sleepParticles.isPlaying)
+                    sleepParticles.Stop();
+                if (excitedParticles.isPlaying)
+                    excitedParticles.Stop();
+                if (loveParticles.isPlaying)
+                    loveParticles.Stop();
+                if (searchParticles.isPlaying)
+                    searchParticles.Stop();
 
-            if (!attackParticles.isPlaying)
-                attackParticles.Play();
-        }
-        else if (entityController.currentFocus == EntityController.Focus.Companion && entityController.canReproduce) // love particles
-        {
-            if (sleepParticles.isPlaying)
-                sleepParticles.Stop();
-            if (excitedParticles.isPlaying)
-                excitedParticles.Stop();
-            if (attackParticles.isPlaying)
-                attackParticles.Stop();
-            if (searchParticles.isPlaying)
-                searchParticles.Stop();
+                if (!attackParticles.isPlaying)
+                    attackParticles.Play();
+            }
+            else if ((entityController.target.focusType == EntityController.Focus.Companion) && entityController.canReproduce) // love particles
+            {
+                if (sleepParticles.isPlaying)
+                    sleepParticles.Stop();
+                if (excitedParticles.isPlaying)
+                    excitedParticles.Stop();
+                if (attackParticles.isPlaying)
+                    attackParticles.Stop();
+                if (searchParticles.isPlaying)
+                    searchParticles.Stop();
 
-            if (!loveParticles.isPlaying)
-                loveParticles.Play();
-        }
-        else if ((entityController.currentFocus == EntityController.Focus.Companion && !entityController.canReproduce) ) // excited particles
-        {
-            if (sleepParticles.isPlaying)
-                sleepParticles.Stop();
-            if (attackParticles.isPlaying)
-                attackParticles.Stop();
-            if (loveParticles.isPlaying)
-                loveParticles.Stop();
-            if (searchParticles.isPlaying)
-                searchParticles.Stop();
+                if (!loveParticles.isPlaying)
+                    loveParticles.Play();
+            }
+            else if ((entityController.target.focusType == EntityController.Focus.Companion && !entityController.canReproduce)) // excited particles
+            {
+                if (sleepParticles.isPlaying)
+                    sleepParticles.Stop();
+                if (attackParticles.isPlaying)
+                    attackParticles.Stop();
+                if (loveParticles.isPlaying)
+                    loveParticles.Stop();
+                if (searchParticles.isPlaying)
+                    searchParticles.Stop();
 
-            if (!excitedParticles.isPlaying)
-                excitedParticles.Play();
+                if (!excitedParticles.isPlaying)
+                    excitedParticles.Play();
+            }
         }
         else if (entityController.target == null || entityController.detectedObjects == null || entityController.detectedObjects.Count <= 0) // search particles
         {
@@ -120,3 +123,4 @@ public class EntityUI : MonoBehaviour
     }
 
 }
+
