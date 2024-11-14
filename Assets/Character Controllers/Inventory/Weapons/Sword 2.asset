@@ -12,22 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d31c182e4bed94cb8a5902bf65e333, type: 3}
   m_Name: Sword 2
   m_EditorClassIdentifier: 
-  itemName: Sword
+  itemName: Machete
   itemID: 0
   itemIcon: {fileID: 21300000, guid: 90e99a7fde056a4418b9fe16084adb5c, type: 3}
   itemDescription: Very sharp
   prefab: {fileID: 2522171815033881113, guid: 8175768f85af0b6469d666f2a6be36c7, type: 3}
   heldRigWeight: 0
-  itemType: 4
+  equipmentType: 4
+  itemType: 3
+  placedObject: {fileID: 0}
+  possibleObjects: []
   itemValue: 30
   weight: 4
   canConsume: 0
   isStackable: 0
   maxNumCarried: 1
   canActivate: 0
-  isTwoHanded: 0
+  isProjectile: 0
+  maxAmmo: 0
   usesBatteries: 0
   maxBatteryCharge: 0
+  canSpoil: 0
   healthEffect: 0
   staminaEffect: 0
   healthModifier: 0

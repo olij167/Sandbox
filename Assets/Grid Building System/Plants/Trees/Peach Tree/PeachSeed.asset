@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d31c182e4bed94cb8a5902bf65e333, type: 3}
+  m_Name: PeachSeed
+  m_EditorClassIdentifier: 
+  itemName: Peach Seed
+  itemID: 0
+  itemIcon: {fileID: 21300000, guid: ff4e2a40a0a91494a873149252b1aaaf, type: 3}
+  itemDescription: 
+  prefab: {fileID: 807858153588674960, guid: 175386259219eef4d9a3ff064984e38c, type: 3}
+  heldRigWeight: 0
+  equipmentType: 4
+  itemType: 0
+  placedObject: {fileID: 0}
+  possibleObjects:
+  - {fileID: 11400000, guid: 56d7d64e7bb1f0f499e11c104d077190, type: 2}
+  - {fileID: 11400000, guid: 0a623deef2231df49b45d18110176a85, type: 2}
+  - {fileID: 11400000, guid: 2ad88f986ac670a46b9a57a4c4930ce8, type: 2}
+  - {fileID: 11400000, guid: 691324980a99e1541907e183a3c52328, type: 2}
+  - {fileID: 11400000, guid: d79bf490e1353b44bb086b395fd4659e, type: 2}
+  itemValue: 0.5
+  weight: 0
+  canConsume: 0
+  isStackable: 1
+  maxNumCarried: 12
+  canActivate: 0
+  isProjectile: 0
+  maxAmmo: 0
+  usesBatteries: 0
+  maxBatteryCharge: 0
+  canSpoil: 0
+  healthEffect: 0
+  staminaEffect: 0
+  healthModifier: 0
+  staminaModifier: 0
+  oxygenModifier: 0
+  speedModifier: 0
+  jumpModifier: 0
+  armourModifier: 0
+  attackDamageModifier: 0
+  passiveDamageModifier: 0
+  knockBackModifier: 0
+  attackSpeedModifier: 0

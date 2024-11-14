@@ -247,6 +247,7 @@ GameObject:
   - component: {fileID: 5155542701752036560}
   - component: {fileID: 1064774164035592125}
   - component: {fileID: 243204515317408534}
+  - component: {fileID: 6169768813493780208}
   m_Layer: 0
   m_Name: Pudu
   m_TagString: Untagged
@@ -316,7 +317,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3811933219322441196}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
@@ -343,6 +344,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityInfo:
     entityID: 3
+    entityName: Pudu
+    icon: {fileID: 21300000, guid: e2375e53132627b4c94b2ca374f11d41, type: 3}
+    entityDesc: 
     gender: 0
     age: 0
     agingSpeed: 0.2
@@ -418,6 +422,9 @@ MonoBehaviour:
     interestingObject: {fileID: 0}
     priority: 0
     focusType: 0
+  homeType: 7
+  canCreateHome: 0
+  spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
   isAsleep: 0
@@ -477,7 +484,6 @@ MonoBehaviour:
     modifiedValue: 0
     baseValue: 5
     modifiers: []
-  entityName: Pudu
   awakeHours: {x: 8, y: 18}
   hunger: 100
   maxHunger:
@@ -566,6 +572,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6, y: 1.1, z: 1.2}
   m_Center: {x: 0, y: 0.55, z: 0.12}
+--- !u!114 &6169768813493780208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3811933219322441196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4735fe1886dbbd418c923a949544aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
 --- !u!1 &3972230277033258255
 GameObject:
   m_ObjectHideFlags: 0

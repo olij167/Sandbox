@@ -101,7 +101,7 @@ public class EmoteManager : MonoBehaviour
                 inventory.inventoryUI.SetActive(false);
                 playerAbilities.abilityUI.SetActive(false);
                 emoteWindowOpen = inventory.inventoryWindowOpen;
-                
+
             }
             else
             {
@@ -143,18 +143,22 @@ public class EmoteManager : MonoBehaviour
         if (emoteWindowOpen && !emoteWindowPanel.activeSelf)
         {
             emoteWindowPanel.SetActive(true);
-            cam.freezeCameraRotation = true;
+            //cam.freezeCameraRotation = true;
 
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.Confined;
+            //Cursor.visible = true;
+            Pause.instance.freezeCameraRotation = true;
+            Pause.instance.unlockCursor = true;
         }
         else if (!emoteWindowOpen && emoteWindowPanel.activeSelf)
         {
             emoteWindowPanel.SetActive(false);
-            cam.freezeCameraRotation = false;
+            //cam.freezeCameraRotation = false;
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
+            Pause.instance.freezeCameraRotation = false;
+            Pause.instance.unlockCursor = false;
         }
     }
 

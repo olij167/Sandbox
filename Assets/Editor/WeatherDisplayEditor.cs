@@ -206,11 +206,11 @@ namespace TimeWeather
 
                 for (int i = 0; i < hourlyForcast.arraySize; i++)
                 {
-                    int c = hourlyForcast.GetArrayElementAtIndex(i).FindPropertyRelative("hourlyClouds").arraySize;
+                    //int c = hourlyForcast.GetArrayElementAtIndex(i).FindPropertyRelative("hourlyClouds").arraySize;
                     if ((backwardHours > 0 && i < weatherController.timeController.timeHours && i >= weatherController.timeController.timeHours - backwardHours) || //if 
                     (i >= weatherController.timeController.timeHours && i < weatherController.timeController.timeHours + numOfHoursToDisplay))
                     {
-                        SetHourForcast(i, c);
+                        SetHourForcast(i);
                     }
 
                     //EditorGUILayout.PropertyField(forcastTime);
@@ -236,7 +236,7 @@ namespace TimeWeather
 
         }
 
-        public void SetHourForcast(int i, int c)
+        public void SetHourForcast(int i)
         {
             SerializedProperty MyListRef = hourlyForcast.GetArrayElementAtIndex(i);
             SerializedProperty forcastTime = MyListRef.FindPropertyRelative("forcastTime");
@@ -275,7 +275,7 @@ namespace TimeWeather
             EditorGUILayout.Toggle(isRaining.boolValue);
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.BeginHorizontal();
+            //EditorGUILayout.BeginHorizontal();
             //cloudFoldOut = EditorGUILayout.Foldout(forcastFoldOut, "Cloud Values", true);
             ////EditorGUILayout.Slider(cloudPower.floatValue, -10f, 10f);
             //if (cloudFoldOut)
@@ -287,9 +287,9 @@ namespace TimeWeather
 
             //    EditorGUILayout.EndVertical();
             //}
-            GUILayout.Label("Wind Speed ");
-            EditorGUILayout.Slider(windSpeed.floatValue, -10f, 10f);
-            EditorGUILayout.EndHorizontal();
+            //GUILayout.Label("Wind Speed ");
+            //EditorGUILayout.Slider(windSpeed.floatValue, -10f, 10f);
+            //EditorGUILayout.EndHorizontal();
 
             //EditorGUILayout.BeginHorizontal();
             //GUILayout.Label("Wetness ");

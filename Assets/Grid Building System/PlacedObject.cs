@@ -5,22 +5,24 @@ using UnityEngine.UI;
 
 public class PlacedObject : MonoBehaviour
 {
-    public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir, PlacedObjectTypeSO placedObjectTypeSO)
+    public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir, PlacedObjectTypeSO placedObjectTypeSO, GridBuildingSystem gridSystem)
     {
-       Transform placedObjectTransform  = Instantiate(placedObjectTypeSO.itemData.prefab.transform, worldPosition, Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0));
+       Transform placedObjectTransform  = Instantiate(placedObjectTypeSO.refItem.transform, worldPosition, Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0));
 
         PlacedObject placedObject = placedObjectTransform.GetComponent<PlacedObject>();
 
         placedObject.origin = origin;
         placedObject.dir = dir;
+        placedObject.gridSystem = gridSystem;
 
         return placedObject;
     }
 
     //private PlacedObjectTypeSO refItem;
     public PlacedObjectTypeSO refItem;
-    [HideInInspector] public Vector2Int origin;
-    [HideInInspector] public PlacedObjectTypeSO.Dir dir;
+    [field: ReadOnlyField] public Vector2Int origin;
+    [field: ReadOnlyField] public PlacedObjectTypeSO.Dir dir;
+    [field: ReadOnlyField] public GridBuildingSystem gridSystem;
 
     public List<Vector2Int> GetGridPositionList()
     {

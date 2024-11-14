@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d31c182e4bed94cb8a5902bf65e333, type: 3}
+  m_Name: Carrot
+  m_EditorClassIdentifier: 
+  itemName: Carrot
+  itemID: 0
+  itemIcon: {fileID: 21300000, guid: 5f0aa86c578f781439a524b5de5de88c, type: 3}
+  itemDescription: 
+  prefab: {fileID: 8900603336253020460, guid: 5c8dd291892c4724b976e0477dc05c34, type: 3}
+  heldRigWeight: 0
+  equipmentType: 4
+  itemType: 1
+  placedObject: {fileID: 0}
+  possibleObjects: []
+  itemValue: 2
+  weight: 0
+  canConsume: 1
+  isStackable: 1
+  maxNumCarried: 6
+  canActivate: 0
+  isProjectile: 0
+  maxAmmo: 0
+  usesBatteries: 0
+  maxBatteryCharge: 0
+  canSpoil: 1
+  healthEffect: 10
+  staminaEffect: 0
+  healthModifier: 0
+  staminaModifier: 0
+  oxygenModifier: 0
+  speedModifier: 0
+  jumpModifier: 0
+  armourModifier: 0
+  attackDamageModifier: 0
+  passiveDamageModifier: 0
+  knockBackModifier: 0
+  attackSpeedModifier: 0

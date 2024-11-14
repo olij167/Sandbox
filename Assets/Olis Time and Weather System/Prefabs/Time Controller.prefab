@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1898008734982147877}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 624.8906, y: 38.797142, z: 290.8374}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &627756389
 MonoBehaviour:
@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c997d62f8d0b24fa6c66d90097b05c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondsPerMinuteInGame: 1
+  secondsPerMinuteInGame: 0.1
   timeScale: 365
   timeOfDay: 7.33
   timeHours: 17
@@ -72,9 +72,9 @@ MonoBehaviour:
   currentDay: 0
   dayOfMonth: 23
   currentMonthData:
-    month: July
-    season: Winter
-    daysInMonth: 31
+    month: September
+    season: Spring
+    daysInMonth: 30
   monthPresets:
   - month: January
     season: Summer
@@ -114,7 +114,7 @@ MonoBehaviour:
     daysInMonth: 31
   seasonalRotation: {fileID: 0}
   maxSeasonalTilt: 30
-  currentYear: 2001
+  currentYear: 2050
   dayCount: 22
   skyData:
     lightIntensity: 1.3
@@ -133,7 +133,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 0.5
-        value: 1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -166,7 +166,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 0.5
-        value: 10
+        value: 5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -212,6 +212,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 5
       m_NumAlphaKeys: 2
     dayMidColorOverTime:
@@ -241,6 +242,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 7
       m_NumAlphaKeys: 2
     nightTopColorOverTime:
@@ -270,6 +272,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 3
       m_NumAlphaKeys: 2
     nightMidColorOverTime:
@@ -299,6 +302,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 6
       m_NumAlphaKeys: 2
     ambientColour:
@@ -328,6 +332,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 5
       m_NumAlphaKeys: 2
     fogColour:
@@ -357,15 +362,24 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 4
       m_NumAlphaKeys: 3
     fogToDayColor: 0.5
   sunLight: {fileID: 0}
   moonLight: {fileID: 0}
   moon: {fileID: 0}
+  toggleTimeUI: 1
   showSeconds: 0
   twelveHourTime: 1
   timeText: {fileID: 0}
   dayText: {fileID: 0}
   timeString: 
+  toggleUITimeControls: 0
+  timeScaleSlider: {fileID: 0}
+  timeOfDaySlider: {fileID: 0}
+  toggleSunTimeUI: 0
+  sunriseText: {fileID: 0}
+  sunsetText: {fileID: 0}
+  showDebugLogs: 0
   smoothLerp: 0.5

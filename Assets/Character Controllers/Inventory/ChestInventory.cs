@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ChestInventory : Interactable
 {
-    [HideInInspector] public ItemSlot[] inventorySlots;
-    public List<InventoryItem> inventory;
+    public ItemSlot[] inventorySlots;
+
+    public List<InventoryUIItem> inventory;
+    public List<ProduceInInventory> produceItems;
+    //public List<InventoryUIItem> uiInventory;
     //public List<InventoryUIItem> inventoryUI;
     public GameObject chestPanel;
 
@@ -14,6 +18,8 @@ public class ChestInventory : Interactable
     private PlayerInventory playerInventory;
 
     public bool isCurrentChest;
+
+    [field: ReadOnlyField] public float timeSinceOpened;
 
     private void Awake()
     {
@@ -30,6 +36,8 @@ public class ChestInventory : Interactable
             for (int i = 0; i < inventorySlots.Length; i++)
             {
                 inventory.Add(null);
+                produceItems.Add(null);
+                //uiInventory.Add(null);
             }
 
             for (int i = 0; i < chestPanel.transform.childCount; i++)
@@ -46,16 +54,45 @@ public class ChestInventory : Interactable
 
     private void Update()
     {
-        if (isCurrentChest && Vector3.Distance(transform.position, playerController.transform.position) > radius)
+        if (isCurrentChest)
         {
-            CloseChest();
+            if (playerInventory.currentChest != this) playerInventory.currentChest = this;
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                if (inventory[i] != null && inventory[i].chest != this) inventory[i].chest = this;
+            }
+
+            if (Vector3.Distance(transform.position, playerController.transform.position) > radius)
+            {
+                CloseChest();
+            }
+        }
+
+        if (produceItems != null && produceItems.Count > 0 && (!isCurrentChest || !chestPanel.activeSelf))
+        {
+            timeSinceOpened += Time.deltaTime;
+
+        }
+        else if (timeSinceOpened > 0)
+        {
+            for (int i = 0; i < produceItems.Count; i++)
+            {
+                if (produceItems[i] != null)
+                {
+                    for (int j = 0; j < produceItems[i].produceAgesInStack.Count; j++)
+                        produceItems[i].produceAgesInStack[j] += timeSinceOpened * produceItems[i].growthSpeed;
+                }
+            }
+
+            timeSinceOpened = 0;
         }
     }
 
     public void CloseChest()
     {
         chestPanel.SetActive(false);
-        //SaveInventory();
+        SaveInventory();
         playerInventory.CloseInventoryWindow();
         playerInventory.inventoryWindowOpen = false;
         isCurrentChest = false;
@@ -73,15 +110,42 @@ public class ChestInventory : Interactable
 
                 if (inventorySlots[i].transform.childCount > 0)
                 {
-                    foreach(Transform c in inventorySlots[i].transform)
+                    foreach (Transform c in inventorySlots[i].transform)
                     {
                         Destroy(c.gameObject);
                     }
                 }
 
-                if (inventory[i] != null)
+                if (produceItems[i] != null)
                 {
-                    SpawnNewItem(inventory[i], i);
+                    playerInventory.SpawnUsedItem(produceItems[i].produceItem, i, inventory, inventorySlots, this);
+
+                    ProduceInInventory prodInInv = inventory[i].AddComponent<ProduceInInventory>();
+
+                    prodInInv.produceItem = inventory[i];
+
+
+                    for (int j = 0; j < produceItems[i].produceAgesInStack.Count; j++)
+                    {
+                        if (j == 0)
+                        {
+                            prodInInv.InitaliseInventoryProduce(inventory[i], produceItems[i], j);
+                        }
+
+                        prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[j]);
+
+                    }
+
+                    GameObject toDestroy = produceItems[i].gameObject;
+
+                    produceItems[i] = prodInInv;
+
+                    Destroy(toDestroy);
+
+                }
+                else if (inventory[i] != null)
+                {
+                    playerInventory.SpawnUsedItem(inventory[i], i, inventory, inventorySlots, this);
                 }
             }
         }
@@ -102,42 +166,66 @@ public class ChestInventory : Interactable
         }
     }
 
-    public void SpawnNewItem(InventoryItem item, int itemSlot)
-    {
-        GameObject newItemUI = Instantiate(playerInventory.inventoryItemPrefab, inventorySlots[itemSlot].transform);
-        InventoryUIItem inventoryItem = newItemUI.GetComponent<InventoryUIItem>();
-        inventoryItem.isEquipped = false;
-        inventorySlots[itemSlot].inventoryItem = inventoryItem;
-
-        //Button button = newItemUI.AddComponent<Button>();
-        //button.onClick.AddListener(() => playerInventory.SelectInventoryItemAsButton(itemSlot));
-
-        inventoryItem.InitialiseItem(item, itemSlot, this);
-
-        //inventoryUI[itemSlot] = inventoryItem;
-        inventory[itemSlot] = item;
-
-    }
-
     public void SaveInventory()
     {
         for (int i = 0; i < inventory.Count; i++)
         {
             if (inventorySlots[i].inventoryItem != null)
-                inventory[i] = inventorySlots[i].inventoryItem.item;
+            {
+                inventory[i] = inventorySlots[i].inventoryItem;
+
+
+                if (produceItems[i] != null)
+                {
+                    GameObject savedProdInv = new GameObject(produceItems[i].produceItem.item.itemName + " Saved Produce Info");
+                    savedProdInv.transform.parent = transform;
+                    ProduceInInventory prodInInv = savedProdInv.AddComponent<ProduceInInventory>();
+
+                    for (int j = 0; j < produceItems[i].produceAgesInStack.Count; j++)
+                    {
+                        if (j == 0)
+                        {
+                            prodInInv.InitaliseInventoryProduce(inventory[i], produceItems[i], j);
+                        }
+                        prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[j]);
+
+                    }
+                    produceItems[i] = prodInInv;
+
+                    InventoryUIItem savedProdItem = savedProdInv.AddComponent<InventoryUIItem>();
+                    playerInventory.CopyItemVariables(inventory[i], savedProdItem, i);
+
+                    savedProdItem.InitialiseItem(inventory[i].item, i, savedProdItem.numCarried, this);
+
+                    prodInInv.produceItem = savedProdItem;
+
+                }
+            }
             else inventory[i] = null;
         }
-    }
 
+      
+    }
     public void SwapItemSlot(int indexA, int indexB)
     {
 
         // Store emote A info
         InventoryUIItem inventoryItem = inventorySlots[indexA].inventoryItem;
+        ProduceInInventory produceB = null;
+        if (inventorySlots[indexA].inventoryItem != null && inventorySlots[indexA].inventoryItem.GetComponent<ProduceInInventory>())
+        {
+            produceB = inventorySlots[indexA].inventoryItem.GetComponent<ProduceInInventory>();
+        }
+
+        ProduceInInventory produceA = null;
+        if (inventorySlots[indexB].inventoryItem.GetComponent<ProduceInInventory>())
+        {
+            produceA = inventorySlots[indexB].inventoryItem.GetComponent<ProduceInInventory>();
+        }
 
         //Swap Slot A Info for slot B
         inventorySlots[indexA].inventoryItem = inventorySlots[indexB].inventoryItem;
-
+        produceItems[indexA] = produceA;
 
         inventory[indexA] = inventory[indexB];
 
@@ -145,7 +233,10 @@ public class ChestInventory : Interactable
         inventorySlots[indexB].inventoryItem = inventoryItem;
 
         if (inventoryItem != null)
-            inventory[indexB] = inventoryItem.item;
+        {
+            inventory[indexB] = inventoryItem;
+            produceItems[indexB] = produceB;
+        }
         else inventory[indexB] = null;
 
 
@@ -155,7 +246,6 @@ public class ChestInventory : Interactable
             {
                 Destroy(child.gameObject);
             }
-            //SpawnNewEmoteUI(inventorySlots[indexB].inventoryItem.emote, indexB);
 
         }
 
@@ -165,15 +255,57 @@ public class ChestInventory : Interactable
             {
                 Destroy(child.gameObject);
             }
-            SpawnNewItem(inventorySlots[indexA].inventoryItem.item, indexA); //a = originally B
-                                                                             //inventory[indexA] = inventorySlots[indexA].inventoryItem.item;
+
+
+            playerInventory.SpawnUsedItem(inventorySlots[indexA].inventoryItem, indexA, inventory, inventorySlots); //a = originally B
+
+            if (produceItems[indexA] != null)
+            {
+                ProduceInInventory prodInInv = inventory[indexA].AddComponent<ProduceInInventory>();
+
+                prodInInv.produceItem = inventory[indexA];
+
+
+                for (int j = 0; j < produceItems[indexA].produceAgesInStack.Count; j++)
+                {
+                    if (j == 0)
+                    {
+                        prodInInv.InitaliseInventoryProduce(inventory[indexA], produceItems[indexA], j);
+                    }
+
+                    prodInInv.produceAgesInStack.Add(produceItems[indexA].produceAgesInStack[j]);
+
+                }
+            }
 
         }
 
         if (inventoryItem != null)
         {
-            SpawnNewItem(inventorySlots[indexB].inventoryItem.item, indexB); // originally A
-            //inventory[indexB] = inventorySlots[indexB].inventoryItem.item;
+
+            playerInventory.SpawnUsedItem(inventorySlots[indexB].inventoryItem, indexB, inventory, inventorySlots); // originally A
+
+
+            if (produceItems[indexB] != null)
+            {
+                ProduceInInventory prodInInv = inventory[indexB].AddComponent<ProduceInInventory>();
+
+                prodInInv.produceItem = inventory[indexB];
+
+
+                for (int j = 0; j < produceItems[indexB].produceAgesInStack.Count; j++)
+                {
+                    if (j == 0)
+                    {
+                        prodInInv.InitaliseInventoryProduce(inventory[indexB], produceItems[indexB], j);
+                    }
+
+                    prodInInv.produceAgesInStack.Add(produceItems[indexB].produceAgesInStack[j]);
+
+                }
+            }
+
+
 
         }
 
@@ -189,6 +321,8 @@ public class ChestInventory : Interactable
 
         chestPanel.SetActive(true);
 
-        thirdPersonCam.freezeCameraRotation = true;
+        //thirdPersonCam.freezeCameraRotation = true;
+        Pause.instance.freezeCameraRotation = true;
+            Pause.instance.unlockCursor = true;
     }
 }

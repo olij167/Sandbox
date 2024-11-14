@@ -46,6 +46,9 @@ public class EntityController : MonoBehaviour
 
 
     public PointOfInterest home;
+    public HomeType homeType;
+    public bool canCreateHome;
+    public bool spawnedByHome;
 
 
     [Header("States")]
@@ -82,13 +85,14 @@ public class EntityController : MonoBehaviour
     [System.Serializable]
     public class Food
     {
+        //public string foodName;
         public Transform foodObject;
         public float healthRecovery;
         public float eatingTime;
     }
 
 
-    private void Awake()
+    private void Start()
     {
         //if (PlayerManager.instance != null)
         //    target = PlayerManager.instance.player.transform;
@@ -115,6 +119,11 @@ public class EntityController : MonoBehaviour
         if (Chance.CoinFlip())
             entityInfo.gender = EntityInfo.Gender.male;
         else entityInfo.gender = EntityInfo.Gender.female;
+
+        if ((home == null || home.interestingObject == null) && !spawnedByHome)
+        {
+            FindAHome();
+        }
     }
 
     private void Update()
@@ -400,6 +409,56 @@ public class EntityController : MonoBehaviour
 
     }
 
+    public void FindAHome()
+    {
+        // check tracked objects for a vacant home with the appropriate home type
+        for (int i = 0; i < ParkStats.instance.currentTrackedObjects.Count; i++) // for each tracked object
+        {
+            if (ParkStats.instance.currentTrackedObjects[i].objectInstances[0].GetComponent<EntityHome>() && 
+                ParkStats.instance.currentTrackedObjects[i].objectInstances[0].GetComponent<EntityHome>().homeType == homeType) // if its a home of the right type
+            {
+                {
+                    for (int j = 0; j < ParkStats.instance.currentTrackedObjects[i].objectInstances.Count; j++) // Check whether any insatnces of this object are vacant
+                    {
+                        if (ParkStats.instance.currentTrackedObjects[i].objectInstances[j].GetComponent<EntityHome>().isVacant)
+                        {
+                            EntityHome newHome = ParkStats.instance.currentTrackedObjects[i].objectInstances[j].GetComponent<EntityHome>();
+                            
+                            for (int k = 0; k < ParkStats.instance.unlockableObjects.Count; k++)
+                            {
+                                if (gameObject.name.Contains( ParkStats.instance.unlockableObjects[k].unlockableObject.name))
+                                {
+                                    newHome.prefabs.Add(ParkStats.instance.unlockableObjects[k].unlockableObject);
+                                    break;
+                                }
+                            }
+                            newHome.isVacant = false;
+                            newHome.spawningActive = true;
+                            newHome.gameObject.name += " - " + entityInfo.entityName;
+                            SetHome(newHome.transform, newHome.homePriority);
+                            //Set this home
+
+                            Debug.Log(entityInfo.entityName + " has found a home");
+                            return;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        //if (canCreateHome)
+        //{
+        //    CreateAHome();
+        //}
+    }
+    public void CreateAHome()
+    {
+        // (Only for some animals) Build a home in a suitable location if none are found
+        Debug.Log("Creating a home");
+
+    }
+
     public void ManageStats()
     {
         //if (!isAsleep)
@@ -501,7 +560,7 @@ public class EntityController : MonoBehaviour
 
                     for (int p = 0; p < pointsOfInterest.Count; p++)
                     {
-                        if (pOI.interestingObject.name.Contains(pointsOfInterest[p].interestingObject.name))
+                        if (pOI.interestingObject.name == pointsOfInterest[p].interestingObject.name)
                         {
                             pOI.priority = pointsOfInterest[p].priority;
 

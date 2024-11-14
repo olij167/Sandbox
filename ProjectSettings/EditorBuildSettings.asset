@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Dungeon.unity
     guid: 233f9396943509e42a4d2406e4bc9a66
+  - enabled: 1
+    path: Assets/Scenes/Indoors.unity
+    guid: 90ee9afeff18e7943b56b8fa4ee28f40
+  - enabled: 1
+    path: Assets/Scenes/ParkDemo.unity
+    guid: fc0b0a111f2091041aaf6647f498b109
   m_configObjects: {}

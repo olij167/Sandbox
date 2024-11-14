@@ -16,9 +16,11 @@ public class InventoryItem : Item
     //public Quaternion heldRotation;
     public float heldRigWeight;
 
+    public EquipmentType equipmentType;
     public ItemType itemType;
     // public SkinnedMeshRenderer mesh;
     public PlacedObjectTypeSO placedObject;
+    public List<PlacedObjectTypeSO> possibleObjects;
     public float itemValue;
 
     public float weight;
@@ -38,6 +40,8 @@ public class InventoryItem : Item
 
     public bool usesBatteries;
     public float maxBatteryCharge;
+
+    public bool canSpoil;
 
     public float healthEffect;
     public float staminaEffect;
@@ -62,7 +66,13 @@ public class InventoryItem : Item
 }
 
 [System.Serializable]
-public enum ItemType
+public enum EquipmentType
 {
     Head, Chest, Legs, Feet, Hand
+}
+
+[System.Serializable]
+public enum ItemType
+{
+    Plant, Produce, Tool, Weapon, Misc, AnimalProduct, Food, Furniture, Ammo
 }

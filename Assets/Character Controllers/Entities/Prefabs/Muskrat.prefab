@@ -459,6 +459,7 @@ GameObject:
   - component: {fileID: 580012322709727181}
   - component: {fileID: 316954437100879880}
   - component: {fileID: 6008295534566764979}
+  - component: {fileID: -5057296533312685191}
   m_Layer: 0
   m_Name: Muskrat
   m_TagString: Untagged
@@ -528,7 +529,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4080243304029891224}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 3
   m_Acceleration: 10
   avoidancePriority: 50
@@ -555,6 +556,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityInfo:
     entityID: 2
+    entityName: Muskrat
+    icon: {fileID: 21300000, guid: b387f0f41a63a1d438cba45bac3a4af4, type: 3}
+    entityDesc: 
     gender: 0
     age: 0
     agingSpeed: 0.4
@@ -638,6 +642,9 @@ MonoBehaviour:
     interestingObject: {fileID: 0}
     priority: 0
     focusType: 0
+  homeType: 4
+  canCreateHome: 0
+  spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
   isAsleep: 0
@@ -697,7 +704,6 @@ MonoBehaviour:
     modifiedValue: 0
     baseValue: 5
     modifiers: []
-  entityName: Muskrat
   awakeHours: {x: 8, y: 18}
   hunger: 100
   maxHunger:
@@ -786,6 +792,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.5, z: 0.95}
   m_Center: {x: 0, y: 0.25, z: -0.03}
+--- !u!114 &-5057296533312685191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4080243304029891224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4735fe1886dbbd418c923a949544aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
 --- !u!1 &4416653616088707858
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,8 @@ public class WeaponItem : MonoBehaviour
     public bool isTwoHanded;
     public Transform leftHandPos;
 
+    public AttackType attackType;
+
     public bool isProjectile;
     public float maxAmmo;
     public float currentAmmo;
@@ -31,6 +33,7 @@ public class WeaponItem : MonoBehaviour
     private PlayerInventory inventory;
     public InventoryUIItem inventoryItem;
     private PlayerUI playerUI;
+    private WeaponAttack weaponAttack;
 
 
     [System.Serializable]
@@ -45,6 +48,9 @@ public class WeaponItem : MonoBehaviour
     {
         inventory = FindObjectOfType<PlayerInventory>();
         playerUI = FindObjectOfType<PlayerUI>();
+
+        weaponAttack = GetComponentInChildren<WeaponAttack>();
+        weaponAttack.attackType = attackType;
 
         if (GetComponent<ItemInWorld>())
             maxAmmo = GetComponent<ItemInWorld>().item.maxAmmo;
@@ -85,7 +91,7 @@ public class WeaponItem : MonoBehaviour
                 {
                     IncreaseAmmo(foundBattery.ammo);
 
-                    inventory.RemoveItemFromInventory(foundBattery);
+                    inventory.RemoveItemFromInventory(foundBattery, inventory.inventory);
                 }
                 else
                 {
@@ -128,4 +134,10 @@ public class WeaponItem : MonoBehaviour
     //}
 
 
+}
+
+[System.Serializable]
+public enum AttackType
+{
+    Slash, Hack, Stab, Smash, Burn, Dig, Shoot
 }

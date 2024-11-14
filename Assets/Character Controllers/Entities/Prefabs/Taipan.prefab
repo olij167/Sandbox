@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 335707402728600319}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 7453061960333647428}
   - component: {fileID: 9149143714079526013}
   - component: {fileID: 291198584186476221}
+  - component: {fileID: -2092609898045779149}
   m_Layer: 0
   m_Name: Taipan
   m_TagString: Untagged
@@ -772,7 +773,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 7647437791196449152}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 2
   m_Acceleration: 3
   avoidancePriority: 50
@@ -799,6 +800,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityInfo:
     entityID: 7
+    entityName: Taipan
+    icon: {fileID: 21300000, guid: 98a65268c4fd316499afd3a101e45eaa, type: 3}
+    entityDesc: 
     gender: 0
     age: 0
     agingSpeed: 0.2
@@ -890,6 +894,9 @@ MonoBehaviour:
     interestingObject: {fileID: 0}
     priority: 0
     focusType: 0
+  homeType: 1
+  canCreateHome: 0
+  spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
   isAsleep: 0
@@ -949,7 +956,6 @@ MonoBehaviour:
     modifiedValue: 0
     baseValue: 5
     modifiers: []
-  entityName: Taipan
   awakeHours: {x: 10, y: 18}
   hunger: 100
   maxHunger:
@@ -1038,6 +1044,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3, y: 0.8, z: 1.2}
   m_Center: {x: 0, y: 0.4, z: 0}
+--- !u!114 &-2092609898045779149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647437791196449152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4735fe1886dbbd418c923a949544aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
 --- !u!1 &8096587236275376157
 GameObject:
   m_ObjectHideFlags: 0

@@ -43,7 +43,7 @@ public class TorchItem : ItemAction
                 {
                     IncreaseBattery(foundBattery.batteryCharge);
 
-                    inventory.RemoveItemFromInventory(foundBattery);
+                    inventory.RemoveItemFromInventory(foundBattery, inventory.inventory);
                 }
                 else Debug.Log("Out of battery");
             }

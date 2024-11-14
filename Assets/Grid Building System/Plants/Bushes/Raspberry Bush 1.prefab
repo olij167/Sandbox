@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3582470914474706169
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1740911146975100361, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: refItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 27e4588b30dd5da46b38149b2f107c9c,
+        type: 2}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460168884720658954, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906375214708439462, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: defaultProduce
+      value: 
+      objectReference: {fileID: 8545464000173858838, guid: d3794b4affa2be042a183a1e73565157,
+        type: 3}
+    - target: {fileID: 7717448401803524242, guid: 3a06c6be2d3c61f43b88a68ab6d203b7,
+        type: 3}
+      propertyPath: m_Name
+      value: Raspberry Bush 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3a06c6be2d3c61f43b88a68ab6d203b7, type: 3}

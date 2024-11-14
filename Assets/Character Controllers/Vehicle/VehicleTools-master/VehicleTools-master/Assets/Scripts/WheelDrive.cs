@@ -150,12 +150,16 @@ public class WheelDrive : Interactable
 
 	  public void EnterCar()
     {
-        playerController.characterControllerMovement = false;
-        playerController.GetComponent<CharacterController>().enabled = false;
-        playerController.GetComponent<BoxCollider>().enabled = false;
-        GetComponent<Rigidbody>().isKinematic = false;
+        //playerController.characterControllerMovement = false;
+        //playerController.GetComponent<CharacterController>().enabled = false;
+        //playerController.GetComponent<BoxCollider>().enabled = false;
+        Pause.instance.freezeMovement = true;
 
-		FindObjectOfType<ThirdPersonCam>().freezeOrientation = true;
+		GetComponent<Rigidbody>().isKinematic = false;
+
+		//FindObjectOfType<ThirdPersonCam>().freezeOrientation = true;
+		Pause.instance.freezeCameraOrbit = true;
+
 		FindObjectOfType<ThirdPersonCam>().orientation.forward = transform.forward;
 
 		playerController.transform.position = driverSeat.position;
@@ -175,12 +179,15 @@ public class WheelDrive : Interactable
     
     public void ExitCar()
     {
-        playerController.characterControllerMovement = true;
-        playerController.GetComponent<CharacterController>().enabled = true;
-		playerController.GetComponent<BoxCollider>().enabled = true;
+		//      playerController.characterControllerMovement = true;
+		//      playerController.GetComponent<CharacterController>().enabled = true;
+		//playerController.GetComponent<BoxCollider>().enabled = true;
+		Pause.instance.freezeMovement = false;
+
 		GetComponent<Rigidbody>().isKinematic = true;
 
-		FindObjectOfType<ThirdPersonCam>().freezeOrientation = false;
+		//FindObjectOfType<ThirdPersonCam>().freezeOrientation = false;
+		Pause.instance.freezeCameraOrbit = false;
 
 		playerController.transform.parent = null;
 		//playerController.model.SetActive(true);

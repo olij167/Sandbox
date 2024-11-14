@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 693e93c4496530049b0a4300b797fe35, type: 3}
+  m_Name: Placed Watermelon
+  m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: 502082eac12f10b418f6e2e841d4619e, type: 2}
+  width: 1
+  height: 1
+  refItem: {fileID: 7200993558952317583, guid: 81406de8d962b584da8c40bdc72da11f, type: 3}
+  origin: {x: 1, y: 1}
+  dir: 0
+  gridType: 1

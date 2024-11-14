@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
-    public ItemQuestPreset testQuest;
+   // public ItemQuestPreset testQuest;
 
     // manage all current quests
     public GameObject questUIPanel;
@@ -15,9 +15,11 @@ public class QuestManager : MonoBehaviour
     public Sprite failedSprite;
 
 
-    public List<QuestTracker> currentQuests;
+    public List<QuestTracker> currentQuestUI;
     public List<QuestTracker> completeQuests;
     public List<QuestTracker> failedQuests;
+
+    public ItemQuestPreset questToAdd;
 
     private void Awake()
     {
@@ -26,18 +28,29 @@ public class QuestManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-            ToggleQuestUI();
+        //if (Input.GetKeyDown(KeyCode.J))
+        //    ToggleQuestUI();
 
-        for (int i = 0; i < currentQuests.Count; i++)
+        for (int i = 0; i < currentQuestUI.Count; i++)
         {
-            if (!currentQuests[i].isComplete && !currentQuests[i].isFailed)
+            if (!currentQuestUI[i].isComplete && !currentQuestUI[i].isFailed)
             {
-                if (!currentQuests[i].isActive)
-                    currentQuests[i].StartQuest();
-                else currentQuests[i].TrackQuest();
+                if (!currentQuestUI[i].isActive)
+                    currentQuestUI[i].StartQuest();
+                else currentQuestUI[i].TrackQuest();
             }
-            else FinishQuest(currentQuests[i].isComplete, currentQuests[i]);
+            else FinishQuest(currentQuestUI[i].isComplete, currentQuestUI[i]);
+        }
+    }
+
+    public void RefreshQuestUI()
+    {
+        foreach(Transform c in questUIPanel.transform)
+        { Destroy(c.gameObject); }
+
+        for (int i = 0; i < currentQuestUI.Count; i++)
+        {
+
         }
     }
 
@@ -49,7 +62,8 @@ public class QuestManager : MonoBehaviour
         newQuestUI.quest = newQuest;
         newQuestUI.questItems = newQuest.questItems;
 
-        currentQuests.Add(newQuestUI);
+        if (!currentQuestUI.Contains(newQuestUI))
+        currentQuestUI.Add(newQuestUI);
 
         newQuestUI.questName.text = newQuest.questName;
         newQuestUI.questDetails.text = newQuest.questDetails;
@@ -70,7 +84,7 @@ public class QuestManager : MonoBehaviour
             quest.progressImage.sprite = failedSprite;
         }
 
-        currentQuests.Remove(quest);
+        currentQuestUI.Remove(quest);
 
     }
 

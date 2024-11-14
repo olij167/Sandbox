@@ -18,16 +18,21 @@ MonoBehaviour:
   itemDescription: Very sharp
   prefab: {fileID: 6964118567169960050, guid: 80dd9eb44b82974438d6f30996fe444e, type: 3}
   heldRigWeight: 0
-  itemType: 4
+  equipmentType: 4
+  itemType: 3
+  placedObject: {fileID: 0}
+  possibleObjects: []
   itemValue: 10
   weight: 2
   canConsume: 0
   isStackable: 0
   maxNumCarried: 1
   canActivate: 0
-  isTwoHanded: 0
+  isProjectile: 0
+  maxAmmo: 0
   usesBatteries: 0
   maxBatteryCharge: 0
+  canSpoil: 0
   healthEffect: 0
   staminaEffect: 0
   healthModifier: 0

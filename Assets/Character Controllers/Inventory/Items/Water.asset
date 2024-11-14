@@ -18,14 +18,18 @@ MonoBehaviour:
   itemDescription: 
   prefab: {fileID: 2392614586191389766, guid: 91c0d5c10621714418defcb97b7c833c, type: 3}
   heldRigWeight: 0.5
-  itemType: 4
+  equipmentType: 0
+  itemType: 6
+  placedObject: {fileID: 0}
+  possibleObjects: []
   itemValue: 2
   weight: 0.5
   canConsume: 1
   isStackable: 1
   maxNumCarried: 3
   canActivate: 0
-  isTwoHanded: 0
+  isProjectile: 0
+  maxAmmo: 0
   usesBatteries: 0
   maxBatteryCharge: 0
   healthEffect: 20

@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d31c182e4bed94cb8a5902bf65e333, type: 3}
+  m_Name: PlumSeed
+  m_EditorClassIdentifier: 
+  itemName: Plum Seed
+  itemID: 0
+  itemIcon: {fileID: 21300000, guid: ff4e2a40a0a91494a873149252b1aaaf, type: 3}
+  itemDescription: 
+  prefab: {fileID: 807858153588674960, guid: daa5081887dfbfa40b2f0ca673415917, type: 3}
+  heldRigWeight: 0
+  equipmentType: 4
+  itemType: 0
+  placedObject: {fileID: 0}
+  possibleObjects:
+  - {fileID: 11400000, guid: 71da4be2f2ac436409cdba54306774c1, type: 2}
+  - {fileID: 11400000, guid: 1299027efd8b6e44cbf33722a65f4f85, type: 2}
+  - {fileID: 11400000, guid: 87baeb1acd3be8242a3a0b885740b7a8, type: 2}
+  - {fileID: 11400000, guid: f1a8f6b3e98b06246a46de68c4b840c0, type: 2}
+  - {fileID: 11400000, guid: 9830343c9f0505642a8e87e2a3e52bd2, type: 2}
+  itemValue: 0.5
+  weight: 0
+  canConsume: 0
+  isStackable: 1
+  maxNumCarried: 12
+  canActivate: 0
+  isProjectile: 0
+  maxAmmo: 0
+  usesBatteries: 0
+  maxBatteryCharge: 0
+  canSpoil: 0
+  healthEffect: 0
+  staminaEffect: 0
+  healthModifier: 0
+  staminaModifier: 0
+  oxygenModifier: 0
+  speedModifier: 0
+  jumpModifier: 0
+  armourModifier: 0
+  attackDamageModifier: 0
+  passiveDamageModifier: 0
+  knockBackModifier: 0
+  attackSpeedModifier: 0

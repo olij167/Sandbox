@@ -160,18 +160,23 @@ public class PlayerAbilities : MonoBehaviour
         if (abilityWindowOpen && !abilityWindowPanel.activeSelf)
         {
             abilityWindowPanel.SetActive(true);
-            cam.freezeCameraRotation = true;
+            //cam.freezeCameraRotation = true;
 
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.Confined;
+            //Cursor.visible = true;
+            Pause.instance.freezeCameraRotation = true;
+            Pause.instance.unlockCursor = true;
+
         }
         else if (!abilityWindowOpen && abilityWindowPanel.activeSelf)
         {
             abilityWindowPanel.SetActive(false);
-            cam.freezeCameraRotation = false;
+            //cam.freezeCameraRotation = false;
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
+            Pause.instance.freezeCameraRotation = false;
+            Pause.instance.unlockCursor = false;
         }
     }
 

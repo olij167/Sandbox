@@ -205,7 +205,7 @@ public class PlayerInteractionRaycast : MonoBehaviour
     {
         InventoryItem item = selectedObject.GetComponent<ItemInWorld>().item;
 
-        inventorySystem.AddItemToInventory(item, selectedObject);
+        inventorySystem.AddItemToInventory(item, inventorySystem.inventory, inventorySystem.inventorySlots, selectedObject);
         
 
         StartCoroutine(DelaySettingFalseVariables());

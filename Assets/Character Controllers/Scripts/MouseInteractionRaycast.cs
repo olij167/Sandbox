@@ -242,7 +242,11 @@ public class MouseInteractionRaycast : MonoBehaviour
     {
         InventoryItem item = selectedObject.GetComponent<ItemInWorld>().item;
 
-        inventorySystem.AddItemToInventory(item, selectedObject);
+        ProduceController produceController = null;
+
+        if (selectedObject.GetComponent<ProduceController>()) produceController = selectedObject.GetComponent<ProduceController>();
+
+        inventorySystem.AddItemToInventory(item, inventorySystem.inventory, inventorySystem.inventorySlots, selectedObject, produceController);
 
         StartCoroutine(DelaySettingFalseVariables());
 

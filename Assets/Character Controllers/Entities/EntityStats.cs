@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EntityStats : CharacterStats
 {
-    public string entityName;
 
     //public float energy;
     //public Stat maxEnergy;
@@ -45,6 +44,7 @@ public class EntityStats : CharacterStats
 
         isDead = true;
 
+        ParkStats.instance.StopTrackingObject(gameObject);
         // death animation
         if (FindObjectOfType<PlayerAttack>())
             FindObjectOfType<PlayerAttack>().lookTargets.RemoveMember(transform);

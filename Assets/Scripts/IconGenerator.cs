@@ -8,7 +8,9 @@ public class IconGenerator : MonoBehaviour
     Camera cam;
     public string pathFolder;
     public List<GameObject> sceneObjects;
-    public List<PlacedObjectTypeSO> dataObjects;
+    public List<InventoryItem> dataObjects;
+    public string namePrefix;
+    public string nameSuffix;
 
     private void Awake()
     {
@@ -26,21 +28,22 @@ public class IconGenerator : MonoBehaviour
         for(int i = 0; i < sceneObjects.Count; i++)
         {
             GameObject obj = sceneObjects[i];
-            PlacedObjectTypeSO data = dataObjects[i];
 
             obj.gameObject.SetActive(true);
 
             yield return null;
 
-            TakeScreenshot($"{Application.dataPath}/{pathFolder}/{data.itemData.itemID}_Icon.png");
+            TakeScreenshot($"{Application.dataPath}/{pathFolder}/{namePrefix}{obj.name}{nameSuffix}_Icon.png");
 
             yield return null;
             obj.gameObject.SetActive(false);
 
-            Sprite s = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/{pathFolder}/{data.itemData.itemID}_Icon.png");
-            if (s != null)
+            Sprite s = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/{pathFolder}/{namePrefix}{obj.name}{nameSuffix}_Icon.png");
+            if (s != null && dataObjects != null && dataObjects.Count > i)
             {
-                data.itemData.itemIcon = s;
+                InventoryItem data = dataObjects[i];
+
+                data.itemIcon = s;
                 EditorUtility.SetDirty(data);
             }
 

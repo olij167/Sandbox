@@ -6,7 +6,7 @@ using TMPro;
 public class TextPopUp : MonoBehaviour
 {
 
-    [HideInInspector] public TextMeshProUGUI popUpText;
+    public TextMeshProUGUI popUpText;
 
     [SerializeField] private float popUpDisplayTime = 7.5f;
 
@@ -19,7 +19,8 @@ public class TextPopUp : MonoBehaviour
     private void Start()
     {
         popUpDisplayTimeReset = popUpDisplayTime;
-        popUpText = GetComponentInChildren<TextMeshProUGUI>();
+        if (popUpText == null && GetComponentInChildren<TextMeshProUGUI>())
+            popUpText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     private void Update()

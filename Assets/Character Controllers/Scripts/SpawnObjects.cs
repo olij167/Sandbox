@@ -12,7 +12,7 @@ public class SpawnObjects : MonoBehaviour
     public Transform parent;
     public List<GameObject> prefabs;
 
-    //public bool randomSpawnPoint;
+    public bool spawningActive;
 
     Vector3 spawnPos;
     public int spawnNumPerPrefab, totalSpawnNum;
@@ -23,83 +23,96 @@ public class SpawnObjects : MonoBehaviour
     private Vector3 spawnArea;
     public float distanceFromGround;
 
-
     public bool spawnInRadius;
     public float spawnRadius = 10;
 
-    public bool spawnConstant;
+    public bool spawnOnTimer;
+    [field: ReadOnlyField, SerializeField] private float timer;
 
     //public int maxSpawnAmount = 10;
-    public List<GameObject> spawnedObjects;
 
     public float spawnRate = 30f;
     public bool fluctuateSpawnRate;
     public float fluctuationRange = 30f;
 
-    private float timer;
+    public List<GameObject> spawnedObjects;
+
 
     private void Awake()
     {
         if (spawnPoint == null)
             spawnPoint = transform;
+
+        if (spawnOnTimer) timer = spawnRate;
     }
 
     public void Update()
     {
-        if ((spawnConstant && spawnedObjects.Count < totalSpawnNum) || (!spawnConstant && (randomPrefabs && spawnedObjects.Count < totalSpawnNum || !randomPrefabs && spawnedObjects.Count < spawnNumPerPrefab * prefabs.Count) ))
+        if (!randomPrefabs) totalSpawnNum = spawnNumPerPrefab * prefabs.Count;
+
+
+        if (spawningActive)
         {
-            SpawnPrefabs(randomPrefabs, spawnInRadius);
+            if (prefabs != null && prefabs.Count > 0)
+                SpawnPrefabs(randomPrefabs, spawnInRadius);
         }
 
-        CheckIfDestroyed();
+        if (spawnedObjects != null && spawnedObjects.Count > 0)
+            CheckIfDestroyed();
     }
 
     public virtual void SpawnPrefabs(bool randomPrefabs, bool inRadius)
     {
         if (!randomPrefabs)
         {
-            for (int i = 0; i < prefabs.Count; i++)
+            if (spawnedObjects.Count < spawnNumPerPrefab * prefabs.Count)
             {
-                if (spawnConstant)
+                for (int i = 0; i < prefabs.Count; i++)
                 {
-                    if (fluctuateSpawnRate)
+                    if (spawnOnTimer)
                     {
-                        SpawnSporatic(prefabs[i], parent, spawnRate, inRadius);
+                        if (fluctuateSpawnRate)
+                        {
+                            SpawnSporatic(prefabs[i], parent, spawnRate, inRadius);
+                        }
+                        else
+                        {
+                            SpawnConsistent(prefabs[i], parent, spawnRate, inRadius);
+                        }
                     }
                     else
                     {
-                        SpawnConsistent(prefabs[i], parent, spawnRate, inRadius);
+                        SpawnConsistent(prefabs[i], parent, 0, inRadius);
                     }
-                }
-                else
-                {
-                    SpawnConsistent(prefabs[i], parent, 0, inRadius);
-                }
 
+                }
             }
 
         }
         else
         {
-            for (int i = 0; i < totalSpawnNum; i++)
+            if (spawnedObjects.Count < totalSpawnNum)
             {
-
-                if (spawnConstant)
+                for (int i = 0; i < totalSpawnNum; i++)
                 {
-                    if (fluctuateSpawnRate)
+
+                    if (spawnOnTimer)
                     {
-                        SpawnSporatic(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, inRadius);
+                        if (fluctuateSpawnRate)
+                        {
+                            SpawnSporatic(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, inRadius);
+                        }
+                        else
+                        {
+                            SpawnConsistent(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, inRadius);
+                        }
                     }
                     else
                     {
-                        SpawnConsistent(prefabs[Random.Range(0, prefabs.Count)], parent, spawnRate, inRadius);
+                        SpawnConsistent(prefabs[Random.Range(0, prefabs.Count)], parent, 0, inRadius);
                     }
-                }
-                else
-                {
-                    SpawnConsistent(prefabs[Random.Range(0, prefabs.Count)], parent, 0, inRadius);
-                }
 
+                }
             }
         }
     }
@@ -130,7 +143,11 @@ public class SpawnObjects : MonoBehaviour
                 spawnArea = GenerateRandomPointWithinRadius();
                 GameObject newObject = Instantiate(prefab, spawnArea, Quaternion.identity);
                 newObject.transform.parent = parent;
+                newObject.name = prefab.name;
                 spawnedObjects.Add(newObject);
+
+                ParkStats.instance.TrackObject(newObject);
+
             }
             else
             {
@@ -139,7 +156,7 @@ public class SpawnObjects : MonoBehaviour
             }
             timer = spawnRate;
         }
-        
+
         //else
         //{
         //    //Debug.Log("Max Objects Reached");
@@ -160,7 +177,10 @@ public class SpawnObjects : MonoBehaviour
                 spawnArea = GenerateRandomPointWithinRadius();
                 GameObject newObject = Instantiate(prefab, spawnArea, Quaternion.identity);
                 newObject.transform.parent = parent;
+                newObject.name = prefab.name;
                 spawnedObjects.Add(newObject);
+
+                ParkStats.instance.TrackObject(newObject);
 
             }
             else
@@ -199,8 +219,10 @@ public class SpawnObjects : MonoBehaviour
         //spawnPos = GetRandomPointOnGraph();
         GameObject newObject = Instantiate(prefab, spawnPos, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)));
         newObject.transform.parent = parent;
+        newObject.name = prefab.name;
         spawnedObjects.Add(newObject);
 
+        ParkStats.instance.TrackObject(newObject);
 
         return newObject;
 
@@ -215,7 +237,11 @@ public class SpawnObjects : MonoBehaviour
             //spawnPos = GetRandomPointOnGraph();
             GameObject newObject = Instantiate(prefab, spawnPos, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)));
             newObject.transform.parent = parent;
+            newObject.name = prefab.name;
             spawnedObjects.Add(newObject);
+
+            ParkStats.instance.TrackObject(newObject);
+
 
         }
 

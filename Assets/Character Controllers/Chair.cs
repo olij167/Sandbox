@@ -9,9 +9,10 @@ public class Chair : Interactable
 
     public void SitDown(PlayerController playerController)
     {
-        playerController.characterControllerMovement = false;
-        playerController.GetComponent<CharacterController>().enabled = false;
-        playerController.GetComponent<BoxCollider>().enabled = false;
+        //playerController.characterControllerMovement = false;
+        //playerController.GetComponent<CharacterController>().enabled = false;
+        //playerController.GetComponent<BoxCollider>().enabled = false;
+        Pause.instance.freezeMovement = true;
 
         playerController.transform.position = transform.position + sittingPositionOffset;
 
@@ -27,9 +28,11 @@ public class Chair : Interactable
 
     public void StandUp(PlayerController playerController)
     {
-        playerController.characterControllerMovement = true;
-        playerController.GetComponent<CharacterController>().enabled = true;
-        playerController.GetComponent<BoxCollider>().enabled = true;
+        //playerController.characterControllerMovement = true;
+        //playerController.GetComponent<CharacterController>().enabled = true;
+        //playerController.GetComponent<BoxCollider>().enabled = true;
+        Pause.instance.freezeMovement = false;
+
 
         playerController.transform.parent = null;
         //playerController.model.SetActive(true);

@@ -37,7 +37,7 @@ public class EquipmentManager : MonoBehaviour
         inventory = FindObjectOfType<PlayerInventory>();
         //playerStats = FindObjectOfType<PlayerStats>();
 
-        int numSlots = System.Enum.GetNames(typeof(ItemType)).Length;
+        int numSlots = System.Enum.GetNames(typeof(EquipmentType)).Length;
         //equipmentSlots = new EquipmentSlot[numSlots];
         //meshes = new SkinnedMeshRenderer[numSlots];
 

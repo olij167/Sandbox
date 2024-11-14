@@ -692,6 +692,7 @@ GameObject:
   - component: {fileID: 2172824284486682967}
   - component: {fileID: 2172824284486682973}
   - component: {fileID: 6543724417003955271}
+  - component: {fileID: -1150466927487193474}
   m_Layer: 0
   m_Name: Slime Enemy
   m_TagString: Untagged
@@ -735,7 +736,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2172824284947859693}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 1.5
   m_Acceleration: 15
   avoidancePriority: 50
@@ -744,7 +745,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1
+  m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -789,6 +790,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityInfo:
     entityID: 5
+    entityName: Slime
+    icon: {fileID: 21300000, guid: fa6892a3216ef2f4baff75e1933910cf, type: 3}
+    entityDesc: 
     gender: 0
     age: 0
     agingSpeed: 0.4
@@ -868,6 +872,9 @@ MonoBehaviour:
     interestingObject: {fileID: 0}
     priority: 0
     focusType: 0
+  homeType: 0
+  canCreateHome: 0
+  spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
   isAsleep: 0
@@ -927,7 +934,6 @@ MonoBehaviour:
     modifiedValue: 0
     baseValue: 0
     modifiers: []
-  entityName: Slime
   awakeHours: {x: 6, y: 18}
   hunger: 100
   maxHunger:
@@ -1018,6 +1024,19 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &-1150466927487193474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2172824284947859693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4735fe1886dbbd418c923a949544aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
 --- !u!1 &3483992107138374020
 GameObject:
   m_ObjectHideFlags: 0

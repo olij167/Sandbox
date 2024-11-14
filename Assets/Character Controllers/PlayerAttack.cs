@@ -8,6 +8,7 @@ public class PlayerAttack : CharacterCombat
     [HideInInspector] public PlayerController player;
     //[HideInInspector] public CinemachineFreeLook camController;
     [HideInInspector] public ThirdPersonCam thirdPersonCam;
+    public CinemachineFreeLook cmFreeLook;
     public CinemachineTargetGroup lookTargets;
     [HideInInspector] public PlayerInventory inventory;
 
@@ -33,7 +34,7 @@ public class PlayerAttack : CharacterCombat
         // collider = GetComponent<BoxCollider>();
         player = GetComponent<PlayerController>();
         inventory = FindObjectOfType<PlayerInventory>();
-        //camController = FindObjectOfType<CinemachineFreeLook>();
+        cmFreeLook = FindObjectOfType<CinemachineFreeLook>();
         thirdPersonCam = FindObjectOfType<ThirdPersonCam>();
 
         //defaultLookTarget = camController.m_LookAt;
@@ -378,6 +379,8 @@ public class PlayerAttack : CharacterCombat
 
         if (lockedOn && enemiesInRange != null && enemiesInRange.Count > 0)
         {
+            cmFreeLook.LookAt = lookTargets.transform;
+
             if (!thirdPersonCam.targetOrientation)
             {
                 thirdPersonCam.targetOrientation = true;
@@ -413,7 +416,7 @@ public class PlayerAttack : CharacterCombat
                 lockedOn = false;
 
                 //thirdPersonCam.lockedOn = false;
-
+                cmFreeLook.LookAt = transform;
             }
 
             if (thirdPersonCam.targetOrientation)
@@ -432,10 +435,7 @@ public class PlayerAttack : CharacterCombat
         //        enemiesInRange.RemoveAt(i);
         //    }
         //}
-    }
 
-    private void LateUpdate()
-    {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, enemyDetectionRange);
         foreach (Collider collider in hitColliders)
         {
@@ -444,9 +444,9 @@ public class PlayerAttack : CharacterCombat
                 enemiesInRange.Add(collider.gameObject);
 
                 if (collider.GetComponent<CapsuleCollider>())
-                    lookTargets.AddMember(collider.transform, 0, collider.GetComponent<CapsuleCollider>().radius);
+                    lookTargets.AddMember(collider.transform, 0, collider.GetComponent<CapsuleCollider>().radius + 1);
                 else if (collider.GetComponent<BoxCollider>())
-                    lookTargets.AddMember(collider.transform, 0, collider.GetComponent<BoxCollider>().size.magnitude);
+                    lookTargets.AddMember(collider.transform, 0, collider.GetComponent<BoxCollider>().size.magnitude + 1);
 
             }
         }

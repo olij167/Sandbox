@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 693e93c4496530049b0a4300b797fe35, type: 3}
+  m_Name: Placed Zucchini
+  m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: e5fe545221af2bc40a17781b96c2d376, type: 2}
+  width: 1
+  height: 1
+  refItem: {fileID: 2099020941473194347, guid: c04b4a25313975242be252f16c5092e2, type: 3}
+  origin: {x: 1, y: 1}
+  dir: 0
+  gridType: 1

@@ -23,6 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5169165454233506675}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,13 +38,13 @@ Transform:
   - {fileID: 616659973639076132}
   - {fileID: 616659973495145422}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &73751060
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
     - target: {fileID: 616659973556148698, guid: 4efab63962e24a748a3775c564e2b5f8,
@@ -147,6 +148,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4efab63962e24a748a3775c564e2b5f8, type: 3}
 --- !u!4 &616659973495145422 stripped
 Transform:
@@ -165,6 +169,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
     - target: {fileID: 616659973556148698, guid: 4efab63962e24a748a3775c564e2b5f8,
@@ -268,6 +273,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4efab63962e24a748a3775c564e2b5f8, type: 3}
 --- !u!4 &616659973639076132 stripped
 Transform:
@@ -286,6 +294,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
     - target: {fileID: 8697380267818737233, guid: 121fbc4bd20209741a44e19cae73452b,
@@ -2064,6 +2073,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 121fbc4bd20209741a44e19cae73452b, type: 3}
 --- !u!4 &5169165453983530995 stripped
 Transform:
@@ -2076,6 +2088,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
     - target: {fileID: 93690512, guid: a96146495d52ea5489d8e7c049c3cffe, type: 3}
@@ -2676,6 +2689,17 @@ PrefabInstance:
       value: 150
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1207839629, guid: a96146495d52ea5489d8e7c049c3cffe,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1428228682}
+    - targetCorrespondingSourceObject: {fileID: 8403696323902431422, guid: a96146495d52ea5489d8e7c049c3cffe,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 330113705}
   m_SourcePrefab: {fileID: 100100000, guid: a96146495d52ea5489d8e7c049c3cffe, type: 3}
 --- !u!224 &2311806104051569193 stripped
 RectTransform:
@@ -2835,6 +2859,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
     - target: {fileID: 1372015286, guid: 2daeeff78881540468dbf884575b75b2, type: 3}
@@ -3027,6 +3052,9 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2daeeff78881540468dbf884575b75b2, type: 3}
 --- !u!4 &1045597975308245502 stripped
 Transform:
@@ -3075,6 +3103,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
     - target: {fileID: 2549189186321043876, guid: 1e42fe1397abfa14dbbaaf2a651da00c,
@@ -3206,6 +3235,9 @@ PrefabInstance:
       value: Seasonal Sun Rotation
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e42fe1397abfa14dbbaaf2a651da00c, type: 3}
 --- !u!4 &4036933613262108550 stripped
 Transform:
@@ -3236,6 +3268,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
     - target: {fileID: 616659973556148698, guid: 4efab63962e24a748a3775c564e2b5f8,
@@ -3329,6 +3362,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 2f82153bf4da83b4fbe7524db0bfcff4, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4efab63962e24a748a3775c564e2b5f8, type: 3}
 --- !u!23 &2453629483091544502 stripped
 MeshRenderer:
@@ -3347,13 +3383,9 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5169165454233506676}
     m_Modifications:
-    - target: {fileID: 1898008734982147875, guid: 2f16708e9513a8141a6a4d7477356c3e,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1898008734982147875, guid: 2f16708e9513a8141a6a4d7477356c3e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3441,11 +3473,6 @@ PrefabInstance:
       objectReference: {fileID: 9159919117717646692}
     - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
         type: 3}
-      propertyPath: toggleTimeUI
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
-        type: 3}
       propertyPath: timeOfDaySlider
       value: 
       objectReference: {fileID: 5169165452683735644}
@@ -3456,40 +3483,18 @@ PrefabInstance:
       objectReference: {fileID: 5169165453016621450}
     - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
         type: 3}
-      propertyPath: toggleSunTimeUI
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
-        type: 3}
       propertyPath: seasonalRotation
       value: 
       objectReference: {fileID: 4036933613262108550}
-    - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
-        type: 3}
-      propertyPath: toggleUITimeControls
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
-        type: 3}
-      propertyPath: secondsPerMinuteInGame
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
-        type: 3}
-      propertyPath: skyData.sunSizeOverTime.m_Curve.Array.data[1].value
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1898008734982147876, guid: 2f16708e9513a8141a6a4d7477356c3e,
-        type: 3}
-      propertyPath: skyData.sunIntensityCurve.m_Curve.Array.data[1].value
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1898008734982147877, guid: 2f16708e9513a8141a6a4d7477356c3e,
         type: 3}
       propertyPath: m_Name
       value: Time Controller
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f16708e9513a8141a6a4d7477356c3e, type: 3}
 --- !u!114 &5169165453950741203 stripped
 MonoBehaviour:

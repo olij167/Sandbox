@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 4399576471999286727}
   - component: {fileID: 1921015318686346251}
   - component: {fileID: 1160799142736175453}
+  - component: {fileID: -6695259577738968290}
   m_Layer: 0
   m_Name: Sparrow
   m_TagString: Untagged
@@ -244,7 +245,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2756271917110698758}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 4
   m_Acceleration: 10
   avoidancePriority: 50
@@ -271,6 +272,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityInfo:
     entityID: 6
+    entityName: Sparrow
+    icon: {fileID: 21300000, guid: 495e329dd45dbd549a13afcf6ab1d4ae, type: 3}
+    entityDesc: 
     gender: 0
     age: 0
     agingSpeed: 0.4
@@ -303,6 +307,10 @@ MonoBehaviour:
   detectedObjects: []
   foodList:
   - foodObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
+      type: 3}
+    healthRecovery: 100
+    eatingTime: 10
+  - foodObject: {fileID: 8306161674226188575, guid: b94740991638e2342994e98df0b25f44,
       type: 3}
     healthRecovery: 100
     eatingTime: 10
@@ -346,6 +354,9 @@ MonoBehaviour:
     interestingObject: {fileID: 0}
     priority: 0
     focusType: 0
+  homeType: 3
+  canCreateHome: 0
+  spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
   isAsleep: 0
@@ -405,7 +416,6 @@ MonoBehaviour:
     modifiedValue: 0
     baseValue: 5
     modifiers: []
-  entityName: Sparrow
   awakeHours: {x: 6, y: 16}
   hunger: 100
   maxHunger:
@@ -494,6 +504,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.7, z: 0.5}
   m_Center: {x: 0, y: 0.35, z: 0}
+--- !u!114 &-6695259577738968290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2756271917110698758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4735fe1886dbbd418c923a949544aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
 --- !u!1 &4683789745785631301
 GameObject:
   m_ObjectHideFlags: 0

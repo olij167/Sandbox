@@ -37,7 +37,7 @@ public class CharacterCombat : MonoBehaviour
 
     public void Attack(CharacterStats targetStats, float damage, bool isPassive)
     {
-        if (attackCooldown <= 0f)
+        if (attackCooldown <= 0f && damage > 0)
         {
             StartCoroutine(DoDamage(targetStats, attackDelay, damage));
             Debug.Log("Attacking " + targetStats.gameObject.name + " for " + damage + " damage");
@@ -69,6 +69,11 @@ public class CharacterCombat : MonoBehaviour
             //Debug.Log(gameObject.name + " attack cooldown = " + attackCooldown);
         }
         //else Debug.Log("Cooldown still running");
+    }
+
+    public void AttackPlant(PlantController plant, float damage)
+    {
+        plant.damage += damage;
     }
 
     IEnumerator DoDamage(CharacterStats stats, float delay, float damage)

@@ -29,22 +29,25 @@ public class GridXZ<TGridObject> {
     private float cellSize;
     private Vector3 originPosition;
     private TGridObject[,] gridArray;
+    private GridType gridType;
 
-    public GridXZ(int width, int height, float cellSize, Vector3 originPosition, Func<GridXZ<TGridObject>, int, int, TGridObject> createGridObject) {
+    public GridXZ(int width, int height, float cellSize, Vector3 originPosition, GridType gridType, Func<GridXZ<TGridObject>, int, int, GridType, TGridObject> createGridObject) {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.originPosition = originPosition;
+        this.gridType = gridType;
 
         gridArray = new TGridObject[width, height];
 
         for (int x = 0; x < gridArray.GetLength(0); x++) {
             for (int z = 0; z < gridArray.GetLength(1); z++) {
-                gridArray[x, z] = createGridObject(this, x, z);
+                gridArray[x, z] = createGridObject(this, x, z, gridType);
             }
         }
 
-        bool showDebug = true;
+        bool showDebug = false;
+
         if (showDebug) {
             TextMesh[,] debugTextArray = new TextMesh[width, height];
 

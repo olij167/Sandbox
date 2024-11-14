@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class PlayerInventory : MonoBehaviour
 {
@@ -34,15 +37,20 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private TextPopUp textPopUp;
 
     public GameObject chestPanel;
+    public ChestInventory currentChest;
+    public GameObject shopPanel;
+    public GameObject shopParent;
+    public GameObject buyBackPanel;
+    public ShopInventory currentShop;
 
-    public GameObject infoPanel;
+    //public GameObject infoPanel;
     [SerializeField] private TextMeshProUGUI selectedItemNameText;
     [SerializeField] private TextMeshProUGUI selectedItemDescText;
     [SerializeField] private TextMeshProUGUI statsText;
     [SerializeField] private TextMeshProUGUI weightText;
     [SerializeField] private TextMeshProUGUI valueText;
 
-    private ItemSlot[] inventorySlots;
+    public ItemSlot[] inventorySlots;
     public EquipmentSlot[] equipmentSlots;
 
     private EmoteManager emoteManager;
@@ -60,10 +68,12 @@ public class PlayerInventory : MonoBehaviour
     [Header("Inventory Contents")]
     public float inventoryWeight;
     public float inventoryValue;
+    public float money;
 
     public List<InventoryUIItem> inventory;
+    public List<ProduceInInventory> produceItems;
     [SerializeField]private PlayerController player;
-    private ThirdPersonCam cam;
+    [HideInInspector] public ThirdPersonCam cam;
 
 
     [Header("Holding Items")]
@@ -111,6 +121,7 @@ public class PlayerInventory : MonoBehaviour
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             inventory.Add(null);
+            produceItems.Add(null);
         }
 
         for (int i = 0; i < inventoryBarPanel.transform.childCount + inventorySlotNum; i++)
@@ -138,9 +149,9 @@ public class PlayerInventory : MonoBehaviour
 
         }
         GetInventoryWeight();
-        GetInventoryValue();
+        //GetInventoryValue();
 
-        infoPanel.SetActive(false);
+        //infoPanel.SetActive(false);
 
         rightArm.weight = 0f;
         leftArm.weight = 0f;
@@ -148,6 +159,8 @@ public class PlayerInventory : MonoBehaviour
 
     private void Update()
     {
+        valueText.text = money.ToString("$" + "0.00");
+
         if (inventoryUI.activeSelf)
         {
             SelectInventoryItemWithNumbers();
@@ -174,11 +187,13 @@ public class PlayerInventory : MonoBehaviour
 
                 if (player.isUsingBoth)
                 {
-                    leftArm.weight = 1;
+                    leftArm.weight = rightArm.weight;
 
-                    if (selectedInventoryItem.physicalItem.GetComponent<WeaponItem>() && selectedInventoryItem.physicalItem.GetComponent<WeaponItem>().isProjectile)
+                    if (selectedInventoryItem.physicalItem.GetComponent<WeaponItem>() )
                     {
+                        if (selectedInventoryItem.physicalItem.GetComponent<WeaponItem>().isProjectile)
                         rightTarget.position = rightWeaponTarget.position;
+
                         leftTarget.position = selectedInventoryItem.physicalItem.GetComponent<WeaponItem>().leftHandPos.position;
                     }
                 }
@@ -244,32 +259,35 @@ public class PlayerInventory : MonoBehaviour
                     selectedPhysicalItem.transform.LookAt(projectileTarget);
                 }
 
-                rightHandTextPrompts.gameObject.SetActive(true);
-                if (selectedInventoryItem.item.canConsume)
+                if (!inventoryWindowOpen)
                 {
-                    rightHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "]" + "\nConsume [LMB] \nThrow [" + rightThrowItemInput + "]"/*+ selectedInventoryItem.item.itemName*/;
-
-                    if (Input.GetButtonDown("Fire1"))
+                    rightHandTextPrompts.gameObject.SetActive(true);
+                    if (selectedInventoryItem.item.canConsume)
                     {
-                        ConsumeFood(true);
-                        player.animator.SetBool("isUsingRight", true);
-                        player.animator.SetInteger("RightIndex", -2);
+                        rightHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "]" + "\nConsume [LMB] \nThrow [" + rightThrowItemInput + "]"/*+ selectedInventoryItem.item.itemName*/;
+
+                        if (Input.GetButtonDown("Fire1"))
+                        {
+                            ConsumeFood(true);
+                            player.animator.SetBool("isUsingRight", true);
+                            player.animator.SetInteger("RightIndex", -2);
+                        }
                     }
-                }
-                else rightHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "] \nThrow [" + rightThrowItemInput + "]" /*+ selectedInventoryItem.item.itemName*/;
+                    else rightHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "] \nThrow [" + rightThrowItemInput + "]" /*+ selectedInventoryItem.item.itemName*/;
 
-                if (Input.GetKeyDown(rightDropItemInput))
-                {
+                    if (Input.GetKeyDown(rightDropItemInput))
+                    {
 
-                    DropItem(selectedInventoryItem, true);
+                        DropItem(selectedInventoryItem, true);
 
-                }
+                    }
 
-                if (Input.GetKeyDown(rightThrowItemInput) && canThrow)
-                {
-                    ThrowItem(selectedInventoryItem, true);
-                    player.animator.SetBool("isUsingRight", true);
-                    player.animator.SetInteger("RightIndex", -1);
+                    if (Input.GetKeyDown(rightThrowItemInput) && canThrow)
+                    {
+                        ThrowItem(selectedInventoryItem, true);
+                        player.animator.SetBool("isUsingRight", true);
+                        player.animator.SetInteger("RightIndex", -1);
+                    }
                 }
             }
             else
@@ -311,31 +329,35 @@ public class PlayerInventory : MonoBehaviour
             //SetSelectedItemColour();
             //HoldItemMainHand();
             leftHandTextPrompts.gameObject.SetActive(true);
-            if (offHandSlot.inventoryItem.item.canConsume)
-            {
-                leftHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "]" + "\nConsume [RMB] \nThrow [" + lefttThrowItemInput + "]";/*+ selectedInventoryItem.item.itemName*/;
 
-                if (Input.GetButtonDown("Fire2"))
+            if (!inventoryWindowOpen)
+            {
+                if (offHandSlot.inventoryItem.item.canConsume)
                 {
-                    ConsumeFood(false);
-                    player.animator.SetBool("isUsingLeft", true);
-                    player.animator.SetInteger("LeftIndex", -2);
+                    leftHandTextPrompts.text = "Drop [" + rightDropItemInput.ToString() + "]" + "\nConsume [RMB] \nThrow [" + lefttThrowItemInput + "]";/*+ selectedInventoryItem.item.itemName*/;
+
+                    if (Input.GetButtonDown("Fire2"))
+                    {
+                        ConsumeFood(false);
+                        player.animator.SetBool("isUsingLeft", true);
+                        player.animator.SetInteger("LeftIndex", -2);
+                    }
                 }
-            }
-            else leftHandTextPrompts.text = "Drop [" + leftDropItemInput.ToString() + "] \nThrow [" + lefttThrowItemInput + "]" /*+ selectedInventoryItem.item.itemName*/;
+                else leftHandTextPrompts.text = "Drop [" + leftDropItemInput.ToString() + "] \nThrow [" + lefttThrowItemInput + "]" /*+ selectedInventoryItem.item.itemName*/;
 
-            if (Input.GetKeyDown(leftDropItemInput))
-            {
+                if (Input.GetKeyDown(leftDropItemInput))
+                {
 
-                DropItem(offHandSlot.inventoryItem, false);
+                    DropItem(offHandSlot.inventoryItem, false);
 
-            }
+                }
 
-            if (Input.GetKeyDown(lefttThrowItemInput) && canThrow)
-            {
-                ThrowItem(offHandSlot.inventoryItem, false);
-                player.animator.SetBool("isUsingLeft", true);
-                player.animator.SetInteger("LeftIndex", -1);
+                if (Input.GetKeyDown(lefttThrowItemInput) && canThrow)
+                {
+                    ThrowItem(offHandSlot.inventoryItem, false);
+                    player.animator.SetBool("isUsingLeft", true);
+                    player.animator.SetInteger("LeftIndex", -1);
+                }
             }
         }
         else
@@ -362,14 +384,14 @@ public class PlayerInventory : MonoBehaviour
             CloseInventoryWindow();
         }
 
-        if (infoPanel.activeSelf)
-        {
-            if ((selectedInventoryItem != null && selectedInventoryItem.item.itemName != selectedItemNameText.text) || (selectedInventoryItem == null && selectedItemNameText.text != null))
-            {
-                SetSelectedItemInfoUI();
-                Debug.Log("Item info set");
-            }
-        }
+        //if (infoPanel.activeSelf)
+        //{
+        //    if ((selectedInventoryItem != null && selectedInventoryItem.item.itemName != selectedItemNameText.text) || (selectedInventoryItem == null && selectedItemNameText.text != null))
+        //    {
+        //        SetSelectedItemInfoUI();
+        //        Debug.Log("Item info set");
+        //    }
+        //}
     }
 
     public void OpenInventoryBar()
@@ -392,27 +414,35 @@ public class PlayerInventory : MonoBehaviour
         inventoryWindowPanel.SetActive(true);
         inventoryEquipmentPanel.SetActive(true);
 
-        cam.freezeCameraRotation = true;
+        //cam.freezeCameraRotation = true;
+        //player.GetComponent<PlayerAttack>().enabled = false;
+            player.GetComponent<PlayerAttack>().enabled = false;
+        Pause.instance.freezeCameraRotation = true;
+        Pause.instance.unlockCursor = true;
 
-        infoPanel.SetActive(true);
+
+        //infoPanel.SetActive(true);
 
 
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.Confined;
+        //Cursor.visible = true;
     }
 
     public void CloseInventoryWindow()
     {
         inventoryWindowPanel.SetActive(false);
         inventoryEquipmentPanel.SetActive(false);
-        cam.freezeCameraRotation = false;
+        //cam.freezeCameraRotation = false;
+        //player.GetComponent<PlayerAttack>().enabled = true;
+        Pause.instance.freezeCameraRotation = false;
+        Pause.instance.unlockCursor = false;
 
-        infoPanel.SetActive(false);
-        SetSelectedItemInfoUI();
+        //infoPanel.SetActive(false);
+        //SetSelectedItemInfoUI();
 
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     public void SetSelectedItemInfoUI()
@@ -425,84 +455,84 @@ public class PlayerInventory : MonoBehaviour
 
             statsText.text = null;
 
-            if (selectedInventoryItem.item.healthEffect != 0)
+            if (selectedInventoryItem.healthEffect != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Health Effect: " + selectedInventoryItem.item.healthEffect;
             }
 
-            if (selectedInventoryItem.item.staminaEffect != 0)
+            if (selectedInventoryItem.staminaEffect != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Stamina Effect: " + selectedInventoryItem.item.staminaEffect;
             }
 
-            if (selectedInventoryItem.item.healthModifier != 0)
+            if (selectedInventoryItem.healthModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Health: " + selectedInventoryItem.item.healthModifier;
             }
 
-            if (selectedInventoryItem.item.staminaModifier != 0)
+            if (selectedInventoryItem.staminaModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Stamina: " + selectedInventoryItem.item.staminaModifier;
             }
 
-            if (selectedInventoryItem.item.oxygenModifier != 0)
+            if (selectedInventoryItem.oxygenModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Oxygen: " + selectedInventoryItem.item.oxygenModifier;
             }
 
-            if (selectedInventoryItem.item.speedModifier != 0)
+            if (selectedInventoryItem.speedModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Speed: " + selectedInventoryItem.item.speedModifier;
             }
 
-            if (selectedInventoryItem.item.jumpModifier != 0)
+            if (selectedInventoryItem.jumpModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Jump: " + selectedInventoryItem.item.jumpModifier;
             }
 
-            if (selectedInventoryItem.item.armourModifier != 0)
+            if (selectedInventoryItem.armourModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Armour: " + selectedInventoryItem.item.armourModifier;
             }
 
-            if (selectedInventoryItem.item.attackDamageModifier != 0)
+            if (selectedInventoryItem.attackDamageModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Attack Damage: " + selectedInventoryItem.item.attackDamageModifier;
             }  
             
-            if (selectedInventoryItem.item.passiveDamageModifier != 0)
+            if (selectedInventoryItem.passiveDamageModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Passive Damage: " + selectedInventoryItem.item.passiveDamageModifier;
             }
 
-            if (selectedInventoryItem.item.attackSpeedModifier != 0)
+            if (selectedInventoryItem.attackSpeedModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
                 statsText.text += "Attack Speed: " + selectedInventoryItem.item.attackSpeedModifier;
             }
 
-            if (selectedInventoryItem.item.knockBackModifier != 0)
+            if (selectedInventoryItem.knockBackModifier != 0)
             {
                 if (statsText.text != null) statsText.text += "\n";
 
@@ -518,13 +548,17 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public void AddItemToInventory(InventoryItem item, GameObject itemInWorld)
+    public void AddItemToInventory(InventoryItem item, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots, GameObject itemInWorld = null, ProduceController produceController = null)
     {
+        Debug.Log("Adding " + item.itemName + " to inventory");
         if (player.stats.weight + item.weight <= player.stats.maxWeight.GetValue())
         {
+            if (itemInWorld != null)
+                ParkStats.instance.StopTrackingObject(itemInWorld);
             //if item is already in inventory increase num carried (in 'InventoryItem' scriptable object)
             if (item.isStackable)
             {
+                Debug.Log(item.itemName + " is stackable");
                 List<InventoryUIItem> slotsWithItem = new List<InventoryUIItem>();
 
                 for (int i = 0; i < inventory.Count; i++)
@@ -543,9 +577,84 @@ public class PlayerInventory : MonoBehaviour
                         {
 
                             slotsWithItem[i].numCarried += 1;
-                            slotsWithItem[i].stackCountText.text = "[" + slotsWithItem[i].numCarried + "]";
+                            slotsWithItem[i].stackCountText.text = slotsWithItem[i].numCarried.ToString();
 
-                            if (itemInWorld.GetComponent<ItemInWorld>())
+                            if (slotsWithItem[i].item.canSpoil) // if the item can spoil
+                            {
+                                Debug.Log(slotsWithItem[i].item.itemName + " is produce - initialising item in stack");
+
+                                ProduceInInventory produce = null;
+
+                                if (!slotsWithItem[i].GetComponent<ProduceInInventory>())
+                                {
+                                    produce = slotsWithItem[i].AddComponent<ProduceInInventory>();
+
+                                    //produce.produceItem = slotsWithItem[i];
+
+                                    if (itemInWorld != null && itemInWorld.GetComponent<ProduceController>())
+                                    {
+                                        ProduceController currentProduce = itemInWorld.GetComponent<ProduceController>();
+                                        //produce.InitaliseInventoryProduce(slotsWithItem[i], currentProduce);
+
+                                        produce.produceAgesInStack.Add(currentProduce.age);
+                                    }
+                                    else if (slotsWithItem[i].physicalItem != null && slotsWithItem[i].physicalItem.GetComponent<ProduceController>() != null)
+                                    {
+                                        ProduceController currentProduce = slotsWithItem[i].physicalItem.GetComponent<ProduceController>();
+                                        //produce.InitaliseInventoryProduce(slotsWithItem[i], currentProduce);
+                                        produce.produceAgesInStack.Add(currentProduce.age);
+
+                                    }
+                                    else if (inventory[i].item.prefab != null && inventory[i].item.prefab.GetComponent<ProduceController>() != null)
+                                    {
+                                        ProduceController currentProduce = inventory[i].item.prefab.GetComponent<ProduceController>();
+                                        //currentProduce.age = currentProduce.ageOfMaturity;
+
+                                        produce.produceAgesInStack.Add(currentProduce.ageOfMaturity);
+
+                                    }
+                                }
+                                else
+                                {
+                                    produce = slotsWithItem[i].GetComponent<ProduceInInventory>();
+
+                                    if (produceController == null)
+                                    {
+                                        if (itemInWorld != null && itemInWorld.GetComponent<ProduceController>())
+                                        {
+                                            ProduceController currentProduce = itemInWorld.GetComponent<ProduceController>();
+                                            produce.produceAgesInStack.Add(currentProduce.age);
+
+                                        }
+                                        else if (slotsWithItem[i].physicalItem != null && slotsWithItem[i].physicalItem.GetComponent<ProduceController>() != null)
+                                        {
+                                            ProduceController currentProduce = slotsWithItem[i].physicalItem.GetComponent<ProduceController>();
+                                            produce.produceAgesInStack.Add(currentProduce.age);
+
+                                        }
+                                        else if (item.prefab != null && item.prefab.GetComponent<ProduceController>() != null)
+                                        {
+                                            ProduceController currentProduce = item.prefab.GetComponent<ProduceController>();
+                                            //currentProduce.age = currentProduce.ageOfMaturity;
+
+                                            produce.produceAgesInStack.Add(currentProduce.ageOfMaturity);
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        produce.produceAgesInStack.Add(produceController.age);
+
+                                    }
+
+                                    //produce.InitaliseInventoryProduce(produce, );
+
+                                }
+                            }
+                            else Debug.Log(slotsWithItem[i].item.itemName + " isn't produce");
+
+
+                            if (itemInWorld != null && itemInWorld.GetComponent<ItemInWorld>())
                             {
                                 Destroy(itemInWorld);
 
@@ -555,22 +664,77 @@ public class PlayerInventory : MonoBehaviour
                                 //playerInteractionRaycast.interactPromptIndicator.SetActive(false);
                             }
                             GetInventoryWeight();
-                            GetInventoryValue();
+                            // GetInventoryValue();
                             break;
                         }
                         else if (i == slotsWithItem.Count - 1)// if the capacity is full check if it can take a new slot
                         {
-                            AddItemToNewInventorySlot(item, itemInWorld);
-                            break;
+                            if (!slotsWithItem[i].item.canSpoil) // if the item cant spoil
+                            {
+                                AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld);
+                                break;
+                            }
+                            else
+                            {
+                                if (itemInWorld != null && itemInWorld.GetComponent<ProduceController>())
+                                {
+                                    ProduceController currentProduce = itemInWorld.GetComponent<ProduceController>();
+                                    AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld, 1, currentProduce, null, currentProduce.age);
+
+                                    break;
+
+                                }
+                                else if (slotsWithItem[i].physicalItem != null && slotsWithItem[i].physicalItem.GetComponent<ProduceController>() != null)
+                                {
+                                    ProduceController currentProduce = slotsWithItem[i].physicalItem.GetComponent<ProduceController>();
+                                    AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld, 1, currentProduce, null, currentProduce.age);
+                                    break;
+                                }
+                                else if (slotsWithItem[i].item.prefab != null && slotsWithItem[i].item.prefab.GetComponent<ProduceController>() != null)
+                                {
+                                    ProduceController currentProduce = slotsWithItem[i].item.prefab.GetComponent<ProduceController>();
+
+                                    AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld, 1, currentProduce, null, currentProduce.ageOfMaturity);
+
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
-                else AddItemToNewInventorySlot(item, itemInWorld);
-
+                else
+                {
+                    //Debug.Log(item.itemName + " isn't produce"); 
+                    AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld, 1, produceController);
+                }
             }
             else // otherwise add a new item to the inventory
             {
-                AddItemToNewInventorySlot(item, itemInWorld);
+                Debug.Log(item.itemName + " isn't stackable");
+
+                // AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld);
+
+                if (!item.canSpoil) // if the item can spoil
+                {
+                    AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld);
+                }
+                else
+                {
+                    if (itemInWorld != null && itemInWorld.GetComponent<ProduceController>())
+                    {
+                        ProduceController currentProduce = itemInWorld.GetComponent<ProduceController>();
+                        AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld, 1, currentProduce, null, currentProduce.age);
+
+
+                    }
+                    else if (item.prefab != null && item.prefab.GetComponent<ProduceController>() != null)
+                    {
+                        ProduceController currentProduce = item.prefab.GetComponent<ProduceController>();
+
+                        AddItemToNewInventorySlot(item, inventory, inventorySlots, itemInWorld, 1, currentProduce, null, currentProduce.ageOfMaturity);
+                    }
+
+                }
             }
         }
         else
@@ -581,7 +745,183 @@ public class PlayerInventory : MonoBehaviour
 
     }
 
-    int CheckEmptySlots(ItemSlot[] slots)
+    public void SplitStack(InventoryUIItem item, int numToTake, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots, ProduceInInventory produceInInventory = null)
+    {
+        if (item.numCarried >= numToTake)
+        {
+            int next = GetFirstEmptySlot(inventorySlots);
+
+
+            //
+            for (int i = 0; i < numToTake; i++)
+            {
+                if (produceInInventory != null)
+                {
+                    if (i == 0)
+                    {
+                        AddItemToNewInventorySlot(item.item, inventory, inventorySlots, null, numToTake, null, produceInInventory, item.GetComponent<ProduceInInventory>().produceAgesInStack[i]);
+
+                    }
+
+                    ProduceInInventory nextProduce = inventory[next].GetComponent<ProduceInInventory>();
+                    nextProduce.InitaliseInventoryProduce(inventory[next], nextProduce, i);
+                    Debug.Log("Initialising produce for split");
+
+                    UpdateStackText(inventory[next]);
+
+                    //RemoveItemFromInventory(item, inventory, numToTake, produceInInventory);
+                    item.GetComponent<ProduceInInventory>().produceAgesInStack.RemoveAt(i);
+                   
+                }
+                else
+                {
+                    if (i == 0)
+                    {
+                        AddItemToNewInventorySlot(item.item, inventory, inventorySlots, null, numToTake);
+                        UpdateStackText(inventory[next]);
+                        break;
+                    }
+                }
+                item.numCarried--;
+
+                UpdateStackText(item);
+            }
+
+        }
+        else
+        {
+            AddItemToNewInventorySlot(item.item, inventory, inventorySlots, null, item.numCarried, null, produceInInventory);
+            RemoveItemFromInventory(item, inventory, item.numCarried);
+        }
+
+        UpdateStackText(item);
+    }
+     public void CombineStack(InventoryUIItem staticItem, InventoryUIItem movedItem, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots)
+    {
+        if (staticItem.item == movedItem.item && staticItem != movedItem)
+        {
+            if (staticItem.numCarried + movedItem.numCarried <= staticItem.item.maxNumCarried)
+            {
+
+                if (staticItem.GetComponent<ProduceInInventory>() != null)
+                {
+                    ProduceInInventory produceInInventory = staticItem.GetComponent<ProduceInInventory>();
+                    for (int i = 0; i < movedItem.GetComponent<ProduceInInventory>().produceAgesInStack.Count; i++)
+                    {
+                        if (produceInInventory.AssessRipeness(movedItem.GetComponent<ProduceInInventory>().produceAgesInStack[i]) == produceInInventory.stackQuality)
+                        {
+                            staticItem.GetComponent<ProduceInInventory>().produceAgesInStack.Add(movedItem.GetComponent<ProduceInInventory>().produceAgesInStack[i]);
+                            movedItem.GetComponent<ProduceInInventory>().produceAgesInStack.RemoveAt(i);
+
+                            staticItem.numCarried += 1;
+
+
+                            if (movedItem.numCarried - 1 >= 0)
+                            {
+                                RemoveItemFromInventory(movedItem, inventory);
+                                //break;
+                            }
+                            else
+                                movedItem.numCarried -= 1;
+
+
+                        }
+                        else
+                        {
+                            Debug.Log("Can't combine produce stacks of different qualities");
+                            textPopUp.SetAndDisplayPopUp("Can't combine produce stacks of different qualities");
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    staticItem.numCarried += movedItem.numCarried;
+                    movedItem.numCarried = 0;
+
+                    RemoveItemFromInventory(movedItem, inventory);
+                }
+
+            }
+            else
+            {
+                int extra = (staticItem.numCarried + movedItem.numCarried) - staticItem.item.maxNumCarried;
+                Debug.Log("Extra items = " + extra);
+
+                if (staticItem.GetComponent<ProduceInInventory>() != null)
+                {
+                    ProduceInInventory produceInInventory = staticItem.GetComponent<ProduceInInventory>();
+                    for (int i = 0; i < staticItem.item.maxNumCarried - staticItem.numCarried; i++)
+                    {
+                        if (produceInInventory.AssessRipeness(movedItem.GetComponent<ProduceInInventory>().produceAgesInStack[i]) == produceInInventory.stackQuality)
+                        {
+                            staticItem.GetComponent<ProduceInInventory>().produceAgesInStack.Add(movedItem.GetComponent<ProduceInInventory>().produceAgesInStack[i]);
+                            //RemoveItemFromInventory(movedItem, inventory, );
+                            movedItem.GetComponent<ProduceInInventory>().produceAgesInStack.RemoveAt(i);
+
+                            staticItem.numCarried += 1;
+
+                            if (movedItem.numCarried - 1 >= 0)
+                            {
+                                RemoveItemFromInventory(movedItem, inventory);
+                                //break;
+                            }
+                            else
+                                movedItem.numCarried -= 1;
+
+                        }
+                        else
+                        {
+                            Debug.Log("Can't combine produce stacks of different qualities");
+                            textPopUp.SetAndDisplayPopUp("Can't combine produce stacks of different qualities");
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    //movedItem.numCarried -= staticItem.item.maxNumCarried - staticItem.numCarried;
+
+                    RemoveItemFromInventory(movedItem, inventory, staticItem.item.maxNumCarried - staticItem.numCarried);
+
+                    staticItem.numCarried = staticItem.item.maxNumCarried;
+
+                }
+            }
+        }
+        UpdateStackText(staticItem);
+
+        if (movedItem != null) UpdateStackText(movedItem);
+
+
+    }
+
+    public void CombineAllStacksOfType(InventoryUIItem staticItem, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots)
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i] != null && inventory[i].item == staticItem.item && inventory[i] != staticItem)
+            {
+                InventoryUIItem otherStack = inventory[i];
+                CombineStack(staticItem, otherStack, inventory, inventorySlots);
+            }
+        }
+    }
+
+    public int CountStacksOfType(InventoryUIItem staticItem, List<InventoryUIItem> inventory)
+    {
+        int count = 0;
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i] != null && inventory[i].item == staticItem.item)
+            {
+                count += 1;
+            }
+        }
+
+        return count;
+    }
+    public int CheckEmptySlots(ItemSlot[] slots)
     {
         int emptySlots = 0;
 
@@ -596,34 +936,57 @@ public class PlayerInventory : MonoBehaviour
         return emptySlots;
     }
 
-    void AddItemToNewInventorySlot(InventoryItem item, GameObject itemInWorld)
+    public int GetFirstEmptySlot(ItemSlot[] slots)
     {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].transform.childCount == 0) // for the first empty slot
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void UpdateStackText(InventoryUIItem invItem)
+    {
+        if (invItem.item.isStackable && invItem.numCarried > 1)
+        {
+            invItem.stackCountText.text = invItem.numCarried.ToString();
+        }
+        else invItem.stackCountText.text = null;
+    }
+
+    public void AddItemToNewInventorySlot(InventoryItem item, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots, GameObject itemInWorld = null, int stackCount = 1, ProduceController produceController = null, ProduceInInventory produceInInventory = null, float produceAge = 0f)
+    {
+        Debug.Log("adding new item");
         if (CheckEmptySlots(inventorySlots) > 0)
         {
             for (int i = 0; i < inventorySlots.Length; i++)
             {
-                if (inventorySlots[i].transform.childCount == 0) // for the first empty slot
+                if (GetFirstEmptySlot(inventorySlots) == i) // for the first empty slot
                 {
                     if (setCamera.isFirstPerson)
                     {
                         if (firstPersonRaycast.selectedObject.GetComponent<InventoryUIItem>()) // check whether it has used variables
                         {
-                            SpawnUsedItem(firstPersonRaycast.selectedObject.GetComponent<InventoryUIItem>(), i); // add a new inventory item with old variables
-
-                            //if (inventory[i].physicalItem.GetComponent<RopeItem>())
-                            //{
-                            //    inventory[i].physicalItem.GetComponent<RopeItem>().inventoryItem = inventory[i];
-                            //}
+                            SpawnUsedItem(firstPersonRaycast.selectedObject.GetComponent<InventoryUIItem>(), i, inventory, inventorySlots); // add a new inventory item with old variables
 
                             firstPersonRaycast.selectedObject = null;
 
                         }
                         else
                         {
-                            SpawnNewItem(item, i);
+                            SpawnNewItem(item, i, inventory, inventorySlots);
+
                         }
 
-                        if (itemInWorld.GetComponent<ItemInWorld>())
+                        inventory[i].numCarried = stackCount;
+
+
+                        UpdateStackText(inventory[i]);
+
+                        if (itemInWorld != null && itemInWorld.GetComponent<ItemInWorld>())
                         {
                             Destroy(itemInWorld);
                             firstPersonRaycast.selectedObject = null;
@@ -631,24 +994,20 @@ public class PlayerInventory : MonoBehaviour
                     }
                     else if (thirdPersonRaycast.selectedObject.GetComponent<InventoryUIItem>()) // check whether it has used variables
                     {
-                        SpawnUsedItem(thirdPersonRaycast.selectedObject.GetComponent<InventoryUIItem>(), i); // add a new inventory item with old variables
-
-                        //if (inventory[i].physicalItem.GetComponent<RopeItem>())
-                        //{
-                        //    inventory[i].physicalItem.GetComponent<RopeItem>().inventoryItem = inventory[i];
-                        //}
+                        SpawnUsedItem(thirdPersonRaycast.selectedObject.GetComponent<InventoryUIItem>(), i, inventory, inventorySlots); // add a new inventory item with old variables
 
                         thirdPersonRaycast.selectedObject = null;
 
                     }
                     else
                     {
-                        SpawnNewItem(item, i);
-
-
+                        SpawnNewItem(item, i, inventory, inventorySlots);
                     }
+                    inventory[i].numCarried = stackCount;
 
-                    if (itemInWorld.GetComponent<ItemInWorld>())
+                    UpdateStackText(inventory[i]);
+
+                    if (itemInWorld != null && itemInWorld.GetComponent<ItemInWorld>())
                     {
                         Destroy(itemInWorld);
                         thirdPersonRaycast.selectedObject = null;
@@ -663,23 +1022,68 @@ public class PlayerInventory : MonoBehaviour
 
                     }
 
+                    if (inventory[i].item.canSpoil) // if the item can spoil
+                    {
+                        Debug.Log(inventory[i].item.itemName + " is produce - initialising new item");
+                        ProduceInInventory produce = inventory[i].AddComponent<ProduceInInventory>();
+
+                        if (produceInInventory == null) // if it isn't coming from another stack
+                        {
+                            if (produceController == null)
+                            {
+                                if (itemInWorld != null && itemInWorld.GetComponent<ProduceController>())
+                                {
+                                    ProduceController currentProduce = itemInWorld.GetComponent<ProduceController>();
+                                    produce.InitaliseInventoryProduce(inventory[i], currentProduce);
+
+                                }
+                                else if (inventory[i].physicalItem != null && inventory[i].physicalItem.GetComponent<ProduceController>() != null)
+                                {
+                                    ProduceController currentProduce = inventory[i].physicalItem.GetComponent<ProduceController>();
+                                    produce.InitaliseInventoryProduce(inventory[i], currentProduce);
+
+                                }
+                                else if (inventory[i].item.prefab != null && inventory[i].item.prefab.GetComponent<ProduceController>() != null)
+                                {
+                                    ProduceController currentProduce = inventory[i].item.prefab.GetComponent<ProduceController>();
+                                    currentProduce.age = currentProduce.ageOfMaturity;
+
+                                    produce.InitaliseInventoryProduce(inventory[i], currentProduce);
+
+                                }
+                            }
+                            else
+                            {
+                                produce.InitaliseInventoryProduce(inventory[i], produceController);
+
+                            }
+                            UpdateStackText(inventory[i]);
+
+                        }
+                        else // if it is coming from another stack
+                        {
+                            for (int j = 0; j < stackCount; j++)
+                            {
+                                //produce.InitaliseInventoryProduce(inventory[i], produceInInventory, j);
+                                produce.InitaliseInventoryProduce(inventory[i], produceAge, produceInInventory.growthSpeed, produceInInventory.ageOfMaturity, produceInInventory.ageOfDecline, produceInInventory.ageOfSpoilage, produceInInventory.stackQuality);
+                                Debug.Log("Initialising from another stack");
+                            }
+                            UpdateStackText(inventory[i]);
+
+                        }
+
+                        UpdateStackText(inventory[i]);
+
+                    }
+                    else Debug.Log(inventory[i].item.itemName + " isn't produce");
                     break;
                 }
 
+                if (inventory[i] != null)
+                UpdateStackText(inventory[i]);
 
-
-                //if (inventory[i].physicalItem == itemInWorld && !inventory[i].isInUse)
-                //{
-                //    Destroy(itemInWorld);
-                //    playerInteractionRaycast.selectedObject = null;
-                //}
-                //else if (inventory[i].isInUse) playerInteractionRaycast.selectedObject = null;
             }
-            //if (itemInWorld.GetComponent<ItemInWorld>() && !inventory[])
-            //{
-            //    Destroy(itemInWorld);
-            //    playerInteractionRaycast.selectedObject = null;
-            //}
+
 
         }
         else
@@ -689,10 +1093,10 @@ public class PlayerInventory : MonoBehaviour
         }
 
         GetInventoryWeight();
-        GetInventoryValue();
+        //GetInventoryValue();
     }
 
-    void SpawnNewItem(InventoryItem item, int itemSlot)
+    public void SpawnNewItem(InventoryItem item, int itemSlot, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots, ChestInventory chest = null, ShopInventory shop = null)
     {
         GameObject newItemUI = Instantiate(inventoryItemPrefab, inventorySlots[itemSlot].transform);
         InventoryUIItem inventoryItem = newItemUI.GetComponent<InventoryUIItem>();
@@ -702,7 +1106,7 @@ public class PlayerInventory : MonoBehaviour
         Button button = newItemUI.AddComponent<Button>();
         button.onClick.AddListener(() => SelectInventoryItemAsButton(itemSlot));
 
-        inventoryItem.InitialiseItem(item, itemSlot);
+        inventoryItem.InitialiseItem(item, itemSlot, 1, chest, shop);
 
         inventory[itemSlot] = inventoryItem;
 
@@ -724,22 +1128,27 @@ public class PlayerInventory : MonoBehaviour
         //inventory[itemSlot] = inventoryItem;
 
     }
-    void SpawnUsedItem(InventoryUIItem usedItem, int itemSlot)
+    public void SpawnUsedItem(InventoryUIItem item, int itemSlot, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots, ChestInventory chest = null, ShopInventory shop = null)
     {
         GameObject newItemUI = Instantiate(inventoryItemPrefab, inventorySlots[itemSlot].transform);
         InventoryUIItem inventoryItem = newItemUI.GetComponent<InventoryUIItem>();
 
-        inventorySlots[itemSlot].inventoryItem = inventoryItem;
 
-        CopyItemVariables(usedItem, inventoryItem);
+        CopyItemVariables(item, inventoryItem, itemSlot);
 
         inventoryItem.image.sprite = inventoryItem.item.itemIcon;
 
+        UpdateStackText(inventoryItem);
+
         inventory[itemSlot] = inventoryItem;
+        inventorySlots[itemSlot].inventoryItem = inventoryItem;
+
+        inventoryItem.InitialiseItem(item.item, itemSlot, item.numCarried, chest, shop);
+
 
     }
 
-    InventoryUIItem CopyItemVariables(InventoryUIItem originalInventoryItem, InventoryUIItem copyInventoryItem)
+    public InventoryUIItem CopyItemVariables(InventoryUIItem originalInventoryItem, InventoryUIItem copyInventoryItem, int itemSlot)
     {
         copyInventoryItem.item = originalInventoryItem.item;
         copyInventoryItem.isInUse = originalInventoryItem.isInUse;
@@ -748,8 +1157,12 @@ public class PlayerInventory : MonoBehaviour
         copyInventoryItem.ammo = originalInventoryItem.ammo;
         copyInventoryItem.batteryCharge = originalInventoryItem.batteryCharge;
         copyInventoryItem.numCarried = originalInventoryItem.numCarried;
+        //copyInventoryItem.chest = originalInventoryItem.chest;
+        //copyInventoryItem.shop = originalInventoryItem.shop;
+        copyInventoryItem.slot = itemSlot;
+        
 
-        Debug.Log("InventoryItem copied");
+        Debug.Log(copyInventoryItem.item.itemName + " copied");
         return copyInventoryItem;
 
         //selectedInventoryItem.GetComponentnsform);
@@ -760,31 +1173,41 @@ public class PlayerInventory : MonoBehaviour
         if (item.isInUse || item.batteryCharge < item.item.maxBatteryCharge || item.ammo < item.item.maxAmmo)
         {
             InventoryUIItem copyInventoryItem = item.physicalItem.AddComponent<InventoryUIItem>();
-            CopyItemVariables(item, copyInventoryItem);
+            CopyItemVariables(item, copyInventoryItem, item.slot);
         }
 
-        item.physicalItem.transform.parent = null;
+        GameObject itemObject = null;
 
-        if (item.physicalItem.GetComponent<Rigidbody>())
+        if (item.physicalItem != null)
         {
-            item.physicalItem.GetComponent<Rigidbody>().useGravity = true;
-            item.physicalItem.GetComponent<Rigidbody>().isKinematic = false;
-        }
+            item.physicalItem.transform.parent = null;
+            itemObject = item.physicalItem;
 
-        if (item.physicalItem.AddComponent<StickToObject>())
-        {
-            Destroy(item.physicalItem.GetComponent<StickToObject>());
-        }
+            if (item.physicalItem.GetComponent<Rigidbody>())
+            {
+                item.physicalItem.GetComponent<Rigidbody>().useGravity = true;
+                item.physicalItem.GetComponent<Rigidbody>().isKinematic = false;
+            }
 
-        item.physicalItem.GetComponent<ItemInWorld>().enabled = true;
-        item.physicalItem.GetComponent<Collider>().enabled = true;
+            if (item.physicalItem.AddComponent<StickToObject>())
+            {
+                Destroy(item.physicalItem.GetComponent<StickToObject>());
+            }
+
+            item.physicalItem.GetComponent<ItemInWorld>().enabled = true;
+            item.physicalItem.GetComponent<Collider>().enabled = true;
+
+        }
+        else itemObject = Instantiate(item.item.prefab, rightHandPos.position, Quaternion.identity);
+
+        if (itemObject != null) ParkStats.instance.TrackObject(itemObject);
 
         if (mainHand)
         {
             //selectedPhysicalItem.GetComponent<ItemInWorld>().enabled = true;
             //selectedPhysicalItem.GetComponent<Collider>().enabled = true;
 
-            RemoveItemFromInventory(item);
+            RemoveItemFromInventory(item, inventory);
         }
         else
         {
@@ -807,40 +1230,49 @@ public class PlayerInventory : MonoBehaviour
     {
         canThrow = false;
 
-        item.physicalItem.transform.parent = null;
-
-        if (item.isInUse || item.batteryCharge < item.item.maxBatteryCharge || item.ammo < item.item.maxAmmo)
+        GameObject itemObject = null;
+        
+        if (item.physicalItem != null)
         {
-            InventoryUIItem copyInventoryItem = item.physicalItem.AddComponent<InventoryUIItem>();
-            CopyItemVariables(item, copyInventoryItem);
+            item.physicalItem.transform.parent = null;
+            itemObject = item.physicalItem;
+
+            if (item.isInUse || item.batteryCharge < item.item.maxBatteryCharge || item.ammo < item.item.maxAmmo)
+            {
+                InventoryUIItem copyInventoryItem = item.physicalItem.AddComponent<InventoryUIItem>();
+                CopyItemVariables(item, copyInventoryItem, item.slot);
+            }
+
+            Vector3 force = Camera.main.transform.forward * throwForce + transform.up * throwUpwardForce;
+
+            item.physicalItem.GetComponent<Rigidbody>().useGravity = true;
+            item.physicalItem.GetComponent<Rigidbody>().isKinematic = false;
+
+            item.physicalItem.GetComponent<ItemInWorld>().enabled = true;
+            item.physicalItem.GetComponent<Collider>().enabled = true;
+
+
+            item.physicalItem.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+
+            if (item.physicalItem.AddComponent<StickToObject>())
+            {
+                Destroy(item.physicalItem.GetComponent<StickToObject>());
+            }
         }
+        else itemObject = Instantiate(item.item.prefab, rightHandPos.position, Quaternion.identity);
 
-        Vector3 force = Camera.main.transform.forward * throwForce + transform.up * throwUpwardForce;
-
-        item.physicalItem.GetComponent<Rigidbody>().useGravity = true;
-        item.physicalItem.GetComponent<Rigidbody>().isKinematic = false;
-
-        item.physicalItem.GetComponent<ItemInWorld>().enabled = true;
-        item.physicalItem.GetComponent<Collider>().enabled = true;
-
-
-        item.physicalItem.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
-
-        if (item.physicalItem.AddComponent<StickToObject>())
-        {
-            Destroy(item.physicalItem.GetComponent<StickToObject>());
-        }
+        if (itemObject != null) ParkStats.instance.TrackObject(itemObject);
 
         if (mainHand)
         {
-            
-            RemoveItemFromInventory(item);
+
+            RemoveItemFromInventory(item, inventory);
         }
         else
         {
             //offHandSlot.inventoryItem.physicalItem.GetComponent<ItemInWorld>().enabled = true;
             //offHandSlot.inventoryItem.physicalItem.GetComponent<Collider>().enabled = true;
-            RemoveEquipmentFromSlot( offHandSlot);
+            RemoveEquipmentFromSlot(offHandSlot);
             //EndOffHandInspection();
         }
         Invoke(nameof(ResetThrow), throwCooldown);
@@ -851,7 +1283,7 @@ public class PlayerInventory : MonoBehaviour
         canThrow = true;
     }
 
-    public void RemoveItemFromInventory(InventoryUIItem item)
+    public void RemoveItemFromInventory(InventoryUIItem item, List<InventoryUIItem> inventory, int numToRemove = 1)
     {
         RemoveModifiers(item.item);
 
@@ -860,8 +1292,13 @@ public class PlayerInventory : MonoBehaviour
         {
             if (inventory[i] == item)
             {
-                inventory[i].numCarried--;
-                inventory[i].stackCountText.text = "[" + inventory[i].numCarried + "]";
+                for (int r = 0; r < numToRemove; r++)
+                {
+                    inventory[i].numCarried--;
+                    inventory[i].stackCountText.text = inventory[i].numCarried.ToString();
+                }
+
+                
 
                 if (inventory[i].numCarried <= 0f)
                 {
@@ -884,12 +1321,14 @@ public class PlayerInventory : MonoBehaviour
                     inventory[i].physicalItem = null;
                     HoldItemMainHand();
                 }
+
+                break;
             }
         }
 
 
         GetInventoryWeight();
-        GetInventoryValue();
+        //GetInventoryValue();
     }
 
     public void RemoveEquipmentFromSlot(EquipmentSlot slot)
@@ -903,7 +1342,7 @@ public class PlayerInventory : MonoBehaviour
                 if (slot == offHandSlot) offHandItem = null;
 
                 equipmentSlots[i].inventoryItem.numCarried--;
-                equipmentSlots[i].inventoryItem.stackCountText.text = "[" + equipmentSlots[i].inventoryItem.numCarried + "]";
+                equipmentSlots[i].inventoryItem.stackCountText.text = equipmentSlots[i].inventoryItem.numCarried.ToString();
 
                 if (equipmentSlots[i].inventoryItem.numCarried <= 0f)
                 {
@@ -949,7 +1388,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if (inventory[i] != null)
             {
-                value += inventory[i].item.itemValue * inventory[i].numCarried;
+                value += inventory[i].itemValue * inventory[i].numCarried;
             }
         }
         //player.weight = value;
@@ -971,6 +1410,21 @@ public class PlayerInventory : MonoBehaviour
         }
 
         return false;
+    }
+
+    public int GetItemIndex(InventoryItem desiredItem)
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i] != null)
+            {
+                if (inventory[i].item == desiredItem)
+                {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     public InventoryUIItem GetInventoryItem(InventoryItem desiredItem)
@@ -1048,7 +1502,7 @@ public class PlayerInventory : MonoBehaviour
 
                 selectedPhysicalItem = Instantiate(selectedInventoryItem.item.prefab, rightHandPos.position, Quaternion.identity, player.transform);
 
-
+                selectedPhysicalItem.name = selectedInventoryItem.item.prefab.name;
                 //selectedPhysicalItem.transform.localRotation = Quaternion.Inverse(rightHandPos.localRotation);
 
                 //lastParentRotation = rightHandPos.localRotation;
@@ -1064,6 +1518,7 @@ public class PlayerInventory : MonoBehaviour
                 {
                     selectedPhysicalItem.transform.parent = rightHandPos;
                     selectedPhysicalItem.transform.LookAt(swordTarget);
+                    //Debug.Log("looking at sword target");
                 }//selectedPhysicalItem.transform.parent = rightHandPos;
                 // selectedPhysicalItem.transform.eulerAngles = Vector3.zero;
                 //selectedPhysicalItem.transform.rotation = Quaternion.Inverse( rightHandPos.rotation);
@@ -1210,7 +1665,7 @@ public class PlayerInventory : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         if (mainHand)
-            RemoveItemFromInventory(selectedInventoryItem);
+            RemoveItemFromInventory(selectedInventoryItem, inventory);
         else
             RemoveEquipmentFromSlot(offHandSlot);
 
@@ -1474,22 +1929,42 @@ public class PlayerInventory : MonoBehaviour
 
     public void SwapItemSlot(int indexA, int indexB, bool equippedItem)
     {
+        //Debug.Log(inventorySlots[indexB].inventoryItem + " Num carried = " + inventorySlots[indexB].inventoryItem.numCarried);
+
+        //if (inventorySlots[indexA].inventoryItem != null)
+        //    Debug.Log(inventorySlots[indexA].inventoryItem + " Num carried = " + inventorySlots[indexA].inventoryItem.numCarried);
+
 
         if (!equippedItem)
         {
             // Store emote A info
             InventoryUIItem inventoryItem = inventorySlots[indexA].inventoryItem;
+            ProduceInInventory produceB = null;
+            if (inventorySlots[indexA].inventoryItem != null && inventorySlots[indexA].inventoryItem.GetComponent<ProduceInInventory>())
+            {
+                produceB = inventorySlots[indexA].inventoryItem.GetComponent<ProduceInInventory>();
+            }
 
+            ProduceInInventory produceA = null;
+            if (inventorySlots[indexB].inventoryItem.GetComponent<ProduceInInventory>())
+            {
+                produceA = inventorySlots[indexB].inventoryItem.GetComponent<ProduceInInventory>();
+            }
             //Swap Slot A Info for slot B
             inventorySlots[indexA].inventoryItem = inventorySlots[indexB].inventoryItem;
+            produceItems[indexA] = produceA;
 
+           
             // Swap slot B info for stored A info
             inventorySlots[indexB].inventoryItem = inventoryItem;
+            produceItems[indexB] = produceB;
 
             //Delete & Spawn UI
 
-            EndItemInspection();
+            //Debug.Log("Num carried 1 = " + inventorySlots[indexA].inventoryItem.numCarried);
 
+
+            EndItemInspection();
 
             if (inventorySlots[indexA].transform.childCount > 0)
             {
@@ -1497,7 +1972,6 @@ public class PlayerInventory : MonoBehaviour
                 {
                     Destroy(child.gameObject);
                 }
-                //SpawnNewEmoteUI(inventorySlots[indexB].inventoryItem.emote, indexB);
 
             }
 
@@ -1507,12 +1981,59 @@ public class PlayerInventory : MonoBehaviour
                 {
                     Destroy(child.gameObject);
                 }
-                SpawnNewItem(inventorySlots[indexA].inventoryItem.item, indexA); //a = originally B
+
+
+                SpawnUsedItem(inventorySlots[indexA].inventoryItem, indexA, inventory, inventorySlots); //a = originally B
+
+                if (produceItems[indexA] != null)
+                {
+                    ProduceInInventory prodInInv = inventory[indexA].AddComponent<ProduceInInventory>();
+
+                    prodInInv.produceItem = inventory[indexA];
+
+
+                    for (int j = 0; j < produceItems[indexA].produceAgesInStack.Count; j++)
+                    {
+                        if (j == 0)
+                        {
+                            prodInInv.InitaliseInventoryProduce(inventory[indexA], produceItems[indexA], j);
+                        }
+
+                        prodInInv.produceAgesInStack.Add(produceItems[indexA].produceAgesInStack[j]);
+
+                    }
+                }
 
             }
 
             if (inventoryItem != null)
-                SpawnNewItem(inventorySlots[indexB].inventoryItem.item, indexB); // originally A
+            {
+
+                SpawnUsedItem(inventorySlots[indexB].inventoryItem, indexB, inventory, inventorySlots); // originally A
+
+
+                if (produceItems[indexB] != null)
+                {
+                    ProduceInInventory prodInInv = inventory[indexB].AddComponent<ProduceInInventory>();
+
+                    prodInInv.produceItem = inventory[indexB];
+
+
+                    for (int j = 0; j < produceItems[indexB].produceAgesInStack.Count; j++)
+                    {
+                        if (j == 0)
+                        {
+                            prodInInv.InitaliseInventoryProduce(inventory[indexB], produceItems[indexB], j);
+                        }
+
+                        prodInInv.produceAgesInStack.Add(produceItems[indexB].produceAgesInStack[j]);
+
+                    }
+                }
+
+
+
+            }
 
 
             HoldItemMainHand();
@@ -1552,9 +2073,6 @@ public class PlayerInventory : MonoBehaviour
             {
                 Destroy(child.gameObject);
             }
-
-            //SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipIndex); //spawn new equipment item (old inventory item)
-
         }
 
         if (equipmentSlots[equipIndex].transform.childCount > 0) // Destroy each child of the old equipment item
@@ -1563,123 +2081,409 @@ public class PlayerInventory : MonoBehaviour
             {
                 Destroy(child.gameObject);
             }
-            //SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipmentSlots[equipIndex]); //a = originally B
-            SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
+
+            if (inventorySlots[invIndex].inventoryItem.numCarried > 1 || inventorySlots[invIndex].inventoryItem.isInUse)
+                SpawnUsedItem(inventorySlots[invIndex].inventoryItem, invIndex, inventory, inventorySlots); //a = originally B
+            else
+                SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex, inventory, inventorySlots); //a = originally B
 
         }
 
         if (equipmentSlots[equipIndex].inventoryItem != null)
         {
-            SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipIndex); //spawn new equipment item (old inventory item)
-            //SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
-           // Debug.Log("Item from inventory slot wasn't null");
+            //if (equipmentSlots[equipIndex].inventoryItem.numCarried > 0 || equipmentSlots[equipIndex].inventoryItem.isInUse)
+            //    //SpawnUsedItem(equipmentSlots[equipIndex].inventoryItem, equipIndex, inventory, equipmentSlots); //a = originally B
+            //else
+            //    SpawnNewEquipment(equipmentSlots[equipIndex].inventoryItem.item, equipIndex); //spawn new equipment item (old inventory item)
 
-        } 
-        //else
-        //    Debug.Log("Item from inventory slot IS null");
+        }
 
         HoldItemMainHand();
 
 
-       //Debug.Log("Equipped " + equipmentSlots[equipIndex].inventoryItem.item.itemName + " from inventory slot #" + invIndex);
 
     }
 
-    public void SwapToChest(int chestIndex, int invIndex, ChestInventory chest)
+    public void Sell(int shopIndex, int invIndex, ShopInventory shop, ItemSlot[] shopSlots, List<InventoryUIItem>shopInventory, int numToSell = 1, ProduceInInventory produceInInventory = null)
     {
-        Debug.Log("Storing in chest");
+        Debug.Log("Selling");
 
-        // Store item info
-        InventoryUIItem inventoryItem = chest.inventorySlots[chestIndex].inventoryItem;
-
-        //Swap  item Info for equipment info
-        chest.inventorySlots[chestIndex].inventoryItem = inventorySlots[invIndex].inventoryItem;
-
-        // Swap equipment info for stored item info
-        inventorySlots[invIndex].inventoryItem = inventoryItem;
-
-        if (inventoryItem != null)
-            RemoveModifiers(inventoryItem.item);
-
-        EndItemInspection();
-
-        if (chest.inventorySlots[chestIndex].transform.childCount > 0)
+        for (int i = 0; i < shop.typesWillBuy.Length; i++)
         {
-            foreach (Transform child in chest.inventorySlots[chestIndex].transform)
+            if (shop.typesWillBuy[i] == inventorySlots[invIndex].inventoryItem.item.itemType) break;
+
+            if (i + 1 >= shop.typesWillBuy.Length)
             {
-                Destroy(child.gameObject);
+                Debug.Log( "This shop won't buy this type of item");
+                return;
             }
         }
 
+        //Swap  item Info for equipment info
+        shopSlots[shopIndex].inventoryItem = inventorySlots[invIndex].inventoryItem;
+
+
+        if (inventorySlots[invIndex].inventoryItem != null)
+            RemoveModifiers(inventorySlots[invIndex].inventoryItem.item);
+
+        EndItemInspection();
+
         if (inventorySlots[invIndex].transform.childCount > 0)
         {
-            foreach (Transform child in inventorySlots[invIndex].transform)
-            {
-                Destroy(child.gameObject);
-            }
-            chest.SpawnNewItem(chest.inventorySlots[chestIndex].inventoryItem.item, chestIndex); //a = originally B
 
-            if (chest.inventorySlots[chestIndex].inventoryItem != null)
-                chest.inventory[chestIndex] = chest.inventorySlots[chestIndex].inventoryItem.item;
+            for (int i = 0; i < numToSell; i++)
+            {
+                ProduceController produceController = null;
+                if (shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>())
+                {
+                    if (shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack != null && shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.Count > numToSell)
+                        produceController = shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>().CreateNewProduceController(i);
+                }
+
+                AddItemToInventory(shopSlots[shopIndex].inventoryItem.item, shopInventory, shopSlots, null, produceController);
+
+                //remove from current stack
+                if (produceInInventory != null && produceInInventory.produceAgesInStack.Count > i)
+                    produceInInventory.produceAgesInStack.RemoveAt(i);
+
+                money += shopSlots[shopIndex].inventoryItem.itemValue;
+
+            }
+
+            if (shopSlots[shopIndex].inventoryItem == inventorySlots[invIndex].inventoryItem)
+                shopSlots[shopIndex].inventoryItem = shopSlots[shopIndex].GetComponentInChildren<InventoryUIItem>();
+
+
+            if (shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>())
+            {
+                shop.produceItems[shopIndex] = shop.buyBackInventorySlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>();
+            }
+
+            inventorySlots[invIndex].inventoryItem.numCarried -= numToSell;
+
+
+            if (inventorySlots[invIndex].inventoryItem.numCarried <= 0)
+            {
+                RemoveItemFromInventory(inventorySlots[invIndex].inventoryItem, inventory);
+            }
+            else UpdateStackText(inventorySlots[invIndex].inventoryItem);
+
+
+           
+
+            if (shopSlots[shopIndex].inventoryItem != null)
+            {
+                shopInventory[shopIndex] = shopSlots[shopIndex].inventoryItem;
+                shopInventory[shopIndex].shop = shop;
+            }
+            else shopInventory[shopIndex] = null;
+
+        }
+
+        //if (inventoryItem != null)
+        //    SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
+
+        HoldItemMainHand();
+    }
+
+    public void Buy(int invIndex, int shopIndex, ShopInventory shop, ItemSlot[] shopSlots, List<InventoryUIItem> shopInventory, int numToBuy = 1, bool buyBack = false, ProduceInInventory produceInInventory = null)
+    {
+        if (money >= numToBuy * shopSlots[shopIndex].inventoryItem.itemValue)
+        {
+            Debug.Log("Buying " + shopSlots[shopIndex].inventoryItem.item.itemName + " for $" + shopSlots[shopIndex].inventoryItem.itemValue);
+
+            //Swap inv item Info for equipment info
+            inventorySlots[invIndex].inventoryItem = shopSlots[shopIndex].inventoryItem;
+
+            EndItemInspection();
+
+
+            if (shopSlots[shopIndex].transform.childCount > 0)
+            {
+                for (int i = 0; i < numToBuy; i++)
+                {
+                    ProduceController produceController = null;
+                    if (shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>() && shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.Count > numToBuy)
+                    {
+                        produceController = shopSlots[shopIndex].inventoryItem.GetComponent<ProduceInInventory>().CreateNewProduceController(i);
+                        Debug.Log("Creating a produce controller for " + shopSlots[shopIndex].inventoryItem.item.itemName);
+                    }
+
+                    AddItemToInventory(inventorySlots[invIndex].inventoryItem.item, inventory, inventorySlots, null, produceController);
+                    money -= shopInventory[shopIndex].itemValue;
+
+                    if (buyBack)
+                    {
+                        if (shopInventory[shopIndex].GetComponent<ProduceInInventory>())
+                        {
+                            shop.produceItems[shopIndex] = null;
+                        }
+
+                        RemoveItemFromInventory(shopInventory[shopIndex], shopInventory);
+
+                        Debug.Log("Removing item from shop");
+                    }
+                }
+
+                inventorySlots[invIndex].inventoryItem = inventorySlots[invIndex].GetComponentInChildren<InventoryUIItem>();
+
+               
+            }
+
+            HoldItemMainHand();
+        }
+        else textPopUp.SetAndDisplayPopUp("You don't have enough money");
+    }
+
+    public void ToggleBuyBackMenu()
+    {
+        if (currentShop != null)
+            if (currentShop.buyBackPanelOpen)
+            {
+                shopPanel.SetActive(true);
+                currentShop.SaveInventory();
+                buyBackPanel.SetActive(false);
+                currentShop.buyBackPanelOpen = false;
+            }
+            else
+            {
+                buyBackPanel.SetActive(true);
+                shopPanel.SetActive(false);
+
+                currentShop.buyBackPanelOpen = true;
+
+            }
+    }
+
+    public void SwapToChest(int chestIndex, int invIndex, ChestInventory chest, int numToStash = 1, ProduceInInventory produceInInventory = null)
+    {
+        if (chest.inventorySlots[chestIndex].inventoryItem != null) // swap both whole stacks
+        {
+            Debug.Log("Storing in chest");
+
+            // Store item info
+            InventoryUIItem inventoryItem = chest.inventorySlots[chestIndex].inventoryItem;
+
+            //Swap  item Info for equipment info
+            chest.inventorySlots[chestIndex].inventoryItem = inventorySlots[invIndex].inventoryItem;
+
+            // Swap equipment info for stored item info
+            inventorySlots[invIndex].inventoryItem = inventoryItem;
+
+            if (inventoryItem != null)
+                RemoveModifiers(inventoryItem.item);
+
+            EndItemInspection();
+
+            if (inventorySlots[invIndex].transform.childCount > 0)
+            {
+
+                for (int i = 0; i < numToStash; i++)
+                {
+                    ProduceController produceController = null;
+                    if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>())
+                    {
+                        if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack != null && chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.Count > numToStash)
+                            produceController = chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>().CreateNewProduceController(i);
+                    }
+
+                    AddItemToInventory(chest.inventorySlots[chestIndex].inventoryItem.item, chest.inventory, chest.inventorySlots, null, produceController);
+
+                    //remove from current stack
+                    if (produceInInventory != null && produceInInventory.produceAgesInStack.Count > i)
+                        produceInInventory.produceAgesInStack.RemoveAt(i);
+                }
+
+                if (chest.inventorySlots[chestIndex].inventoryItem != null)
+                {
+                    chest.inventory[chestIndex] = chest.inventorySlots[chestIndex].inventoryItem;
+
+                    chest.inventory[chestIndex].chest = chest;
+                }
+                else chest.inventory[chestIndex] = null;
+
+            }
+        }
+        else
+        {
+            chest.inventorySlots[chestIndex].inventoryItem = inventorySlots[invIndex].inventoryItem;
+
+            if (inventorySlots[invIndex].transform.childCount > 0)
+            {
+                for (int i = 0; i < numToStash; i++)
+                {
+                    AddItemToInventory(inventorySlots[invIndex].inventoryItem.item, chest.inventory, chest.inventorySlots);
+
+                }
+                //SpawnUsedItem(inventorySlots[invIndex].inventoryItem, invIndex, inventory, inventorySlots); //a = originally B
+                inventorySlots[invIndex].inventoryItem.numCarried -= numToStash;
+
+                if (inventorySlots[invIndex].inventoryItem.GetComponent<ProduceInInventory>())
+                {
+                    for (int i = 0; i < numToStash; i++)
+                    {
+                        if (inventorySlots[invIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.Count > i)
+                        {
+                            inventorySlots[invIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.RemoveAt(i);
+                        }
+                        else break;
+                    }
+                }
+
+                if (inventorySlots[invIndex].inventoryItem.numCarried <= 0)
+                {
+                    RemoveItemFromInventory(inventorySlots[invIndex].inventoryItem, inventory);
+                }
+                else UpdateStackText(inventorySlots[invIndex].inventoryItem);
+
+                chest.inventorySlots[chestIndex].inventoryItem.chest = chest;
+
+                if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>())
+                {
+                    chest.produceItems[chestIndex] = chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>();
+                }
+
+            }
+
+            if (inventorySlots[invIndex].inventoryItem != null)
+            {
+
+                //SpawnUsedItem(inventorySlots[invIndex].inventoryItem, invIndex, inventory, inventorySlots); //a = originally B
+
+                inventory[invIndex] = inventorySlots[invIndex].inventoryItem;
+                inventory[invIndex].chest = null;
+
+            }
+            else inventory[invIndex] = null;
+
+        }
+
+        HoldItemMainHand();
+    }
+
+    public void SwapFromChest(int invIndex, int chestIndex, ChestInventory chest, int numToTake = 1, ProduceInInventory produceInInventory = null)
+    {
+        Debug.Log("Taking from chest");
+
+        if (inventorySlots[invIndex].inventoryItem != null) // swap both whole stacks
+        {
+            // Store item info
+            InventoryUIItem inventoryItem = inventorySlots[invIndex].inventoryItem;
+
+            //Swap  item Info for equipment info
+            inventorySlots[invIndex].inventoryItem = chest.inventorySlots[chestIndex].inventoryItem;
+
+            // Swap equipment info for stored item info
+            chest.inventorySlots[chestIndex].inventoryItem = inventoryItem;
+
+            //if (inventoryItem != null)
+            //    RemoveModifiers(inventoryItem.item);
+
+            EndItemInspection();
+
+
+            if (chest.inventorySlots[chestIndex].transform.childCount > 0)
+            {
+
+                for (int i = 0; i < numToTake; i++)
+                {
+                    ProduceController produceController = null;
+                    if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>() && chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.Count > numToTake)
+                    {
+                        produceController = chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>().CreateNewProduceController(i);
+                        Debug.Log("Creating a produce controller for " + chest.inventorySlots[chestIndex].inventoryItem.item.itemName);
+                    }
+
+                    AddItemToInventory(inventorySlots[invIndex].inventoryItem.item, inventory, inventorySlots, null, produceController);
+
+                    if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>())
+                    {
+                        chest.produceItems[chestIndex] = null;
+                        Debug.Log("Removing produce from chest");
+                    }
+
+                    RemoveItemFromInventory(chest.inventory[chestIndex], chest.inventory);
+
+                    Debug.Log("Removing item from chest");
+
+                }
+
+                inventorySlots[invIndex].inventoryItem = inventorySlots[invIndex].GetComponentInChildren<InventoryUIItem>();
+
+
+                inventorySlots[invIndex].inventoryItem.chest = null;
+
+               
+
+            }
+
+            if (inventoryItem != null)
+            {
+
+                //SpawnUsedItem(chest.inventorySlots[chestIndex].inventoryItem, chestIndex, chest.inventory, chest.inventorySlots); //a = originally B
+
+                chest.inventory[chestIndex] = chest.inventorySlots[chestIndex].inventoryItem;
+                chest.inventory[chestIndex].chest = chest;
+
+                if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>())
+                {
+                    chest.produceItems[chestIndex] = null;
+                    Debug.Log("Removing produce from chest");
+                }
+            }
             else chest.inventory[chestIndex] = null;
 
         }
-
-        if (inventoryItem != null)
-            SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
-
-
-        HoldItemMainHand();
-    }
-
-    public void SwapFromChest(int invIndex, int chestIndex, ChestInventory chest)
-    {
-        Debug.Log("Storing in chest");
-
-        // Store item info
-        InventoryUIItem inventoryItem = inventorySlots[invIndex].inventoryItem;
-
-        //Swap  item Info for equipment info
-        inventorySlots[invIndex].inventoryItem = chest.inventorySlots[chestIndex].inventoryItem;
-
-        // Swap equipment info for stored item info
-        chest.inventorySlots[chestIndex].inventoryItem = inventoryItem;
-
-        if (inventoryItem != null)
-            RemoveModifiers(inventoryItem.item);
-
-        EndItemInspection();
-
-      
-
-        if (inventorySlots[invIndex].transform.childCount > 0)
+        else
         {
-            foreach (Transform child in inventorySlots[invIndex].transform)
+            inventorySlots[invIndex].inventoryItem = chest.inventorySlots[chestIndex].inventoryItem;
+
+            if (chest.inventorySlots[chestIndex].transform.childCount > 0)
             {
-                Destroy(child.gameObject);
-            }
+                for (int i = 0; i < numToTake; i++)
+                {
+                    AddItemToInventory(inventorySlots[invIndex].inventoryItem.item, inventory, inventorySlots);
 
-        }
+                }
+                //SpawnUsedItem(inventorySlots[invIndex].inventoryItem, invIndex, inventory, inventorySlots); //a = originally B
 
-        if (chest.inventorySlots[chestIndex].transform.childCount > 0)
-        {
-            foreach (Transform child in chest.inventorySlots[chestIndex].transform)
+                chest.inventorySlots[chestIndex].inventoryItem.numCarried -= numToTake;
+
+                if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>())
+                {
+                    for (int i = 0; i < numToTake; i++)
+                    {
+                        if (chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.Count > i)
+                        {
+                            chest.inventorySlots[chestIndex].inventoryItem.GetComponent<ProduceInInventory>().produceAgesInStack.RemoveAt(i);
+                        }
+                        else break;
+                    }
+                }
+
+                if (chest.inventorySlots[chestIndex].inventoryItem.numCarried <= 0)
+                {
+                    RemoveItemFromInventory(chest.inventorySlots[chestIndex].inventoryItem, chest.inventory);
+                }
+                else UpdateStackText(chest.inventorySlots[chestIndex].inventoryItem);
+
+                inventorySlots[invIndex].inventoryItem.chest = null;
+
+            } 
+
+            if (chest.inventorySlots[chestIndex].inventoryItem != null)
             {
-                Destroy(child.gameObject);
+
+                //SpawnUsedItem(chest.inventorySlots[chestIndex].inventoryItem, chestIndex, chest.inventory, chest.inventorySlots); //a = originally B
+
+                chest.inventory[chestIndex] = chest.inventorySlots[chestIndex].inventoryItem;
+                chest.inventory[chestIndex].chest = chest;
+
             }
+            else chest.inventory[chestIndex] = null;
 
-            
-            SpawnNewItem(inventorySlots[invIndex].inventoryItem.item, invIndex);
+
         }
-
-        if (inventoryItem != null)
-        {
-            chest.SpawnNewItem(chest.inventorySlots[chestIndex].inventoryItem.item, chestIndex); //a = originally B
-            chest.inventory[chestIndex] = chest.inventorySlots[chestIndex].inventoryItem.item;
-        }
-        else chest.inventory[chestIndex] = null;
-
-
 
         HoldItemMainHand();
     }

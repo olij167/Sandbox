@@ -27,7 +27,7 @@ public class EntityUI : MonoBehaviour
 
         healthBar.maxValue = entityStats.maxHealth.GetValue();
 
-        nameTag.text = entityStats.entityName;
+        nameTag.text = entityController.entityInfo.entityName;
     }
 
     private void Update()

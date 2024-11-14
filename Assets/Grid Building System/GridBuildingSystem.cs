@@ -20,24 +20,44 @@ public class GridBuildingSystem : MonoBehaviour
     public GridXZ<GridObject> grid;
     public PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
 
-    public Transform lookPos, selectedPos;
+    public Transform lookPos;
+    public Transform selectedPos;
+    public Transform selectedPosVisual;
     public GridObject selectedObject;
 
     //public InventoryUIItem inventoryUI;
 
     public bool gridPosEmpty;
+    public bool gridPosCompatible;
     public int x, z;
+    public GridType gridType;
 
     public float distanceFromGround;
+    public float selectionVisualSpeed = 5f;
 
     private void Awake()
     {
-        grid = new GridXZ<GridObject>(gridWidth, gridHeight, cellSize, transform.position, (GridXZ<GridObject> g, int x, int z) => new GridObject(g, x, z));
-        
+        if (inventory == null) inventory = FindObjectOfType<PlayerInventory>();
+
+        if (lookPos == null) lookPos = FindObjectOfType<PlayerController>().lookGridPos;
+        if (selectedPos == null) selectedPos = FindObjectOfType<PlayerController>().selectedGridPos;
+        if (selectedPosVisual == null) selectedPosVisual = FindObjectOfType<PlayerController>().selectedGridPosVisual;
+
+        grid = new GridXZ<GridObject>(gridWidth, gridHeight, cellSize, transform.position, gridType, (GridXZ<GridObject> g, int x, int z, GridType gT) => new GridObject(g, x, z, gT));
+
         if (inventory.inventory.Count > 0)
         {
-            if (inventory.selectedInventoryItem != null && inventory.selectedInventoryItem.item.placedObject != null)
-                selectedInventoryItem = inventory.selectedInventoryItem.item.placedObject;
+            if (inventory.selectedInventoryItem != null)
+            {
+                if (inventory.selectedInventoryItem.item.placedObject == null && inventory.selectedInventoryItem.item.possibleObjects != null && inventory.selectedInventoryItem.item.possibleObjects.Count > 0)
+                {
+
+                    selectedInventoryItem = inventory.selectedInventoryItem.item.possibleObjects[Random.Range(0, inventory.selectedInventoryItem.item.possibleObjects.Count - 1)];
+
+                }
+                else
+                    selectedInventoryItem = inventory.selectedInventoryItem.item.placedObject;
+            }
             else
                 selectedInventoryItem = null;
             //SelectInventoryItem();
@@ -52,12 +72,14 @@ public class GridBuildingSystem : MonoBehaviour
         private int x;
         private int z;
         private PlacedObject placedObject;
+        private GridType gridType;
 
-        public GridObject(GridXZ<GridObject> grid, int x, int z)
+        public GridObject(GridXZ<GridObject> grid, int x, int z, GridType gridType)
         {
             this.grid = grid;
             this.x = x;
             this.z = z;
+            this.gridType = gridType;
         }
 
         public void SetPlacedObject(PlacedObject placedObject)
@@ -71,6 +93,11 @@ public class GridBuildingSystem : MonoBehaviour
             return placedObject;
         }
 
+        public GridType GetGridType()
+        {
+            return gridType;
+        }
+
         public void ClearPlacedObject()
         {
             placedObject = null;
@@ -80,6 +107,12 @@ public class GridBuildingSystem : MonoBehaviour
         public bool CanBuild()
         {
             return placedObject == null;
+        }
+
+        public bool CompatibleGridType(GridType objectGridType)
+        {
+            return (objectGridType == gridType || objectGridType == GridType.Both);
+            
         }
 
         public override string ToString()
@@ -94,130 +127,149 @@ public class GridBuildingSystem : MonoBehaviour
 
     private void Update()
     {
-        
+
         // get selected grid position
         grid.GetXZ(lookPos.position, out x, out z);
         selectedPos.position = grid.GetWorldPosition(x, z);
 
+        selectedPosVisual.position = Vector3.Lerp(selectedPosVisual.position, selectedPos.position, Time.deltaTime * selectionVisualSpeed);
+
+
+        //Highlight selected pos
+
         if (inventory.inventory.Count > 0)
         {
-            if (inventory.selectedInventoryItem != null && inventory.selectedInventoryItem.item.placedObject != null)
-                selectedInventoryItem = inventory.selectedInventoryItem.item.placedObject;
-            else
-                selectedInventoryItem = null;
-            //SelectInventoryItem();
+            if (inventory.selectedInventoryItem != null)
+            {
+                selectedPosVisual.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
 
+                if (inventory.selectedInventoryItem.item.placedObject == null && inventory.selectedInventoryItem.item.possibleObjects != null && inventory.selectedInventoryItem.item.possibleObjects.Count > 0)
+                {
+
+                    selectedInventoryItem = inventory.selectedInventoryItem.item.possibleObjects[Random.Range(0, inventory.selectedInventoryItem.item.possibleObjects.Count - 1)];
+
+                }
+                else
+                    selectedInventoryItem = inventory.selectedInventoryItem.item.placedObject;
+            }
+            else
+            {
+                selectedInventoryItem = null;
+                selectedPosVisual.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+        else
+        {
+            selectedInventoryItem = null;
+            selectedPosVisual.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
         }
 
         // check if theres an object on the selected pos
-        if (grid.GetGridObject(selectedPos.position).CanBuild())
+        if (grid.GetGridObject(selectedPos.position) != null && selectedInventoryItem != null)
         {
-            gridPosEmpty = true;
+            if (grid.GetGridObject(selectedPos.position).CanBuild())
+            {
+                gridPosEmpty = true;
+
+                selectedObject = null;
+                selectedGridItem = null;
+            }
+            else
+            {
+                gridPosEmpty = false;
+
+                selectedObject = grid.GetGridObject(selectedPos.position);
+
+                selectedGridItem = selectedObject.GetPlacedObject().refItem;
+            }
+
+            if (grid.GetGridObject(selectedPos.position).CompatibleGridType(selectedInventoryItem.gridType))
+            {
+                gridPosCompatible = true;
+            }
+            else gridPosCompatible = false;
         }
         else
         {
             gridPosEmpty = false;
         }
 
-
-        // set the selected item to the grid object if the pos isn't empty
-        if (!gridPosEmpty)
+        if (gridPosEmpty)
         {
-            selectedObject = grid.GetGridObject(selectedPos.position);
-            selectedGridItem = selectedObject.GetPlacedObject().refItem;
-
-        }
-        //else
-        //{
-        //    selectedObject = default;
-        //    selectedGridItem = default;
-
-        //}
-
-
-        //if (inventoryUI.activeSelf == true)
-        //{
-        //selectedInventoryItem = inventory.inventory[0].Data;
-
-        //selectedSlot = inventoryUI.transform.GetChild(0).GetComponent<ItemSlot>();
-
-
-       // if (selectedInventoryItem != null)
-       // {
-            //Debug.Log("Inventory Item Selected");
-        if (Input.GetMouseButtonDown(0) && selectedInventoryItem != null && inventory.inventory.Count > 0)
-        {
-
-            //List<Vector2Int> gridPositionList = selectedGridItem.GetGridPositionList(new Vector2Int(x, z), dir);
-
-            //canBuild = true;
-            ////foreach (Vector2Int gridPosition in gridPositionList)
-            ////{
-            //    if (gridPosEmpty) //!grid.GetGridObject((int)selectedPos.position.x, (int)selectedPos.position.z).CanBuild()
-            //{
-            //        //gridPosEmpty = false;
-            //        canBuild = false;
-            //        //break;
-            //    }
-            ////}
-
-            if (gridPosEmpty)
+            if (selectedInventoryItem != null && inventory.inventory.Count > 0)
             {
-                Debug.Log("Can Build");
-                Vector2Int rotationOffset = selectedInventoryItem.GetRotationOffset(dir);
-                Vector3 placedObjectWorldPosition = SetDistanceFromGround( grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize());
-                
+                if (gridPosCompatible)
+                {
+                    if (Input.GetMouseButtonDown(0) && !inventory.inventoryWindowOpen)
+                    {
 
-                //Transform builtTransform = Instantiate(selectedInventoryItem.itemData.prefab, placedObjectWorldPosition, Quaternion.Euler(0, selectedInventoryItem.GetRotationAngle(dir), 0)).transform;
-                PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int((int)selectedPos.position.x, (int)selectedPos.position.z), dir, selectedInventoryItem);
-                placedObject.GetComponent<Rigidbody>().useGravity = false;
-                placedObject.GetComponent<Rigidbody>().isKinematic = true;
-                Debug.Log(placedObject.name + " Placed Object");
+                        Debug.Log("Can Build");
+                        Vector2Int rotationOffset = selectedInventoryItem.GetRotationOffset(dir);
+                        Vector3 placedObjectWorldPosition = SetDistanceFromGround(grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize());
 
-                if (grid.GetGridObject(x,z) != null)
-                    Debug.Log("Grid Pos Found");
-                else
-                    Debug.Log("Grid Pos is NULL!");
 
-                Destroy(inventory.inventory[inventory.selectedItemSlot].physicalItem);
-                inventory.RemoveItemFromInventory(inventory.inventory[inventory.selectedItemSlot]);
-                grid.GetGridObject(x,z).SetPlacedObject(placedObject);
-                
-                
-                //inventoryUI.OnUpdateInventory();
+                        //Transform builtTransform = Instantiate(selectedInventoryItem.itemData.prefab, placedObjectWorldPosition, Quaternion.Euler(0, selectedInventoryItem.GetRotationAngle(dir), 0)).transform;
+                        PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int((int)selectedPos.position.x, (int)selectedPos.position.z), dir, selectedInventoryItem, this);
+                        if (placedObject.GetComponent<Rigidbody>())
+                        {
+                            placedObject.GetComponent<Rigidbody>().useGravity = false;
+                            placedObject.GetComponent<Rigidbody>().isKinematic = true;
+                        }
+                        placedObject.name = selectedInventoryItem.name;
 
-                Debug.Log("Item placed");
+                        for (int i = 0; i < placedObject.name.Length; i++)
+                        {
+                            if (int.TryParse(placedObject.name.Substring(i, 1), out int n))
+                                placedObject.name = placedObject.name.Replace(placedObject.name.Substring(i, 1), "");
+                        }
 
-                //inventoryUI.RemoveInventorySlot();
-                //foreach (InventoryItem item in InventorySystem.current.inventory)
-                //    if (item.Data == selectedInventoryItem)
-                //    {
-                //        inventory.inventory.Remove(item);
-                //        Debug.Log("Inventory item removed");
-                //    }
+                        Debug.Log(placedObject.name + " Placed Object");
+
+
+                        ParkStats.instance.TrackObject(placedObject.gameObject);
+
+                        if (grid.GetGridObject(x, z) != null)
+                            Debug.Log("Grid Pos Found");
+                        else
+                            Debug.Log("Grid Pos is NULL!");
+
+                        Destroy(inventory.inventory[inventory.selectedItemSlot].physicalItem);
+                        inventory.RemoveItemFromInventory(inventory.inventory[inventory.selectedItemSlot], inventory.inventory);
+                        grid.GetGridObject(x, z).SetPlacedObject(placedObject);
+
+                        Debug.Log("Item placed");
+                    }
+                }
+                else Debug.Log("Incompatible grid type");
             }
-            else
+        }
+        else if (selectedObject != null)
+        {
+            if (Input.GetMouseButtonDown(0) && selectedInventoryItem != null && inventory.inventory.Count > 0)
             {
-                //UtilsClass.CreateWorldTextPopup("no", lookPos.position);
-                Debug.Log("Grid Position Already Filled");
+                Debug.Log("Grid Position Already Filled by " + selectedObject.ToString());
                 return;
             }
         }
 
-            if (Input.GetKeyDown(KeyCode.R))
-                if (Input.GetKeyDown(KeyCode.R))
-                    dir = PlacedObjectTypeSO.GetNextDir(dir);
+        if (Input.GetKeyDown(KeyCode.Comma))
+        {
+            dir = PlacedObjectTypeSO.GetNextDir(dir);
+            //selectedPosVisual.rotation = Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0);
+        }
 
-            
-        //}
-            
-        //}
+        if (Input.GetKeyDown(KeyCode.Period))
+        {
+            dir = PlacedObjectTypeSO.GetLastDir(dir);
+        }
+
+        //KEEP AS REFERNECE FOR HOW TO CLEAR GRID POSITIONS>>
 
         //if (Input.GetMouseButtonDown(1))
         //{
         //    selectedObject = grid.GetGridObject(x, z);
         //    PlacedObject placedObject = selectedObject.GetPlacedObject();
-            
+
         //    if (placedObject != null && inventory.inventorySlotNum > inventory.inventory.Count)
         //    {
         //        PlacedObjectTypeSO item = placedObject.refItem;
@@ -228,8 +280,6 @@ public class GridBuildingSystem : MonoBehaviour
 
         //    }
         //}
-
-       
     }
 
     public Vector3 SetDistanceFromGround(Vector3 currentPos)
@@ -251,52 +301,10 @@ public class GridBuildingSystem : MonoBehaviour
 
     }
 
-    //public void SelectInventoryItem()
-    //{
-    //    Debug.Log("selecting item");
+}
 
-    //    //if (selectedItemIndex < 0)
-    //    //{
-    //    //    selectedItemIndex = inventory.inventory.Count;
-    //    //}
-    //    //if (selectedItemIndex > inventory.inventory.Count)
-    //    //{
-    //    //    selectedItemIndex = 0;
-    //    //}
-
-    //    if (Input.GetAxisRaw("Mouse ScrollWheel") >= 0 && selectedItemIndex <= inventory.inventory.Count - 1)
-    //    {
-    //        selectedItemIndex = selectedItemIndex + 1;
-    //        //selectedInventoryItem = inventory.inventory[selectedItemIndex += 1].Data;
-    //    }
-    //    else if (Input.GetAxisRaw("Mouse ScrollWheel") >= inventory.inventory.Count)
-    //    {
-    //        selectedItemIndex = inventory.inventory.Count - 1;
-    //    }
-
-
-    //    if (Input.GetAxisRaw("Mouse ScrollWheel") <= 0 && selectedItemIndex > 0)
-    //    {
-    //        selectedItemIndex = selectedItemIndex - 1;
-    //        //selectedInventoryItem = inventory.inventory[selectedItemIndex -= 1].Data;
-    //    }
-    //    else if (Input.GetAxisRaw("Mouse ScrollWheel") <= 0 && selectedItemIndex <= 0)
-    //    {
-    //        selectedItemIndex = 0;
-    //    }
-
-
-
-    //    //if (Input.GetKeyDown(KeyCode.Alpha1)) { selectedInventoryItem = inventory.inventory[0].Data; }
-    //    //if (Input.GetKeyDown(KeyCode.Alpha2)) { selectedInventoryItem = inventory.inventory[1].Data; }
-    //    //if (Input.GetKeyDown(KeyCode.Alpha3)) { selectedInventoryItem = inventory.inventory[2].Data; }
-    //    //if (Input.GetKeyDown(KeyCode.Alpha4)) { selectedInventoryItem = inventory.inventory[3].Data; }
-
-
-
-    //    Debug.Log("Selected Inventory Item = " + selectedInventoryItem.itemData.itemName);
-
-
-    //}
-
+[System.Serializable]
+public enum GridType
+{
+    Indoors, Outdoors, Both
 }

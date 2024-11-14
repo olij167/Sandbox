@@ -6,6 +6,10 @@ using UnityEngine;
 public class EntityInfo
 {
     public int entityID;
+    public string entityName;
+
+    public Sprite icon;
+    public string entityDesc;
 
     public enum Gender { male, female }
     public Gender gender;

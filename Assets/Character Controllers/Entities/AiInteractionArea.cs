@@ -42,14 +42,14 @@ public class AiInteractionArea : MonoBehaviour
 
                     for (int i = 0; i < entityController.pointsOfInterest.Count; i++)
                     {
-                        if (objectsInTrigger[oIT].name.Contains(entityController.pointsOfInterest[i].interestingObject.name))
+                        if (objectsInTrigger[oIT].name == entityController.pointsOfInterest[i].interestingObject.name)
                         {
                             switch (entityController.pointsOfInterest[i].focusType)
                             {
                                 case EntityController.Focus.Food:
                                     for (int f = 0; f < entityController.foodList.Count; f++)
                                     {
-                                        if (objectsInTrigger[oIT].name.Contains(entityController.foodList[f].foodObject.name))// if you can eat the other object
+                                        if (objectsInTrigger[oIT].name == entityController.foodList[f].foodObject.name)// if you can eat the other object
                                         {
                                             // Debug.Log(entityController.name + " is going after " + objectsInTrigger[oIT].name + " (food)");
                                             if (objectsInTrigger[oIT].GetComponent<EntityStats>()) // if it is another enity
@@ -153,7 +153,7 @@ public class AiInteractionArea : MonoBehaviour
 
         for (int i = 0; i < entityController.pointsOfInterest.Count; i++)
         {
-            if (other.name.Contains(entityController.pointsOfInterest[i].interestingObject.name))
+            if (other.name == entityController.pointsOfInterest[i].interestingObject.name)
                 if (!objectsInTrigger.Contains(other.gameObject))
                     objectsInTrigger.Add(other.gameObject);
         }

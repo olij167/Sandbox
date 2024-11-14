@@ -20,7 +20,8 @@ public class ThirdPersonSelection : MonoBehaviour
     //public Image interactionAimIndicator;
 
     [SerializeField] private bool isItem;
-   // [SerializeField] private bool isInteraction;
+    [SerializeField] private bool isPlant;
+    // [SerializeField] private bool isInteraction;
     [SerializeField] private bool isEmote;
     [SerializeField] private bool isAbility;
     [SerializeField] private bool isChest;
@@ -29,9 +30,11 @@ public class ThirdPersonSelection : MonoBehaviour
     [SerializeField] private bool isFloatingVehicle;
     [SerializeField] private bool isSceneTransition;
     [SerializeField] private bool isDoor;
+    [SerializeField] private bool isShop;
     //public bool isClimbable;
 
     [HideInInspector] public bool isItemInteracted;
+    [HideInInspector] public bool isPlantInteracted;
     [HideInInspector] public bool isEmoteInteracted;
     [HideInInspector] public bool isAbilityInteracted;
     [HideInInspector] public bool isChestInteracted;
@@ -40,6 +43,7 @@ public class ThirdPersonSelection : MonoBehaviour
     [HideInInspector] public bool isFloatingVehicleInteracted;
     [HideInInspector] public bool isSceneTransitionInteracted;
     [HideInInspector] public bool isDoorInteracted;
+    [HideInInspector] public bool isShopInteracted;
 
 
     public TextMeshProUGUI interactPromptText;
@@ -89,7 +93,29 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>())
                     {
                         isItem = true;
-                        interactPromptText.text = "Collect " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+
+                        if (selectedObjects[firstInteractableIndex].GetComponent<ProduceController>())
+                        {
+                            isPlant = true;
+                        }
+                        else isPlant = false;
+
+                        if (isPlant)
+                        {
+                            if (selectedObjects[firstInteractableIndex].GetComponent<ProduceController>().produceQuality != ProduceQuality.Growing)
+                                interactPromptText.text = "Harvest " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                            else
+                            {
+                                interactPromptText.text = selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName + " isn't ready to harvest yet";
+
+                                isItem = false;
+                                isPlant = false;
+                            }
+                        }
+                        else
+                        {
+                            interactPromptText.text = "Collect " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                        }
 
                         isEmote = false;
                         isAbility = false;
@@ -99,6 +125,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isFloatingVehicle = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -115,6 +142,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isFloatingVehicle = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -131,6 +159,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isFloatingVehicle = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -151,6 +180,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isFloatingVehicle = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -171,6 +201,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isFloatingVehicle = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -191,6 +222,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isFloatingVehicle = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -211,6 +243,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isChair = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -228,6 +261,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isChair = false;
                         isFloatingVehicle = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -248,6 +282,27 @@ public class ThirdPersonSelection : MonoBehaviour
                         isChair = false;
                         isFloatingVehicle = false;
                         isSceneTransition = false;
+                        isShop = false;
+
+                        //isInteraction = false;
+                    } else if (selectedObjects[0].GetComponent<ShopInventory>())
+                    {
+                        isShop = true;
+
+                        if(!selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)
+                            interactPromptText.text = "Open Shop";
+                        else
+                            interactPromptText.text = "Close Shop";
+
+                        isItem = false;
+                        isEmote = false;
+                        isAbility = false;
+                        isChest = false;
+                        isCar = false;
+                        isChair = false;
+                        isFloatingVehicle = false;
+                        isSceneTransition = false;
+                        isDoor = false;
 
                         //isInteraction = false;
                     }
@@ -262,6 +317,7 @@ public class ThirdPersonSelection : MonoBehaviour
                         isFloatingVehicle = false;
                         isSceneTransition = false;
                         isDoor = false;
+                        isShop = false;
 
                         //isInteraction = false;
                     }
@@ -271,7 +327,14 @@ public class ThirdPersonSelection : MonoBehaviour
                 if (Input.GetKeyDown(selectInput))
                 {
 
-                    if (isItem && selectedObject.GetComponent<ItemInWorld>())
+
+                    if (isPlant && selectedObject.GetComponent<ProduceController>() && selectedObject.GetComponent<ProduceController>().stillPlanted)
+                    {
+                        isPlantInteracted = true;
+
+                        HarvestPlant();
+                    }
+                    else if (isItem && selectedObject.GetComponent<ItemInWorld>())
                     {
                         isItemInteracted = true;
 
@@ -334,8 +397,10 @@ public class ThirdPersonSelection : MonoBehaviour
 
                         if (!selectedObject.GetComponent<SceneLoader>().isLoaded)
                             selectedObject.GetComponent<SceneLoader>().LoadScene();
-                        else if (selectedObject.GetComponent<SceneLoader>().currentScene != "Demo")
+                        else if (selectedObject.GetComponent<SceneLoader>().rootScene != selectedObject.GetComponent<SceneLoader>().mainScene)
+                        {
                             selectedObject.GetComponent<SceneLoader>().UnloadScene();
+                        }
                     }
 
                     if (isDoor && selectedObject.GetComponent<ToggleDoor>())
@@ -343,6 +408,15 @@ public class ThirdPersonSelection : MonoBehaviour
                         isDoorInteracted = true;
 
                         selectedObject.GetComponent<ToggleDoor>().DoorInteraction();
+                    }
+
+                    if (isShop && selectedObject.GetComponent<ShopInventory>())
+                    {
+                        isShopInteracted = true;
+
+                        if ((!selectedObject.GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObject.GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)&& !selectedObject.GetComponent<ShopInventory>().buyBackPanelOpen)
+                            OpenShop();
+                        else selectedObject.GetComponent<ShopInventory>().CloseShop();
                     }
 
                     StartCoroutine(DelaySettingFalseVariables());
@@ -437,10 +511,19 @@ public class ThirdPersonSelection : MonoBehaviour
             GridBuildingSystem gBS = FindObjectOfType<GridBuildingSystem>();
             gBS.grid.GetGridObject(gBS.x, gBS.z).ClearPlacedObject();
         }
+        ProduceController produceController = null;
 
-        inventorySystem.AddItemToInventory(item, selectedObject);
+        if (selectedObject.GetComponent<ProduceController>()) produceController = selectedObject.GetComponent<ProduceController>();
+
+        inventorySystem.AddItemToInventory(item, inventorySystem.inventory, inventorySystem.inventorySlots, selectedObject, produceController);
     }
 
+    public void HarvestPlant()
+    {
+        ProduceController produce = selectedObject.GetComponent<ProduceController>();
+
+        produce.Harvest();
+    }
     public void PickUpEmote()
     {
         Debug.Log("Collecting emote");
@@ -463,6 +546,13 @@ public class ThirdPersonSelection : MonoBehaviour
         Debug.Log("Opening Chest");
         ChestInventory chest = selectedObject.GetComponent<ChestInventory>();
         chest.InitialiseChestPanel();
+
+    }
+    public void OpenShop()
+    {
+        Debug.Log("Opening Shop");
+        ShopInventory shop = selectedObject.GetComponent<ShopInventory>();
+        shop.InitialiseShopPanel();
 
     }
 
@@ -551,6 +641,13 @@ public class ThirdPersonSelection : MonoBehaviour
             yield return new WaitForSeconds(delayTime);
 
             isDoorInteracted = false;
+        } 
+        
+        if (isShopInteracted)
+        {
+            yield return new WaitForSeconds(delayTime);
+
+            isShopInteracted = false;
         }
     }
 }

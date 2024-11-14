@@ -158,6 +158,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 4080243304029891224, guid: 037a8989feab98645a154e5ba1ca68c4, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -165,12 +166,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &28095512
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1659,6 +1663,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 2756271917110698758, guid: d151cfe6d87d6384aa838c69c2b07ec1, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -1666,12 +1671,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &305286008
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1954,12 +1962,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
+  mainScene: ParkDemo
+  rootScene: 
   sceneToLoad: Dungeon
-  currentScene: Demo
   isLoaded: 0
   shouldLoad: 0
   setSpawnPoint: 1
   goToSpawnPoint: 0
+  setSkybox: 0
+  newSkybox: {fileID: 0}
 --- !u!114 &347006859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2066,6 +2077,7 @@ MonoBehaviour:
   prefabs:
   - {fileID: 4009023282067434551, guid: 01bfb56bca1b0d044b3bc987f2998f80, type: 3}
   - {fileID: 8306161674225769791, guid: b94740991638e2342994e98df0b25f44, type: 3}
+  spawningActive: 0
   spawnNumPerPrefab: 2
   totalSpawnNum: 25
   randomPrefabs: 1
@@ -2073,11 +2085,12 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 30
-  spawnConstant: 1
-  spawnedObjects: []
+  spawnOnTimer: 0
+  timer: 0
   spawnRate: 1
   fluctuateSpawnRate: 1
   fluctuationRange: 2
+  spawnedObjects: []
 --- !u!1 &353655603
 GameObject:
   m_ObjectHideFlags: 0
@@ -2209,11 +2222,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 564816714, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 3
+      value: 2.763064
       objectReference: {fileID: 0}
     - target: {fileID: 564816714, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4
+      value: -3.908563
       objectReference: {fileID: 0}
     - target: {fileID: 676354292, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2237,11 +2250,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 676354292, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000011779882
+      value: 0.0000011985535
       objectReference: {fileID: 0}
     - target: {fileID: 676354292, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000003908841
+      value: -0.0000003848632
       objectReference: {fileID: 0}
     - target: {fileID: 1035397051, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2265,11 +2278,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1107665161, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 3
+      value: 2.763064
       objectReference: {fileID: 0}
     - target: {fileID: 1107665161, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4
+      value: -3.908563
       objectReference: {fileID: 0}
     - target: {fileID: 1811874616, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2293,11 +2306,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1811874616, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000012019
+      value: 0.0000011879124
       objectReference: {fileID: 0}
     - target: {fileID: 1811874616, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00000030965117
+      value: -0.00000031480548
       objectReference: {fileID: 0}
     - target: {fileID: 1956358425, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2321,19 +2334,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1956358425, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000011729558
+      value: 0.0000011727557
       objectReference: {fileID: 0}
     - target: {fileID: 1956358425, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00000040521473
+      value: -0.00000040527067
       objectReference: {fileID: 0}
     - target: {fileID: 2141365183, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 3
+      value: 2.763064
       objectReference: {fileID: 0}
     - target: {fileID: 2141365183, guid: dbddf0a1989d95e4f841b47d1da2ba89, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4
+      value: -3.908563
       objectReference: {fileID: 0}
     - target: {fileID: 37837261775976368, guid: dbddf0a1989d95e4f841b47d1da2ba89,
         type: 3}
@@ -3056,6 +3069,36 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2376766859348308931, guid: dbddf0a1989d95e4f841b47d1da2ba89,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448062787277051257, guid: dbddf0a1989d95e4f841b47d1da2ba89,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448062787277051257, guid: dbddf0a1989d95e4f841b47d1da2ba89,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448062787277051257, guid: dbddf0a1989d95e4f841b47d1da2ba89,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448062787277051257, guid: dbddf0a1989d95e4f841b47d1da2ba89,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448062787277051257, guid: dbddf0a1989d95e4f841b47d1da2ba89,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448062787277051257, guid: dbddf0a1989d95e4f841b47d1da2ba89,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -10450,6 +10493,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2021031026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &621308419
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3176507528123661292, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_Name
+      value: Park Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 125
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 125
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8778836314793356380, guid: 24f5f8842c6f88d4f9689a4676852ea6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 24f5f8842c6f88d4f9689a4676852ea6, type: 3}
 --- !u!1001 &665834411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10564,6 +10675,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 7647437791196449152, guid: 768df9dc42017e84d8057a5cb804ed62, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -10571,12 +10683,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &668277618
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11604,6 +11719,59 @@ Transform:
   - {fileID: 250297398}
   - {fileID: 550504457}
   - {fileID: 1630609926}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &872837523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 872837525}
+  - component: {fileID: 872837524}
+  m_Layer: 0
+  m_Name: Pause
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &872837524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872837523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81fda1608e544104a980f4c2ab480970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryOpen: 0
+  chestOpen: 0
+  shopOpen: 0
+  guideOpen: 0
+  freezeMovement: 0
+  freezeCameraRotation: 0
+  freezeCameraOrbit: 0
+  unlockCursor: 0
+  freezeTime: 0
+--- !u!4 &872837525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872837523}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalPosition: {x: 0, y: 103.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &893903042 stripped
@@ -13190,6 +13358,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 9057722755411291407, guid: 105394952816c0645aa02921b5cc38b2, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -13197,12 +13366,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &1129615860
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13325,6 +13497,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 699726714490758531, guid: 0945f2fde2222ea4e8c698efd4b29a91, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -13332,12 +13505,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &1136462615
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13424,6 +13600,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!84 &1142354000
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 647
+  m_Height: 364
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 90
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &1146771064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13967,6 +14181,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 3811933219322441196, guid: 0c471d5cda1762245abdad5773dbc4b7, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -13974,12 +14189,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &1194060373
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15335,6 +15553,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 4912476555309126658, guid: 156263a8b65c51a469351b062ff7e4a9, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -15342,12 +15561,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &1337920789
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16012,21 +16234,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53b16727405885943aa972e2a65346e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  plantName: 
+  plantDesc: 
+  icon: {fileID: 0}
+  plantType: 0
+  seedsToSpawn: {x: 0, y: 3}
+  seedsToSpawnNum: 0
   age: 0
   ageOfMaturity: 30
+  health: 100
+  maxHealth: 100
+  damage: 0
+  maxDamage: 100
+  planted: 1
+  isDead: 0
+  destroyWhenNotPlanted: 0
+  destroyDelay: 10
+  requirements:
+    tempRange: {x: 0, y: 0}
+    cloudCoverageRange: {x: 0, y: 0}
+    requiredWaterRange: {x: 0, y: 0}
+    season: []
+    weather: []
+  requirementsMet: 0
+  plantDiagnostic:
+    totalDisparity: 0
+    goodTemp: 0
+    tooHot: 0
+    tooCold: 0
+    tempDisparity: 0
+    goodMoisture: 0
+    tooWet: 0
+    tooDry: 0
+    moistureDisparity: 0
+    goodSunlight: 0
+    tooCloudy: 0
+    tooSunny: 0
+    sunDisparity: 0
+    wrongSeason: 0
+    badWeather: 0
+  water: 0
   lifeSizeRange: {x: 0, y: 0}
   growthSpeed: 5
   birthSizeRange: {x: 0.2, y: 0.4}
   maturitySizeRange: {x: 0.8, y: 1.6}
   canProduce: 0
+  produceSpawnCountdown: 0
   defaultProduce: {fileID: 6071189638751353477, guid: 01bfb56bca1b0d044b3bc987f2998f80,
     type: 3}
+  produceFrequency: 0
   producePositions:
   - {fileID: 423916004}
   - {fileID: 40489954}
   - {fileID: 1933411658}
   - {fileID: 934977857}
   produceList: []
+  takenProducePositionList: 
+  foliageMeshes: []
+  currentHealthPhase: 0
+  healthColours: []
+  additionalHealthColours: []
 --- !u!136 &1386891430
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -16786,6 +17053,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   prefabs:
   - {fileID: 2172824284947859693, guid: 654d493e12e886341a92bdd05ec73f35, type: 3}
+  spawningActive: 1
   spawnNumPerPrefab: 4
   totalSpawnNum: 4
   randomPrefabs: 0
@@ -16793,12 +17061,15 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 4
-  spawnConstant: 1
-  spawnedObjects: []
-  spawnRate: 2
+  spawnOnTimer: 0
+  timer: 0
+  spawnRate: 30
   fluctuateSpawnRate: 1
-  fluctuationRange: 2
+  fluctuationRange: 30
+  spawnedObjects: []
   homePriority: 2
+  homeType: 0
+  isVacant: 1
 --- !u!65 &1504450776
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17666,44 +17937,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1630609925}
   m_PrefabAsset: {fileID: 0}
---- !u!84 &1662980015
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 2334
-  m_Height: 1354
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 90
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &1693493563
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18349,7 +18582,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 1662980015}
+      objectReference: {fileID: 1142354000}
     - target: {fileID: 692421375649379052, guid: 15d636b15f71cdb419a4576373e3a3b0,
         type: 3}
       propertyPath: m_IsActive
@@ -19655,6 +19888,7 @@ MonoBehaviour:
   - {fileID: 3811933219322441196, guid: 0c471d5cda1762245abdad5773dbc4b7, type: 3}
   - {fileID: 2756271917110698758, guid: d151cfe6d87d6384aa838c69c2b07ec1, type: 3}
   - {fileID: 7647437791196449152, guid: 768df9dc42017e84d8057a5cb804ed62, type: 3}
+  spawningActive: 0
   spawnNumPerPrefab: 3
   totalSpawnNum: 10
   randomPrefabs: 0
@@ -19662,11 +19896,12 @@ MonoBehaviour:
   distanceFromGround: 1
   spawnInRadius: 1
   spawnRadius: 10
-  spawnConstant: 1
-  spawnedObjects: []
+  spawnOnTimer: 0
+  timer: 0
   spawnRate: 1
   fluctuateSpawnRate: 1
   fluctuationRange: 5
+  spawnedObjects: []
 --- !u!4 &2086569221
 Transform:
   m_ObjectHideFlags: 0
@@ -19734,12 +19969,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
+  mainScene: ParkDemo
+  rootScene: 
   sceneToLoad: Dungeon
-  currentScene: Demo
   isLoaded: 0
   shouldLoad: 0
   setSpawnPoint: 1
   goToSpawnPoint: 0
+  setSkybox: 0
+  newSkybox: {fileID: 0}
 --- !u!1 &2089701244
 GameObject:
   m_ObjectHideFlags: 0
@@ -21812,6 +22050,8 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 621308419}
+  - {fileID: 872837525}
   - {fileID: 739105290}
   - {fileID: 1237427357}
   - {fileID: 377869907}

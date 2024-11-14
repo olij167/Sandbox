@@ -19,7 +19,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
     private PlayerInventory inventory;
     public int slot;
     public InventoryUIItem inventoryItem;
-    public ItemType[] validTypes;
+    public EquipmentType[] validTypes;
 
     void Awake()
     {
@@ -38,7 +38,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
             {
                 if (CheckItemType(invItem.item))
                 {
-                    if (invItem.item.itemType == ItemType.Hand && invItem.item.prefab.GetComponent<WeaponItem>() && invItem.item.prefab.GetComponent<WeaponItem>().isTwoHanded)
+                    if (invItem.item.equipmentType == EquipmentType.Hand && invItem.item.prefab.GetComponent<WeaponItem>() && invItem.item.prefab.GetComponent<WeaponItem>().isTwoHanded)
                     {
                         Debug.Log("Cannot equip two handed weapons in off hand (slot)");
                     }
@@ -69,7 +69,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 
         for (int i = 0; i < validTypes.Length; i++)
         {
-            if (item.itemType == validTypes[i])
+            if (item.equipmentType == validTypes[i])
             {
                 return true;
             }

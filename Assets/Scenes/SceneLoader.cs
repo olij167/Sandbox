@@ -13,21 +13,26 @@ public class SceneLoader : Interactable
     private PlayerController player;
     //public CheckMethod checkMethod;
     //public float loadDistance;
-
+    public string mainScene = "ParkDemo";
+    public string rootScene;
     public string sceneToLoad;
-    public string currentScene;
 
     [field: ReadOnlyField] public  bool isLoaded;
     [field: ReadOnlyField] public  bool shouldLoad;
 
     public bool setSpawnPoint;
     public bool goToSpawnPoint;
+    public bool setSkybox;
+    public Material newSkybox;
+    //public bool hideBackgroundElements;
+    //public List<GameObject> backgroundElements;
 
     private void Awake()
     {
         player = FindObjectOfType<PlayerController>();
 
-        if (sceneToLoad == "Demo") isLoaded = true;
+        if (sceneToLoad == mainScene) isLoaded = true;
+
     }
 
     private void FixedUpdate()
@@ -65,46 +70,26 @@ public class SceneLoader : Interactable
             StartCoroutine(BackgroundLoad());
             //isLoaded = true;
 
+            if (setSkybox && newSkybox != null) RenderSettings.skybox = newSkybox; 
 
             if (setSpawnPoint) player.spawnPoint = player.transform.position;
-            
+
+           
+
         }
-    } 
+        else
+        {
+            if (goToSpawnPoint) player.transform.position = player.spawnPoint;
+
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
+
+        }
+    }
 
     IEnumerator BackgroundLoad()
     {
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive);
-        
 
-        while (!async.isDone)
-        {
-           // float progressValue = Mathf.Clamp01(async.progress / 0.9f);
-
-            yield return null;
-        }
-
-        if (async.isDone) isLoaded = true;
-    }
-
-
-    public void UnloadScene()
-    {
-        if (isLoaded)
-        {
-            if (goToSpawnPoint) player.transform.position = player.spawnPoint;
-
-            //SceneManager.UnloadSceneAsync(sceneToLoad);
-            StartCoroutine(BackgroundUnload());
-
-            //isLoaded = false;
-
-
-        }
-    }
-
-    IEnumerator BackgroundUnload()
-    {
-        AsyncOperation async = SceneManager.UnloadSceneAsync(currentScene);
 
         while (!async.isDone)
         {
@@ -113,7 +98,38 @@ public class SceneLoader : Interactable
             yield return null;
         }
 
-        if (async.isDone) isLoaded = false; 
+        if (async.isDone)
+        {
+            isLoaded = true;
+        }
+    }
+
+
+    public void UnloadScene()
+    {
+        if (goToSpawnPoint)
+            player.returnToSpawn = true;
+
+
+        if (isLoaded)
+            StartCoroutine(BackgroundUnload());
+
+    }
+
+    IEnumerator BackgroundUnload()
+    {
+        AsyncOperation async = SceneManager.UnloadSceneAsync(rootScene);
+
+        while (!async.isDone)
+        {
+
+            yield return null;
+        }
+
+        if (async.isDone)
+        {
+            isLoaded = false;
+        }
     }
 
     void TriggerCheck()

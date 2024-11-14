@@ -12,6 +12,7 @@ public class PlacedObjectTypeSO : ScriptableObject {
     public PlacedObject refItem;
     public Vector2Int origin;
     public Dir dir;
+    public GridType gridType;
     public PlacedObjectTypeSO Data { get; private set; }
 
     public PlacedObjectTypeSO(PlacedObjectTypeSO source)
@@ -27,6 +28,18 @@ public class PlacedObjectTypeSO : ScriptableObject {
             case Dir.Left:      return Dir.Up;
             case Dir.Up:        return Dir.Right;
             case Dir.Right:     return Dir.Down;
+        }
+    }
+
+    public static Dir GetLastDir(Dir dir)
+    {
+        switch (dir)
+        {
+            default:
+            case Dir.Down: return Dir.Right;
+            case Dir.Right: return Dir.Up;
+            case Dir.Up: return Dir.Left;
+            case Dir.Left: return Dir.Down;
         }
     }
 

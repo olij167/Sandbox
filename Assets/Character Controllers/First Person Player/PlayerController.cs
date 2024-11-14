@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public PlayerStats stats;
 
     public Vector3 spawnPoint;
-
+    public bool returnToSpawn;
     //[Header("Health")]
     //public float currentHealth;
     //public float maxHealth;
@@ -65,6 +65,9 @@ public class PlayerController : MonoBehaviour
     //// public float maxMouseClickDistance = 10f;
     // [field: ReadOnlyField] public Vector3 hitPoint;
 
+    public Transform lookGridPos;
+    public Transform selectedGridPos;
+    public Transform selectedGridPosVisual;
 
     public ParticleSystem waterRipples;
 
@@ -130,6 +133,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource audioSource;
 
 
+
     void Awake()
     {
         stats = GetComponent<PlayerStats>();
@@ -154,6 +158,25 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (returnToSpawn)
+        {
+            Debug.Log("Return to spawn is true");
+            if (transform.position != spawnPoint)
+            {
+                Debug.Log("Player should be returning to spawn");
+                Pause.instance.freezeMovement = true;
+
+                transform.position = spawnPoint;
+                Debug.Log("Player Pos set to spawn");
+                
+            }
+            else
+            {
+                returnToSpawn = false;
+                Pause.instance.freezeMovement = false; 
+                Debug.Log("Player is at spawn");
+            }
+        }
         //if (!IsOwner) return;
 
         if (Input.GetButtonDown("Emote"))
@@ -223,7 +246,7 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log(clipInfo[0].clip.name + " Length: " + clipInfo[0].clip.length);
                 float currentTime = clipInfo[0].clip.length * animState.normalizedTime;
                 // Debug.Log("Current time = " + currentTime.ToString("0.00") + ", Full Length  = " + clipInfo[0].clip.length.ToString("0.00"));
-
+                //Debug.Log("Held animation looping? " + loopHeldAnimation);
                 if ((currentTime >= clipInfo[0].clip.length / 2 || animState.normalizedTime >= 0.5f) && !loopHeldAnimation)
                 {
                     isUsingBoth = false;
