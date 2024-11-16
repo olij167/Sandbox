@@ -834,35 +834,23 @@ MonoBehaviour:
     focusType: 0
   detectedObjects: []
   foodList:
-  - foodObject: {fileID: 8777701706498074544, guid: d151cfe6d87d6384aa838c69c2b07ec1,
-      type: 3}
-    healthRecovery: 25
-    eatingTime: 1
   - foodObject: {fileID: 7960500402485515975, guid: 105394952816c0645aa02921b5cc38b2,
       type: 3}
-    healthRecovery: 25
-    eatingTime: 1
-  - foodObject: {fileID: 360447425741970326, guid: 4aac05bb6ff5b6b4097b81f0841eced0,
-      type: 3}
-    healthRecovery: 25
-    eatingTime: 1
+    healthRecovery: 50
+    eatingTime: 5
   - foodObject: {fileID: 8654311611020469116, guid: 037a8989feab98645a154e5ba1ca68c4,
       type: 3}
     healthRecovery: 50
-    eatingTime: 2
-  - foodObject: {fileID: 3282106531187207503, guid: 0945f2fde2222ea4e8c698efd4b29a91,
-      type: 3}
-    healthRecovery: 100
     eatingTime: 5
-  - foodObject: {fileID: 1558637917955894173, guid: 0c471d5cda1762245abdad5773dbc4b7,
+  - foodObject: {fileID: 2172824284947859688, guid: 654d493e12e886341a92bdd05ec73f35,
       type: 3}
-    healthRecovery: 100
-    eatingTime: 8
+    healthRecovery: 50
+    eatingTime: 5
   pointsOfInterest:
   - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
       type: 3}
-    priority: 1
-    focusType: 0
+    priority: 3.5
+    focusType: 5
   - interestingObject: {fileID: 692421377114709336, guid: 15d636b15f71cdb419a4576373e3a3b0,
       type: 3}
     priority: 1.5
@@ -882,14 +870,18 @@ MonoBehaviour:
   - interestingObject: {fileID: 3282106531187207503, guid: 0945f2fde2222ea4e8c698efd4b29a91,
       type: 3}
     priority: 3
-    focusType: 0
+    focusType: 5
   - interestingObject: {fileID: 1558637917955894173, guid: 0c471d5cda1762245abdad5773dbc4b7,
       type: 3}
     priority: 3
-    focusType: 0
+    focusType: 5
   - interestingObject: {fileID: 2572488563164979526}
     priority: 4
     focusType: 2
+  - interestingObject: {fileID: 4912476555309126663, guid: 156263a8b65c51a469351b062ff7e4a9,
+      type: 3}
+    priority: 2.5
+    focusType: 4
   home:
     interestingObject: {fileID: 0}
     priority: 0

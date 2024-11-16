@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ProduceController : MonoBehaviour
 {
+    [field: ReadOnlyField] public Vector3 originalSize;
     [field: ReadOnlyField] public Vector2 lifeSizeRange;
     [field: ReadOnlyField] public Vector3 minSize, maxSize, spoiledSize;
 
@@ -45,6 +46,8 @@ public class ProduceController : MonoBehaviour
 
     private void Awake()
     {
+        originalSize = transform.localScale;
+
         if (produceRenderer == null) produceRenderer = GetComponent<MeshRenderer>();
 
         ripeColour = produceRenderer.material.color;
@@ -52,9 +55,9 @@ public class ProduceController : MonoBehaviour
         age = 0f;
 
         lifeSizeRange.x = Random.Range(birthSizeRange.x, birthSizeRange.y);
-        minSize = new Vector3(lifeSizeRange.x, lifeSizeRange.x, lifeSizeRange.x);
+        minSize = new Vector3(lifeSizeRange.x * originalSize.x, lifeSizeRange.x * originalSize.y, lifeSizeRange.x * originalSize.z);
         lifeSizeRange.y = Random.Range(maturitySizeRange.x, maturitySizeRange.y);
-        maxSize = new Vector3(lifeSizeRange.y, lifeSizeRange.y, lifeSizeRange.y);
+        maxSize = new Vector3(lifeSizeRange.y * originalSize.x, lifeSizeRange.y * originalSize.y, lifeSizeRange.y * originalSize.z);
 
         spoiledSize = minSize + (maxSize / 2);
 

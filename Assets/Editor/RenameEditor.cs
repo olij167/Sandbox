@@ -9,8 +9,13 @@ using UnityEditorInternal;
 public class RenameEditor : Editor
 {
     public List<GameObject> renameList = new List<GameObject>();
+
+    public string newName;
+    
     public string prefix;
     public string suffix;
+    
+    //>> ADD A METHOD TO ADD / REMOVE ITEM COUNT SUFFIX
 
     public override void OnInspectorGUI()
     {
@@ -39,22 +44,43 @@ public class RenameEditor : Editor
                 }
             }
         }
+        //GUILayout.Space(10f);
+
+        if (GUILayout.Button("Clear List"))
+        {
+            rename.objectsToRename = new GameObject[0];
+
+        }
+
+        GUILayout.Space(10f);
+
+
+        EditorGUILayout.BeginHorizontal();
+
+        EditorGUILayout.LabelField("Name:", GUILayout.MaxWidth(50f));
+        newName = EditorGUILayout.TextField(newName, GUILayout.MinWidth(100f));
+        //GUILayout.EndVertical();
+        if (GUILayout.Button("Rename", GUILayout.MinWidth(75f)))
+        {
+            foreach (GameObject g in renameList)
+            {
+
+                g.name = newName;
+
+            }
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        GUILayout.Space(10f);
+
 
         GUILayout.BeginHorizontal();
-        GUILayout.BeginVertical();
-        EditorGUILayout.LabelField("Prefix:");
-        prefix = EditorGUILayout.TextField(prefix);
-        GUILayout.EndVertical();
-        GUILayout.Space(5f);
-        GUILayout.BeginVertical();
-        EditorGUILayout.LabelField("Suffix:");
-        suffix = EditorGUILayout.TextField(suffix);
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Add Prefix"))
+        //GUILayout.BeginVertical();
+        EditorGUILayout.LabelField("Prefix:", GUILayout.MaxWidth(50f));
+        prefix = EditorGUILayout.TextField(prefix, GUILayout.MinWidth(100f));
+        //GUILayout.EndVertical();
+        if (GUILayout.Button("Add", GUILayout.MinWidth(50f)))
         {
             foreach (GameObject g in renameList)
             {
@@ -66,35 +92,7 @@ public class RenameEditor : Editor
             }
         }
 
-        if (GUILayout.Button("Add Suffix"))
-        {
-            foreach (GameObject g in renameList)
-            {
-                if (!g.name.Contains(suffix))
-                    g.name += suffix;
-
-            }
-        }
-        GUILayout.EndHorizontal();
-
-        if (GUILayout.Button("Add Prefix and Suffix"))
-        {
-            foreach (GameObject g in renameList)
-            {
-                if (!g.name.Contains(prefix))
-                {
-                    string old = g.name;
-                    g.name = prefix + old;
-                }
-
-                if (!g.name.Contains(suffix))
-                    g.name += suffix;
-            }
-        }
-
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Remove Prefix"))
+        if (GUILayout.Button("Remove", GUILayout.MinWidth(75f)))
         {
             if (prefix.Length > 0)
                 foreach (GameObject g in renameList)
@@ -109,7 +107,26 @@ public class RenameEditor : Editor
                 }
         }
 
-        if (GUILayout.Button("Remove Suffix"))
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5f);
+
+        GUILayout.BeginHorizontal();
+
+        EditorGUILayout.LabelField("Suffix:", GUILayout.MaxWidth(50f));
+        suffix = EditorGUILayout.TextField(suffix, GUILayout.MinWidth(100f));
+
+        if (GUILayout.Button("Add ", GUILayout.MinWidth(50f)))
+        {
+            foreach (GameObject g in renameList)
+            {
+                if (!g.name.Contains(suffix))
+                    g.name += suffix;
+
+            }
+        }
+
+        if (GUILayout.Button("Remove", GUILayout.MinWidth(75f)))
         {
             if (suffix.Length > 0)
                 foreach (GameObject g in renameList)
@@ -123,8 +140,27 @@ public class RenameEditor : Editor
                 }
         }
         GUILayout.EndHorizontal();
+        GUILayout.Space(5f);
 
-        if (GUILayout.Button("Remove Prefix and Suffix"))
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(50f);
+
+        if (GUILayout.Button("Add Both"))
+        {
+            foreach (GameObject g in renameList)
+            {
+                if (!g.name.Contains(prefix))
+                {
+                    string old = g.name;
+                    g.name = prefix + old;
+                }
+
+                if (!g.name.Contains(suffix))
+                    g.name += suffix;
+            }
+        }
+
+        if (GUILayout.Button("Remove Both"))
         {
             foreach (GameObject g in renameList)
             {
@@ -145,6 +181,48 @@ public class RenameEditor : Editor
                 }
             }
         }
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(25f);
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Add Index Count"))
+        {
+            for (int i = 0; i < renameList.Count; i++)
+            {
+                renameList[i].name += " #" + (i+1);
+            }
+        }
+
+        if (GUILayout.Button("Remove Index Count"))
+        {
+            foreach (GameObject g in renameList)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+
+                    if (g.name.EndsWith("(" + i.ToString() + ")"))
+                    {
+                        g.name = g.name.Substring(0, g.name.Length - 3);
+                    }
+                    else if (g.name.EndsWith("#" + i.ToString()))
+                    {
+                        g.name = g.name.Substring(0, g.name.Length - 2);
+                    }
+                    else if (g.name.EndsWith(i.ToString()))
+                    {
+                        g.name = g.name.Substring(0, g.name.Length - 1);
+                    }
+
+                    if (g.name.EndsWith(" "))
+                    {
+                        g.name = g.name.Substring(0, g.name.Length - 1);
+                    }
+
+                }
+            }
+        }
+        GUILayout.EndHorizontal();
     }
 }
 
@@ -165,6 +243,7 @@ public class RenameEditorWindow : EditorWindow
     Rename rename;
 
     public List<GameObject> renameList = new List<GameObject>();
+    public string newName;
     public string prefix;
     public string suffix;
 
@@ -243,25 +322,43 @@ public class RenameEditorWindow : EditorWindow
             _objectSO.ApplyModifiedProperties();
         }
 
-        GUILayout.Space(_listRE.GetHeight() + 30f);
-        GUILayout.Label("Please select Game Objects to rename");
+        GUILayout.Space(_listRE.GetHeight() + 0f);
+        GUILayout.Label("Add the GameObjects you wish to rename to the list");
+        GUILayout.Space(5f);
+        if (GUILayout.Button("Clear List"))
+        {
+            rename.objectsToRename = new GameObject[0];
+
+        }
+
+        GUILayout.Space(10f);
+
+        EditorGUILayout.BeginHorizontal();
+
+        EditorGUILayout.LabelField("Name:", GUILayout.MaxWidth(50f));
+        newName = EditorGUILayout.TextField(newName, GUILayout.MinWidth(100f));
+        //GUILayout.EndVertical();
+        if (GUILayout.Button("Rename", GUILayout.MinWidth(75f)))
+        {
+            foreach (GameObject g in renameList)
+            {
+
+                g.name = newName;
+
+            }
+        }
+
+        EditorGUILayout.EndHorizontal();
+
         GUILayout.Space(10f);
 
         GUILayout.BeginHorizontal();
-        GUILayout.BeginVertical();
-        EditorGUILayout.LabelField("Prefix:");
-        prefix = EditorGUILayout.TextField(prefix);
-        GUILayout.EndVertical();
-        GUILayout.Space(5f);
-        GUILayout.BeginVertical();
-        EditorGUILayout.LabelField("Suffix:");
-        suffix = EditorGUILayout.TextField(suffix);
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
 
-        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Prefix:", GUILayout.MaxWidth(50f));
 
-        if (GUILayout.Button("Add Prefix"))
+        prefix = EditorGUILayout.TextField(prefix, GUILayout.MinWidth(100f));
+
+        if (GUILayout.Button("Add", GUILayout.MinWidth(50f)))
         {
             foreach (GameObject g in renameList)
             {
@@ -273,35 +370,7 @@ public class RenameEditorWindow : EditorWindow
             }
         }
 
-        if (GUILayout.Button("Add Suffix"))
-        {
-            foreach (GameObject g in renameList)
-            {
-                if (!g.name.Contains(suffix))
-                    g.name += suffix;
-
-            }
-        }
-        GUILayout.EndHorizontal();
-
-        if (GUILayout.Button("Add Prefix and Suffix"))
-        {
-            foreach (GameObject g in renameList)
-            {
-                if (!g.name.Contains(prefix))
-                {
-                    string old = g.name;
-                    g.name = prefix + old;
-                }
-
-                if (!g.name.Contains(suffix))
-                    g.name += suffix;
-            }
-        }
-
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Remove Prefix"))
+        if (GUILayout.Button("Remove", GUILayout.MinWidth(75f)))
         {
             if (prefix.Length > 0)
                 foreach (GameObject g in renameList)
@@ -316,7 +385,25 @@ public class RenameEditorWindow : EditorWindow
                 }
         }
 
-        if (GUILayout.Button("Remove Suffix"))
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5f);
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Suffix:", GUILayout.MaxWidth(50f));
+        suffix = EditorGUILayout.TextField(suffix);
+
+        if (GUILayout.Button("Add", GUILayout.MinWidth(50f)))
+        {
+            foreach (GameObject g in renameList)
+            {
+                if (!g.name.Contains(suffix))
+                    g.name += suffix;
+
+            }
+        }
+
+
+        if (GUILayout.Button("Remove", GUILayout.MinWidth(75f)))
         {
             if (suffix.Length > 0)
                 foreach (GameObject g in renameList)
@@ -330,8 +417,27 @@ public class RenameEditorWindow : EditorWindow
                 }
         }
         GUILayout.EndHorizontal();
+        GUILayout.Space(5f);
 
-        if (GUILayout.Button("Remove Prefix and Suffix"))
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(50f);
+
+        if (GUILayout.Button("Add Both"))
+        {
+            foreach (GameObject g in renameList)
+            {
+                if (!g.name.Contains(prefix))
+                {
+                    string old = g.name;
+                    g.name = prefix + old;
+                }
+
+                if (!g.name.Contains(suffix))
+                    g.name += suffix;
+            }
+        }
+
+        if (GUILayout.Button("Remove Both"))
         {
             foreach (GameObject g in renameList)
             {
@@ -352,6 +458,36 @@ public class RenameEditorWindow : EditorWindow
                 }
             }
         }
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Add Index Count"))
+        {
+            for (int i = 0; i < renameList.Count; i++)
+            {
+                renameList[i].name += " " + i;
+            }
+        }
+
+        if (GUILayout.Button("Remove Index Count"))
+        {
+            foreach (GameObject g in renameList)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    if (g.name.EndsWith(i.ToString()))
+                    {
+                        g.name = g.name.Substring(0, g.name.Length - 1);
+                    }
+                    else if (g.name.EndsWith("(" + i.ToString() + ")"))
+                    {
+                        g.name = g.name.Substring(0, g.name.Length - 3);
+                    }
+
+                }
+            }
+        }
+        GUILayout.EndHorizontal();
     }
 }
 

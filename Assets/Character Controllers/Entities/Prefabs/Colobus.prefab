@@ -186,10 +186,50 @@ MonoBehaviour:
   - foodObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
       type: 3}
     healthRecovery: 25
+    eatingTime: 2
+  - foodObject: {fileID: 5083755493150243077, guid: 2d3554c7ab3b68e479bd5056a7ad9bde,
+      type: 3}
+    healthRecovery: 5
     eatingTime: 1
+  - foodObject: {fileID: 5857256282379547649, guid: acead79e8f61df642a3e96784bf84843,
+      type: 3}
+    healthRecovery: 5
+    eatingTime: 1
+  - foodObject: {fileID: 3661232533398567578, guid: b69f8431b8898c345acadb0cc270e68b,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 2
+  - foodObject: {fileID: 2575141237948661532, guid: 9013d1a41b80f144a96d19b2a7addd97,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 2
+  - foodObject: {fileID: 68985962244808715, guid: 65c2f1c55f287b049857fdef005016b0,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 2
   - foodObject: {fileID: 8306161674226188575, guid: b94740991638e2342994e98df0b25f44,
       type: 3}
     healthRecovery: 25
+    eatingTime: 2
+  - foodObject: {fileID: 6102333449841169126, guid: c9da971f6e093b240a909369dfb9865a,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 2
+  - foodObject: {fileID: 8828301094980299574, guid: 3ccb4a6d31f3acd4f852f385de925b79,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 2
+  - foodObject: {fileID: 1599409604798737777, guid: 3ff6316b49d332c449cce658684f5148,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 2
+  - foodObject: {fileID: 7068048108700219190, guid: d3794b4affa2be042a183a1e73565157,
+      type: 3}
+    healthRecovery: 5
+    eatingTime: 1
+  - foodObject: {fileID: 8197881880145719039, guid: 13bbcdc23d5620b42865bc76532e37b4,
+      type: 3}
+    healthRecovery: 5
     eatingTime: 1
   pointsOfInterest:
   - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
@@ -233,12 +273,52 @@ MonoBehaviour:
     priority: 4
     focusType: 2
   - interestingObject: {fileID: 3282106531187207503}
-    priority: 4
+    priority: 3.5
     focusType: 2
   - interestingObject: {fileID: 2172824284947859688, guid: 654d493e12e886341a92bdd05ec73f35,
       type: 3}
     priority: 4
     focusType: 2
+  - interestingObject: {fileID: 5083755493150243077, guid: 2d3554c7ab3b68e479bd5056a7ad9bde,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 5857256282379547649, guid: acead79e8f61df642a3e96784bf84843,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 3661232533398567578, guid: b69f8431b8898c345acadb0cc270e68b,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 2575141237948661532, guid: 9013d1a41b80f144a96d19b2a7addd97,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 68985962244808715, guid: 65c2f1c55f287b049857fdef005016b0,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 6102333449841169126, guid: c9da971f6e093b240a909369dfb9865a,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 8828301094980299574, guid: 3ccb4a6d31f3acd4f852f385de925b79,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 1599409604798737777, guid: 3ff6316b49d332c449cce658684f5148,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 7068048108700219190, guid: d3794b4affa2be042a183a1e73565157,
+      type: 3}
+    priority: 2
+    focusType: 0
+  - interestingObject: {fileID: 8197881880145719039, guid: 13bbcdc23d5620b42865bc76532e37b4,
+      type: 3}
+    priority: 2
+    focusType: 0
   home:
     interestingObject: {fileID: 0}
     priority: 0

@@ -199,8 +199,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 6818e4569f786474e8d0b846af47484d, type: 3}
   seedItem: {fileID: 11400000, guid: 6f80c868c34455641889b6deea0f1936, type: 2}
   produceQuality: 0
-  birthSizeRange: {x: 0.2, y: 0.4}
-  maturitySizeRange: {x: 0.8, y: 1.6}
+  birthSizeRange: {x: 0.1, y: 0.2}
+  maturitySizeRange: {x: 0.8, y: 1.2}
   growthSpeed: 0.5
   ripeningSpeed: 0.5
   age: 0

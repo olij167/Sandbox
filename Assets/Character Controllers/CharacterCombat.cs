@@ -107,12 +107,13 @@ public class CharacterCombat : MonoBehaviour
                     enemy.animator.SetBool("TakeDamage", true);
 
                     targetRB.isKinematic = false;
+                Debug.Log(targetRB.gameObject.name + " is no longer kinematic");
 
-                    
 
-                }
 
-                if (!isPassive)
+            }
+
+            if (!isPassive)
                 {
                     targetRB.AddForce(dir * myStats.knockBack.GetValue(), ForceMode.Impulse);
                     //Debug.Log("Applying " + myStats.knockBack.GetValue() + " Attack Knockback to " + targetRB.gameObject.name);
@@ -126,9 +127,12 @@ public class CharacterCombat : MonoBehaviour
 
                 yield return new WaitForSeconds(delay);
 
+            targetRB.isKinematic = true;
+            Debug.Log(targetRB.gameObject.name + " has been made kinematic");
 
-            }
-        
+
+        }
+
 
 
 

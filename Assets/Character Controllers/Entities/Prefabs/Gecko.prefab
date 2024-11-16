@@ -1026,22 +1026,26 @@ MonoBehaviour:
     focusType: 0
   detectedObjects: []
   foodList:
-  - foodObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
+  - foodObject: {fileID: 5083755493150243077, guid: 2d3554c7ab3b68e479bd5056a7ad9bde,
       type: 3}
-    healthRecovery: 100
-    eatingTime: 6
-  - foodObject: {fileID: 8306161674226188575, guid: b94740991638e2342994e98df0b25f44,
+    healthRecovery: 25
+    eatingTime: 3
+  - foodObject: {fileID: 5857256282379547649, guid: acead79e8f61df642a3e96784bf84843,
       type: 3}
-    healthRecovery: 100
-    eatingTime: 6
+    healthRecovery: 25
+    eatingTime: 3
+  - foodObject: {fileID: 7068048108700219190, guid: d3794b4affa2be042a183a1e73565157,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 3
+  - foodObject: {fileID: 8197881880145719039, guid: 13bbcdc23d5620b42865bc76532e37b4,
+      type: 3}
+    healthRecovery: 25
+    eatingTime: 3
   pointsOfInterest:
-  - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
-      type: 3}
-    priority: 1
-    focusType: 2
   - interestingObject: {fileID: 692421377114709336, guid: 15d636b15f71cdb419a4576373e3a3b0,
       type: 3}
-    priority: 1.5
+    priority: 1
     focusType: 1
   - interestingObject: {fileID: 2572488563164979526, guid: 768df9dc42017e84d8057a5cb804ed62,
       type: 3}
@@ -1055,24 +1059,36 @@ MonoBehaviour:
       type: 3}
     priority: 2
     focusType: 4
-  - interestingObject: {fileID: 4009023282067140631, guid: 01bfb56bca1b0d044b3bc987f2998f80,
+  - interestingObject: {fileID: 7068048108700219190, guid: d3794b4affa2be042a183a1e73565157,
+      type: 3}
+    priority: 2.5
+    focusType: 0
+  - interestingObject: {fileID: 8197881880145719039, guid: 13bbcdc23d5620b42865bc76532e37b4,
+      type: 3}
+    priority: 2.5
+    focusType: 0
+  - interestingObject: {fileID: 5083755493150243077, guid: 2d3554c7ab3b68e479bd5056a7ad9bde,
+      type: 3}
+    priority: 2.5
+    focusType: 2
+  - interestingObject: {fileID: 5857256282379547649, guid: acead79e8f61df642a3e96784bf84843,
+      type: 3}
+    priority: 2.5
+    focusType: 2
+  - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
       type: 3}
     priority: 3
-    focusType: 0
-  - interestingObject: {fileID: 8306161674226188575, guid: b94740991638e2342994e98df0b25f44,
-      type: 3}
-    priority: 3
-    focusType: 0
+    focusType: 2
   - interestingObject: {fileID: 7960500402485515975}
-    priority: 3
+    priority: 3.5
     focusType: 2
   - interestingObject: {fileID: 2172824284947859688, guid: 654d493e12e886341a92bdd05ec73f35,
       type: 3}
-    priority: 3
+    priority: 4
     focusType: 2
   - interestingObject: {fileID: 8654311611020469116, guid: 037a8989feab98645a154e5ba1ca68c4,
       type: 3}
-    priority: 3
+    priority: 4
     focusType: 2
   home:
     interestingObject: {fileID: 0}

@@ -400,8 +400,28 @@ MonoBehaviour:
   foodList:
   - foodObject: {fileID: 2172824284947859688, guid: 654d493e12e886341a92bdd05ec73f35,
       type: 3}
-    healthRecovery: 25
-    eatingTime: 0
+    healthRecovery: 40
+    eatingTime: 5
+  - foodObject: {fileID: 3282106531187207503, guid: 0945f2fde2222ea4e8c698efd4b29a91,
+      type: 3}
+    healthRecovery: 60
+    eatingTime: 10
+  - foodObject: {fileID: 8654311611020469116, guid: 037a8989feab98645a154e5ba1ca68c4,
+      type: 3}
+    healthRecovery: 10
+    eatingTime: 3
+  - foodObject: {fileID: 7960500402485515975, guid: 105394952816c0645aa02921b5cc38b2,
+      type: 3}
+    healthRecovery: 10
+    eatingTime: 3
+  - foodObject: {fileID: 1558637917955894173, guid: 0c471d5cda1762245abdad5773dbc4b7,
+      type: 3}
+    healthRecovery: 60
+    eatingTime: 10
+  - foodObject: {fileID: 2572488563164979526, guid: 768df9dc42017e84d8057a5cb804ed62,
+      type: 3}
+    healthRecovery: 40
+    eatingTime: 5
   pointsOfInterest:
   - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
       type: 3}

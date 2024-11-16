@@ -36,6 +36,7 @@ public class PlantController : MonoBehaviour
 
     public float water;
 
+    [field: ReadOnlyField] public Vector3 originalSize;
     [field: ReadOnlyField, SerializeField] private Vector2 lifeSizeRange;
     private Vector3 minSize, maxSize;
 
@@ -179,10 +180,12 @@ public class PlantController : MonoBehaviour
 
         water = (requirements.requiredWaterRange.y - requirements.requiredWaterRange.x) / 2 + requirements.requiredWaterRange.x;
 
+        originalSize = transform.localScale;
+
         lifeSizeRange.x = Random.Range(birthSizeRange.x, birthSizeRange.y);
-        minSize = new Vector3(lifeSizeRange.x * transform.localScale.x, lifeSizeRange.x * transform.localScale.y, lifeSizeRange.x * transform.localScale.z) ;
+        minSize = new Vector3(lifeSizeRange.x * originalSize.x, lifeSizeRange.x * originalSize.y, lifeSizeRange.x * originalSize.z) ;
         lifeSizeRange.y = Random.Range(maturitySizeRange.x, maturitySizeRange.y);
-        maxSize = new Vector3(lifeSizeRange.y * transform.localScale.x, lifeSizeRange.y * transform.localScale.y, lifeSizeRange.y * transform.localScale.z);
+        maxSize = new Vector3(lifeSizeRange.y * originalSize.x, lifeSizeRange.y * originalSize.y, lifeSizeRange.y * originalSize.z);
 
         transform.localScale = Vector3.Lerp(minSize, maxSize, age / ageOfMaturity);
 

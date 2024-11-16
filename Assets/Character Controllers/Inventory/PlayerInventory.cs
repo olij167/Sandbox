@@ -1991,15 +1991,24 @@ public class PlayerInventory : MonoBehaviour
 
                     prodInInv.produceItem = inventory[indexA];
 
-
-                    for (int j = 0; j < produceItems[indexA].produceAgesInStack.Count; j++)
+                    if (prodInInv.produceItem.item.isStackable)
                     {
-                        if (j == 0)
+                        for (int j = 0; j < produceItems[indexA].produceAgesInStack.Count; j++)
                         {
-                            prodInInv.InitaliseInventoryProduce(inventory[indexA], produceItems[indexA], j);
-                        }
+                            if (j == 0)
+                            {
+                                prodInInv.InitaliseInventoryProduce(inventory[indexA], produceItems[indexA], j);
+                            }
 
-                        prodInInv.produceAgesInStack.Add(produceItems[indexA].produceAgesInStack[j]);
+                            prodInInv.produceAgesInStack.Add(produceItems[indexA].produceAgesInStack[j]);
+
+                        }
+                    }
+                    else
+                    {
+                        prodInInv.InitaliseInventoryProduce(inventory[indexA], produceItems[indexA], 0);
+                        prodInInv.produceAgesInStack.Add(produceItems[indexA].produceAgesInStack[0]);
+
 
                     }
                 }
@@ -2017,16 +2026,24 @@ public class PlayerInventory : MonoBehaviour
                     ProduceInInventory prodInInv = inventory[indexB].AddComponent<ProduceInInventory>();
 
                     prodInInv.produceItem = inventory[indexB];
-
-
-                    for (int j = 0; j < produceItems[indexB].produceAgesInStack.Count; j++)
+                    if (prodInInv.produceItem.item.isStackable)
                     {
-                        if (j == 0)
-                        {
-                            prodInInv.InitaliseInventoryProduce(inventory[indexB], produceItems[indexB], j);
-                        }
 
-                        prodInInv.produceAgesInStack.Add(produceItems[indexB].produceAgesInStack[j]);
+                        for (int j = 0; j < produceItems[indexB].produceAgesInStack.Count; j++)
+                        {
+                            if (j == 0)
+                            {
+                                prodInInv.InitaliseInventoryProduce(inventory[indexB], produceItems[indexB], j);
+                            }
+
+                            prodInInv.produceAgesInStack.Add(produceItems[indexB].produceAgesInStack[j]);
+
+                        }
+                    }
+                    else
+                    {
+                        prodInInv.InitaliseInventoryProduce(inventory[indexB], produceItems[indexB], 0);
+                        prodInInv.produceAgesInStack.Add(produceItems[indexB].produceAgesInStack[0]);
 
                     }
                 }

@@ -130,8 +130,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 916867be15165004883b4914149981ce, type: 3}
   seedItem: {fileID: 11400000, guid: dfe0636e262bc2246b4d3de6f6c254a4, type: 2}
   produceQuality: 0
-  birthSizeRange: {x: 0.2, y: 0.4}
-  maturitySizeRange: {x: 0.8, y: 1.6}
+  birthSizeRange: {x: 1, y: 2}
+  maturitySizeRange: {x: 0.8, y: 1.2}
   growthSpeed: 0.5
   ripeningSpeed: 0.5
   age: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   ageOfSpoilage: 180
   continueToRipenWhenFallen: 0
   stillPlanted: 0
-  fallWhenMature: 1
+  fallWhenMature: 0
   produceRenderer: {fileID: 0}
   currentColour: {r: 0, g: 0, b: 0, a: 0}
   unRipeColour: {r: 0.4, g: 0.7058824, b: 0.2784314, a: 1}

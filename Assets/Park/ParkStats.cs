@@ -36,6 +36,7 @@ public class ParkStats : MonoBehaviour
     [System.Serializable]
     public class Unlockable
     {
+        public string unlockableName;
         public GameObject unlockableObject;
         public bool isUnlocked;
         public List<UnlockRequirements> requirements;
@@ -120,7 +121,7 @@ public class ParkStats : MonoBehaviour
 
         CheckRelatedUnlocks(trackedObject);
     }
-    
+
     public void StopTrackingObject(GameObject trackedObject)
     {
         for (int i = 0; i < currentTrackedObjects.Count; i++)
@@ -163,51 +164,53 @@ public class ParkStats : MonoBehaviour
         Debug.Log("Checking related unlocks for " + newTrackedObj.name);
         for (int i = 0; i < unlockableObjects.Count; i++) // for each unlockable
         {
-            for (int u = 0; u < unlockableObjects[i].requirements.Count; u++) // for each of it's requirement
-            {
-                if (newTrackedObj.name.Contains(unlockableObjects[i].requirements[u].requiredObject.name)) // if the newly tracked object is required
+            if (unlockableObjects[i].requirements != null && unlockableObjects[i].requirements.Count > 0)
+                for (int u = 0; u < unlockableObjects[i].requirements.Count; u++) // for each of it's requirement
                 {
-                    if (!unlockedObjects.Contains(unlockableObjects[i]))
-                    {
-                        if (CheckUnlockRequirement(unlockableObjects[i].requirements[u])) // check if it's requirements have been met
-                        {
-                            UnlockObject(unlockableObjects[i]); // if so then unlock :D
-                        }
-                    }
-                    else
-                    {
-                        if (!CheckUnlockRequirement(unlockableObjects[i].requirements[u])) // check if it's requirements have been met
-                        {
-                            LockObject(unlockableObjects[i]); // if so then unlock :D
-                        }
-                    }
-                }
-            }
-
-            for (int u = 0; u < unlockableObjects[i].groupRequirements.Count; u++)
-            {
-                for (int t = 0; t < unlockableObjects[i].groupRequirements[u].requiredObjectsGroup.Count; t++)
-                {
-
-                    if (newTrackedObj.name.Contains(unlockableObjects[i].groupRequirements[u].requiredObjectsGroup[t].name)) // if the newly tracked object is required
+                    if (newTrackedObj.name.StartsWith(unlockableObjects[i].requirements[u].requiredObject.name)) // if the newly tracked object is required
                     {
                         if (!unlockedObjects.Contains(unlockableObjects[i]))
                         {
-                            if (CheckUnlockGroupRequirements(unlockableObjects[i].groupRequirements[u])) // check if it's requirements have been met
+                            if (CheckUnlockRequirement(unlockableObjects[i].requirements[u], unlockableObjects[i].unlockableObject.name)) // check if it's requirements have been met
                             {
                                 UnlockObject(unlockableObjects[i]); // if so then unlock :D
                             }
                         }
                         else
                         {
-                            if (!CheckUnlockGroupRequirements(unlockableObjects[i].groupRequirements[u])) // check if it's requirements have been met
+                            if (!CheckUnlockRequirement(unlockableObjects[i].requirements[u], unlockableObjects[i].unlockableObject.name)) // check if it's requirements have been met
                             {
                                 LockObject(unlockableObjects[i]); // if so then unlock :D
                             }
                         }
                     }
                 }
-            }
+
+            if (unlockableObjects[i].groupRequirements != null && unlockableObjects[i].groupRequirements.Count > 0)
+                for (int u = 0; u < unlockableObjects[i].groupRequirements.Count; u++)
+                {
+                    for (int t = 0; t < unlockableObjects[i].groupRequirements[u].requiredObjectsGroup.Count; t++)
+                    {
+
+                        if (newTrackedObj.name.StartsWith(unlockableObjects[i].groupRequirements[u].requiredObjectsGroup[t].name)) // if the newly tracked object is required
+                        {
+                            if (!unlockedObjects.Contains(unlockableObjects[i]))
+                            {
+                                if (CheckUnlockGroupRequirements(unlockableObjects[i].groupRequirements[u])) // check if it's requirements have been met
+                                {
+                                    UnlockObject(unlockableObjects[i]); // if so then unlock :D
+                                }
+                            }
+                            else
+                            {
+                                if (!CheckUnlockGroupRequirements(unlockableObjects[i].groupRequirements[u])) // check if it's requirements have been met
+                                {
+                                    LockObject(unlockableObjects[i]); // if so then unlock :D
+                                }
+                            }
+                        }
+                    }
+                }
         }
     }
 
@@ -217,9 +220,9 @@ public class ParkStats : MonoBehaviour
         for (int u = 0; u < unlockable.requirements.Count; u++) // for each requirement of the unlockable
         {
 
-            unlockable.requirements[u].requiredAmountMet = CheckUnlockRequirement(unlockable.requirements[u]);
+            unlockable.requirements[u].requiredAmountMet = CheckUnlockRequirement(unlockable.requirements[u], unlockable.unlockableObject.name);
 
-            if (CheckUnlockRequirement(unlockable.requirements[u])) return true;
+            if (CheckUnlockRequirement(unlockable.requirements[u], unlockable.unlockableObject.name)) return true;
         }
 
 
@@ -235,22 +238,23 @@ public class ParkStats : MonoBehaviour
         return false;
     }
 
-    public bool CheckUnlockRequirement(UnlockRequirements requirement)
+    public bool CheckUnlockRequirement(UnlockRequirements requirement, string unlockableName = "Unlockable")
     {
         for (int i = 0; i < currentTrackedObjects.Count; i++) // for each tracked object in the scene
         {
-            if (currentTrackedObjects[i].objectInstances[0].name.Contains(requirement.requiredObject.name)) // check if the object exists
+            if (currentTrackedObjects[i].objectInstances[0].name.StartsWith(requirement.requiredObject.name)) // check if the object exists
             {
                 if (requirement.aboveOrBelow == AboveOrBelowValue.Above)
                 {
                     if (requirement.requiredAmount <= currentTrackedObjects[i].objectInstances.Count) // check if there is enough of it
                     {
                         requirement.requiredAmountMet = true;
+                        Debug.Log("Required Amount Reached");
                     }
                     else
                     {
                         requirement.requiredAmountMet = false;
-                        Debug.Log(requirement.requiredObject.name + " requires more " + requirement.requiredObject.name + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
+                        Debug.Log(unlockableName + " requires more " + currentTrackedObjects[i].elementName + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
                         return false; // the requirements arent met
                     }
                 }
@@ -259,12 +263,13 @@ public class ParkStats : MonoBehaviour
                     if (requirement.requiredAmount > currentTrackedObjects[i].objectInstances.Count) // check if there is few enough of it
                     {
                         requirement.requiredAmountMet = true;
+                        Debug.Log("Required Amount Reached");
                     }
                     else
                     {
                         requirement.requiredAmountMet = false;
 
-                        Debug.Log(requirement.requiredObject.name + " requires less " + requirement.requiredObject.name + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
+                        Debug.Log(unlockableName + " requires less " + requirement.requiredObject.name + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
                         return false; // the requirements arent met
                     }
                 }
@@ -302,7 +307,7 @@ public class ParkStats : MonoBehaviour
         {
             for (int t = 0; t < requirement.requiredObjectsGroup.Count; t++) // for each tracked object in the scene
             {
-                if (currentTrackedObjects[i].objectInstances[0].name.Contains(requirement.requiredObjectsGroup[t].name)) // check if the object exists
+                if (currentTrackedObjects[i].objectInstances[0].name.StartsWith(requirement.requiredObjectsGroup[t].name)) // check if the object exists
                 {
                     requirement.cumulativeCount += currentTrackedObjects[i].objectInstances.Count;
                 }

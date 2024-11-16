@@ -41,7 +41,7 @@ MonoBehaviour:
   speedModifier: 0
   jumpModifier: 0
   armourModifier: 0
-  attackDamageModifier: 50
-  passiveDamageModifier: 25
+  attackDamageModifier: 10
+  passiveDamageModifier: 2
   knockBackModifier: 25
   attackSpeedModifier: 1

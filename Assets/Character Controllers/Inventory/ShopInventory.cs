@@ -389,15 +389,25 @@ public class ShopInventory : Interactable
                     prodInInv.produceItem = buyBackInventory[i];
 
 
-                    for (int j = 0; j < produceItems[i].produceAgesInStack.Count; j++)
+
+                    if (prodInInv.produceItem.item.isStackable)
                     {
-                        if (j == 0)
+                        for (int j = 0; j < produceItems[i].produceAgesInStack.Count; j++)
                         {
-                            prodInInv.InitaliseInventoryProduce(buyBackInventory[i], produceItems[i], j);
+                            if (j == 0)
+                            {
+                                prodInInv.InitaliseInventoryProduce(buyBackInventory[i], produceItems[i], j);
+                            }
+
+                            prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[j]);
+
                         }
+                    }
+                    else
+                    {
+                        prodInInv.InitaliseInventoryProduce(buyBackInventory[i], produceItems[i], 0);
 
-                        prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[j]);
-
+                            prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[0]);
                     }
 
                     GameObject toDestroy = produceItems[i].gameObject;
@@ -457,15 +467,26 @@ public class ShopInventory : Interactable
                     savedProdInv.transform.parent = transform;
                     ProduceInInventory prodInInv = savedProdInv.AddComponent<ProduceInInventory>();
 
-                    for (int j = 0; j < produceItems[i].produceAgesInStack.Count; j++)
-                    {
-                        if (j == 0)
-                        {
-                            prodInInv.InitaliseInventoryProduce(buyBackInventory[i], produceItems[i], j);
-                        }
-                        prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[j]);
 
+                    if (prodInInv.produceItem.item.isStackable)
+                    {
+                        for (int j = 0; j < produceItems[i].produceAgesInStack.Count; j++)
+                        {
+                            if (j == 0)
+                            {
+                                prodInInv.InitaliseInventoryProduce(buyBackInventory[i], produceItems[i], j);
+                            }
+                            prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[j]);
+
+                        }
                     }
+                    else
+                    {
+                        prodInInv.InitaliseInventoryProduce(buyBackInventory[i], produceItems[i], 0);
+
+                        prodInInv.produceAgesInStack.Add(produceItems[i].produceAgesInStack[0]);
+                    }
+
                     produceItems[i] = prodInInv;
 
                     InventoryUIItem savedProdItem = savedProdInv.AddComponent<InventoryUIItem>();

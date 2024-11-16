@@ -35,6 +35,8 @@ public class SpawnObjects : MonoBehaviour
     public bool fluctuateSpawnRate;
     public float fluctuationRange = 30f;
 
+    public float minYPos = 0f;
+
     public List<GameObject> spawnedObjects;
 
 
@@ -58,7 +60,12 @@ public class SpawnObjects : MonoBehaviour
         }
 
         if (spawnedObjects != null && spawnedObjects.Count > 0)
-            CheckIfDestroyed();
+        {
+            CheckIfDestroyedOrFalling();
+
+            //if (spawnedObjects.Count > totalSpawnNum || spawnedObjects.Count > spawnNumPerPrefab * prefabs.Count)
+            //    RemoveExcessObjects();
+        }
     }
 
     public virtual void SpawnPrefabs(bool randomPrefabs, bool inRadius)
@@ -69,20 +76,23 @@ public class SpawnObjects : MonoBehaviour
             {
                 for (int i = 0; i < prefabs.Count; i++)
                 {
-                    if (spawnOnTimer)
+                    if (CheckBeforeSpawning(prefabs[i]))
                     {
-                        if (fluctuateSpawnRate)
+                        if (spawnOnTimer)
                         {
-                            SpawnSporatic(prefabs[i], parent, spawnRate, inRadius);
+                            if (fluctuateSpawnRate)
+                            {
+                                SpawnSporatic(prefabs[i], parent, spawnRate, inRadius);
+                            }
+                            else
+                            {
+                                SpawnConsistent(prefabs[i], parent, spawnRate, inRadius);
+                            }
                         }
                         else
                         {
-                            SpawnConsistent(prefabs[i], parent, spawnRate, inRadius);
+                            SpawnConsistent(prefabs[i], parent, 0, inRadius);
                         }
-                    }
-                    else
-                    {
-                        SpawnConsistent(prefabs[i], parent, 0, inRadius);
                     }
 
                 }
@@ -117,7 +127,7 @@ public class SpawnObjects : MonoBehaviour
         }
     }
 
-    public void CheckIfDestroyed()
+    public void CheckIfDestroyedOrFalling()
     {
         for (int i = 0; i < spawnedObjects.Count; i++)
         {
@@ -127,6 +137,66 @@ public class SpawnObjects : MonoBehaviour
 
                 if (showDebug)
                     Debug.Log("Spawned Item " + i + " has been destroyed");
+            }
+            else if (spawnedObjects[i].transform.position.y < minYPos)
+            {
+                spawnedObjects[i].transform.position = new Vector3(spawnedObjects[i].transform.position.x, transform.position.y, spawnedObjects[i].transform.position.z);
+            }
+        }
+    }
+
+    public bool CheckBeforeSpawning(GameObject prefab)
+    {
+        int count = 0;
+
+        for (int i = 0; i < spawnedObjects.Count; i++)
+        {
+
+            if (spawnedObjects[i].name.StartsWith( prefab.name))
+            {
+
+                count += 1;
+
+            }
+
+        }
+
+        if (count < spawnNumPerPrefab)
+        {
+            Debug.Log("Can Spawn " + prefab.name + ". [" + count +"/" + spawnNumPerPrefab + "]");
+            return true;
+        }
+        else
+        {
+            Debug.Log(prefab.name + " spawn limit reached. [" + count + "/" + spawnNumPerPrefab + "]");
+            return false;
+        }
+
+
+        //return false;
+    }
+
+    public void RemoveExcessObjects()
+    {
+        if (!randomPrefabs)
+        {
+            for (int j = 0; j < prefabs.Count; j++)
+            {
+                for (int i = 0; i < spawnedObjects.Count; i++)
+                {
+                    int count = 0;
+
+                    if (spawnedObjects[i] == prefabs[j])
+                    {
+                        if (count < spawnNumPerPrefab)
+                            count++;
+                        else
+                        {
+                            Destroy(spawnedObjects[i]);
+                            spawnedObjects.RemoveAt(i);
+                        }
+                    }
+                }
             }
         }
     }
