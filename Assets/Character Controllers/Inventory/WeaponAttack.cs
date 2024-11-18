@@ -44,7 +44,7 @@ public class WeaponAttack : MonoBehaviour
         {
             if (other.gameObject.GetComponent<EntityStats>())
             {
-                Debug.Log("Weapon Trigger Entered");
+                //Debug.Log("Weapon Trigger Entered");
                 if (isMainHand)
                 {
                     if (playerController.isUsingRight)

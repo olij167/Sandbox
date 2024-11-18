@@ -29,8 +29,10 @@ public class ChangeScene : Interactable
     private void Awake()
     {
         //loadingBar.SetActive(false);
-        player = FindObjectOfType<PlayerController>();
-
+        if (FindObjectOfType<PlayerController>())
+        {
+            player = FindObjectOfType<PlayerController>();
+        }
     }
 
     public void MoveToScene(string sceneID)
@@ -40,7 +42,7 @@ public class ChangeScene : Interactable
 
         //SceneManager.LoadScene(sceneID);
 
-        if (setSpawnPoint)
+        if (setSpawnPoint && player != null)
         {
             player.spawnPoint = player.transform.position;
         }
@@ -78,7 +80,7 @@ public class ChangeScene : Interactable
             yield return null;
         }
 
-        if (async.isDone && goToSpawnPoint) player.transform.position = player.spawnPoint;
+        if (async.isDone && player != null && goToSpawnPoint) player.transform.position = player.spawnPoint;
     }
 
     public void QuitGame()

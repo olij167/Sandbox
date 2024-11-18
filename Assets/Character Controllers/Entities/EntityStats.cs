@@ -30,6 +30,17 @@ public class EntityStats : CharacterStats
 
     Animator animator;
 
+    public Vector2 lootRange = new Vector2(1, 3);
+    public List<LootDrop> lootDrops;
+
+    [System.Serializable]
+    public class LootDrop
+    {
+        public GameObject loot;
+        [Tooltip("0 = impossible, 100 = highly likely")]
+        public float rarity;
+    }
+
     public GameObject experienceItem;
 
     public bool isDead;
@@ -53,6 +64,43 @@ public class EntityStats : CharacterStats
         StartCoroutine(DeathAnimationDelay());
 
         //spawn loot
+        if (lootDrops != null && lootDrops.Count > 0)
+            SpawnLoot();
+    }
+
+    public void SpawnLoot()
+    {
+        int r = (int)Random.Range(lootRange.x, lootRange.y);
+
+        List<GameObject> lootSpawns = new List<GameObject>();
+
+        for (int i = 0; i < r; i++)
+        {
+
+            float luckPool = Random.Range(0f, 100f);
+
+            List<GameObject> possibleLoot = new List<GameObject>();
+
+            for (int j = 0; j < lootDrops.Count; j++)
+            {
+                if (lootDrops[j].rarity >= luckPool)
+                    possibleLoot.Add(lootDrops[j].loot);
+            }
+            if (possibleLoot.Count > 0)
+                lootSpawns.Add(possibleLoot[Random.Range(0, possibleLoot.Count)]);
+            else
+            {
+                Debug.Log("No loot to spawn for " + gameObject.name);
+                return;
+            }
+        }
+
+        for (int i = 0;i < lootSpawns.Count;i++)
+        {
+            Instantiate(lootSpawns[i], transform.position, Quaternion.identity);
+        }
+
+        Debug.Log("Loot has been spawned for " + gameObject.name);
     }
 
     IEnumerator DeathAnimationDelay()

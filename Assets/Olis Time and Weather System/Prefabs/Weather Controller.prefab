@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8697380267818737233}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 624.8906, y: 38.797142, z: 290.8374}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1021060317
 MonoBehaviour:
@@ -59,34 +59,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeController: {fileID: 0}
   currentWeatherPreset:
-    weatherCondition: Cloudy
-    tempRange: {x: -100, y: 30}
-    chanceOfRainRange: {x: 33, y: 55}
-    isRaining: 0
-    cloudPowerRange: {x: 2.5, y: 3.5}
-    fogStrength: 0.005
+    weatherCondition: Snowstorm
+    tempRange: {x: -100, y: 0}
+    rainRange: {x: 0, y: 0}
+    isRaining: 1
+    activeClouds: []
+    cloudPowerRange: {x: 0.5, y: 1.5}
+    cloudAlphaRange: {x: 0, y: 0}
+    fogStrength: 0.1
     wetness: 0
-    snowiness: 0
-    weatherParticles: []
+    snowiness: 1
+    weatherParticles:
+    - particleSystem: {fileID: 0}
+      particleAmount: 1500
+      noiseStrength: 5
     clips:
-    - {fileID: 8300000, guid: 0652e26d183e21344af5cb68583e510f, type: 3}
-    - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
+    - {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
     pitch: 1
-    volume: 0.5
-  temperature: -7.2922573
-  chanceOfRain: 88
-  cloudPower: 2.96
-  fogSpeed: 0.05
+    volume: 1
+  rainRandomiser: 0
+  temperature: -15.249645
+  rainChance: 0
+  fogSpeed: 0.01
   wetness: 0
+  desiredWetness: 0
   snowiness: 0
-  wetnessSpeed: 0.1
+  desiredSnowiness: 0
+  wetnessSpeed: 0.01
   evaporationSpeed: 0.01
-  snowCoverSpeed: 0
-  meltingSpeed: 0.3
+  snowCoverSpeed: 0.01
+  meltingSpeed: 0.01
   currentSeasonConditions:
     season: Winter
     tempRange: {x: -30, y: 15}
-    chanceOfRainRange: {x: 0, y: 100}
+    rainRange: {x: 0, y: 0}
     hottestTimeRange: {x: 13, y: 15}
     coldestMorningTimeRange: {x: 1, y: 6}
     coldestNightTimeRange: {x: 19, y: 22}
@@ -188,6 +194,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       dayMidColorOverTime:
@@ -217,6 +224,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 7
         m_NumAlphaKeys: 2
       nightTopColorOverTime:
@@ -246,6 +254,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 3
         m_NumAlphaKeys: 2
       nightMidColorOverTime:
@@ -275,6 +284,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 6
         m_NumAlphaKeys: 2
       ambientColour:
@@ -304,6 +314,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       fogColour:
@@ -333,281 +344,210 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 4
         m_NumAlphaKeys: 3
       fogToDayColor: 0.5
   hourlyWeather:
   - forcastTime: 0
-    temp: 4
-    chanceOfRain: 42.794476
-    weatherCondition: Cloudy
-    cloudPower: 2.8524275
-    windSpeed: 2.2681532
-    wetness: 0
-    snowiness: 0
-    isRaining: 0
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
-  - forcastTime: 1
-    temp: 4
-    chanceOfRain: 45.61982
-    weatherCondition: Raining
-    cloudPower: 3.4499748
-    windSpeed: -4.860815
-    wetness: 3
-    snowiness: 0
+    temp: 1
+    rainChance: 0
+    weatherCondition: Storming
+    cloudPower: 1.123829
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: a82f5c71fbcb33947bc4b21dbbcfa7d5, type: 3}
+  - forcastTime: 1
+    temp: -18.508121
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 0.6755036
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 2
-    temp: 4
-    chanceOfRain: 48.445164
-    weatherCondition: Cloudy
-    cloudPower: 3.07099
-    windSpeed: -14.831978
-    wetness: 3
-    snowiness: 0
+    temp: -17.965042
+    rainChance: 0
+    weatherCondition: Overcast
+    cloudPower: 1.3135008
     isRaining: 0
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
   - forcastTime: 3
-    temp: 4
-    chanceOfRain: 51.270508
-    weatherCondition: Raining
-    cloudPower: 2.8108368
-    windSpeed: -8.225817
-    wetness: 3
-    snowiness: 0
-    isRaining: 1
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: a82f5c71fbcb33947bc4b21dbbcfa7d5, type: 3}
-  - forcastTime: 4
-    temp: -7.128135
-    chanceOfRain: 54.09585
-    weatherCondition: Heavy Snowfall
-    cloudPower: 3.386197
-    windSpeed: -2.1919603
-    wetness: 3
-    snowiness: 0
-    isRaining: 1
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
-  - forcastTime: 5
-    temp: -7.1646066
-    chanceOfRain: 56.921196
-    weatherCondition: 
-    cloudPower: 0
-    windSpeed: 0
-    wetness: 0
-    snowiness: 0
-    isRaining: 0
-    isMidnight: 0
-    weatherAudio: {fileID: 0}
-  - forcastTime: 6
-    temp: -7.201078
-    chanceOfRain: 59.74654
-    weatherCondition: Heavy Snowfall
-    cloudPower: 3.189081
-    windSpeed: -4.845933
-    wetness: 0
-    snowiness: 0.6
-    isRaining: 1
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
-  - forcastTime: 7
-    temp: -7.2375493
-    chanceOfRain: 62.571888
-    weatherCondition: Heavy Snowfall
-    cloudPower: 2.678247
-    windSpeed: -3.449395
-    wetness: 0
-    snowiness: 0
-    isRaining: 1
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
-  - forcastTime: 8
-    temp: -7.274021
-    chanceOfRain: 65.39723
-    weatherCondition: 
-    cloudPower: 0
-    windSpeed: 0
-    wetness: 0
-    snowiness: 0
-    isRaining: 0
-    isMidnight: 0
-    weatherAudio: {fileID: 0}
-  - forcastTime: 9
-    temp: -7.3104925
-    chanceOfRain: 68.22258
-    weatherCondition: Overcast
-    cloudPower: 1.0474652
-    windSpeed: 1.806344
-    wetness: 0
-    snowiness: 0
-    isRaining: 0
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
-  - forcastTime: 10
-    temp: -7.346964
-    chanceOfRain: 71.04793
+    temp: -17.421963
+    rainChance: 0
     weatherCondition: Snowstorm
-    cloudPower: 0.5805936
-    windSpeed: 0.6612849
-    wetness: 0
-    snowiness: 1
+    cloudPower: 1.4907678
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 4
+    temp: -16.878883
+    rainChance: 0
+    weatherCondition: Overcast
+    cloudPower: 0.53925085
+    isRaining: 0
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
+  - forcastTime: 5
+    temp: -16.335804
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 0.8263816
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 6
+    temp: -15.792725
+    rainChance: 0
+    weatherCondition: 
+    cloudPower: 0
+    isRaining: 0
+    isMidnight: 0
+    weatherAudio: {fileID: 0}
+  - forcastTime: 7
+    temp: -15.249645
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 1.1384239
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 8
+    temp: -14.706566
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 0.5223911
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 9
+    temp: -14.1634865
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 1.3481548
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 10
+    temp: -13.620407
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 0.72869575
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 11
-    temp: -7.3834357
-    chanceOfRain: 73.873276
+    temp: -13.077328
+    rainChance: 0
     weatherCondition: Snowstorm
-    cloudPower: 1.4742893
-    windSpeed: -1.6614895
-    wetness: 0
-    snowiness: 0
+    cloudPower: 0.92027295
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 12
-    temp: -7.4199076
-    chanceOfRain: 76.69862
-    weatherCondition: Overcast
-    cloudPower: 0.613976
-    windSpeed: -9.854763
-    wetness: 0
-    snowiness: 0
-    isRaining: 0
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
-  - forcastTime: 13
-    temp: -7.456379
-    chanceOfRain: 79.52397
+    temp: -12.534248
+    rainChance: 0
     weatherCondition: Snowstorm
-    cloudPower: 1.2315352
-    windSpeed: -11.760236
-    wetness: 0
-    snowiness: 1
+    cloudPower: 0.7989653
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 13
+    temp: -11.991169
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 0.93345606
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 14
-    temp: -7.456379
-    chanceOfRain: 82.34931
+    temp: -11.991169
+    rainChance: 0
     weatherCondition: Snowstorm
-    cloudPower: 0.6857115
-    windSpeed: -17.63273
-    wetness: 0
-    snowiness: 0
+    cloudPower: 0.6051812
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 15
-    temp: -7.4016714
-    chanceOfRain: 85.17465
+    temp: -13.077328
+    rainChance: 0
     weatherCondition: Snowstorm
-    cloudPower: 0.97874296
-    windSpeed: -7.7001815
-    wetness: 0
-    snowiness: 0
+    cloudPower: 1.2978423
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 16
-    temp: -7.3469644
-    chanceOfRain: 88
+    temp: -14.1634865
+    rainChance: 0
     weatherCondition: Snowstorm
-    cloudPower: 1.467022
-    windSpeed: -15.6067
-    wetness: 0
-    snowiness: 0
+    cloudPower: 1.2851958
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 17
-    temp: -7.2922573
-    chanceOfRain: 88
-    weatherCondition: Overcast
-    cloudPower: 0.90754783
-    windSpeed: -19.490297
-    wetness: 0
-    snowiness: 0
-    isRaining: 0
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: 0652e26d183e21344af5cb68583e510f, type: 3}
-  - forcastTime: 18
-    temp: -7.23755
-    chanceOfRain: 83.52099
+    temp: -15.249645
+    rainChance: 0
     weatherCondition: Snowstorm
-    cloudPower: 1.0606631
-    windSpeed: -17.066292
-    wetness: 0
-    snowiness: 1
+    cloudPower: 0.65715444
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 18
+    temp: -16.335804
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 1.3985395
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 19
-    temp: -7.1828423
-    chanceOfRain: 61.731773
-    weatherCondition: Heavy Snowfall
-    cloudPower: 2.6213822
-    windSpeed: -23.567818
-    wetness: 0
-    snowiness: 1
+    temp: -17.421963
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 0.89278686
     isRaining: 1
     isMidnight: 0
     weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 20
-    temp: -7.128135
-    chanceOfRain: 50.772076
-    weatherCondition: Cloudy
-    cloudPower: 2.876536
-    windSpeed: -23.76307
-    wetness: 0
-    snowiness: 1
-    isRaining: 0
-    isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
-  - forcastTime: 21
-    temp: -7.128135
-    chanceOfRain: 44.176727
-    weatherCondition: Heavy Snowfall
-    cloudPower: 3.4508579
-    windSpeed: -29.70113
-    wetness: 0
-    snowiness: 0.6
+    temp: -18.508121
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 1.334587
     isRaining: 1
     isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+  - forcastTime: 21
+    temp: -18.508121
+    rainChance: 0
+    weatherCondition: Snowstorm
+    cloudPower: 1.089311
+    isRaining: 1
+    isMidnight: 0
+    weatherAudio: {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
   - forcastTime: 22
     temp: 21
-    chanceOfRain: 48.08683
-    weatherCondition: Cloudy
-    cloudPower: 2.5834718
-    windSpeed: -38.278473
-    wetness: 0
-    snowiness: 0.6
-    isRaining: 0
+    rainChance: 0
+    weatherCondition: Storming
+    cloudPower: 1.3547246
+    isRaining: 1
     isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
+    weatherAudio: {fileID: 8300000, guid: a82f5c71fbcb33947bc4b21dbbcfa7d5, type: 3}
   - forcastTime: 23
     temp: 21
-    chanceOfRain: 44.895226
-    weatherCondition: Cloudy
-    cloudPower: 2.979951
-    windSpeed: -31.798569
-    wetness: 0
-    snowiness: 0
-    isRaining: 0
+    rainChance: 0
+    weatherCondition: Storming
+    cloudPower: 0.95600736
+    isRaining: 1
     isMidnight: 0
-    weatherAudio: {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
-  windMultiplier: 0.00000001
+    weatherAudio: {fileID: 8300000, guid: a82f5c71fbcb33947bc4b21dbbcfa7d5, type: 3}
+  windMultiplier: 0.000000001
   wind: {x: 0, y: 0}
-  windSpeed: 0
+  windSpeed: 23.223978
   seasonConditions:
   - season: Summer
-    tempRange: {x: 25, y: 50}
-    chanceOfRainRange: {x: 0, y: 75}
+    tempRange: {x: 10, y: 50}
+    rainRange: {x: 0, y: 70}
     hottestTimeRange: {x: 12, y: 19}
     coldestMorningTimeRange: {x: 1, y: 2}
     coldestNightTimeRange: {x: 23, y: 24}
@@ -630,7 +570,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 0.5
-          value: 1
+          value: 1.25
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -663,7 +603,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 0.5
-          value: 5
+          value: 1.5
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -709,13 +649,14 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       dayMidColorOverTime:
         serializedVersion: 2
         key0: {r: 0.9137255, g: 0.4862745, b: 0.4117647, a: 1}
         key1: {r: 1, g: 0.76771796, b: 0.7490196, a: 1}
-        key2: {r: 0.97871006, g: 1, b: 0.76862746, a: 0}
+        key2: {r: 0.8226172, g: 0.8396226, b: 0.63895804, a: 0}
         key3: {r: 0.7071021, g: 0.89838266, b: 0.990566, a: 0}
         key4: {r: 0.71196747, g: 0.88580287, b: 0.9716981, a: 0}
         key5: {r: 0.62299997, g: 0.55916804, b: 0.25022134, a: 0}
@@ -738,6 +679,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 7
         m_NumAlphaKeys: 2
       nightTopColorOverTime:
@@ -767,6 +709,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 3
         m_NumAlphaKeys: 2
       nightMidColorOverTime:
@@ -796,12 +739,13 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 6
         m_NumAlphaKeys: 2
       ambientColour:
         serializedVersion: 2
-        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 1}
-        key1: {r: 0.42745098, g: 0.77254903, b: 0.74944174, a: 1}
+        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0.60784316}
+        key1: {r: 0.42745098, g: 0.77254903, b: 0.74944174, a: 0.60784316}
         key2: {r: 0.83310527, g: 0.8666667, b: 0.4039216, a: 0}
         key3: {r: 0.41568628, g: 0.7478254, b: 0.7607843, a: 0}
         key4: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0}
@@ -825,6 +769,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       fogColour:
@@ -854,12 +799,13 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 4
         m_NumAlphaKeys: 3
       fogToDayColor: 0.5
   - season: Autumn
-    tempRange: {x: 0, y: 28}
-    chanceOfRainRange: {x: 0, y: 80}
+    tempRange: {x: -5, y: 28}
+    rainRange: {x: 0, y: 75}
     hottestTimeRange: {x: 14, y: 17}
     coldestMorningTimeRange: {x: 1, y: 4}
     coldestNightTimeRange: {x: 21, y: 24}
@@ -915,7 +861,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 0.5
-          value: 5
+          value: 1.25
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -961,13 +907,14 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       dayMidColorOverTime:
         serializedVersion: 2
         key0: {r: 0.9137255, g: 0.4862745, b: 0.4117647, a: 1}
         key1: {r: 1, g: 0.76771796, b: 0.7490196, a: 1}
-        key2: {r: 0.97871006, g: 1, b: 0.76862746, a: 0}
+        key2: {r: 0.8773585, g: 0.85500914, b: 0.60145956, a: 0}
         key3: {r: 0.51157695, g: 0.8358798, b: 0.9922768, a: 0}
         key4: {r: 0.5019608, g: 0.8339869, b: 1, a: 0}
         key5: {r: 0.62299997, g: 0.55916804, b: 0.25022134, a: 0}
@@ -990,6 +937,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 7
         m_NumAlphaKeys: 2
       nightTopColorOverTime:
@@ -1019,6 +967,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 3
         m_NumAlphaKeys: 2
       nightMidColorOverTime:
@@ -1048,12 +997,13 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 6
         m_NumAlphaKeys: 2
       ambientColour:
         serializedVersion: 2
-        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 1}
-        key1: {r: 0.77254903, g: 0.7570948, b: 0.42745098, a: 1}
+        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0.60784316}
+        key1: {r: 0.77254903, g: 0.7570948, b: 0.42745098, a: 0.60784316}
         key2: {r: 0.8666667, g: 0.6480815, b: 0.4039216, a: 0}
         key3: {r: 0.7607843, g: 0.47921625, b: 0.41568628, a: 0}
         key4: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0}
@@ -1077,6 +1027,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       fogColour:
@@ -1106,12 +1057,13 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 4
         m_NumAlphaKeys: 3
       fogToDayColor: 0.5
   - season: Winter
-    tempRange: {x: -30, y: 15}
-    chanceOfRainRange: {x: 0, y: 100}
+    tempRange: {x: -10, y: 15}
+    rainRange: {x: 0, y: 85}
     hottestTimeRange: {x: 13, y: 15}
     coldestMorningTimeRange: {x: 1, y: 6}
     coldestNightTimeRange: {x: 19, y: 22}
@@ -1134,7 +1086,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 0.5
-          value: 1
+          value: 0.75
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -1167,7 +1119,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 0.5
-          value: 5
+          value: 1
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -1213,13 +1165,14 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       dayMidColorOverTime:
         serializedVersion: 2
         key0: {r: 0.9137255, g: 0.4862745, b: 0.4117647, a: 1}
         key1: {r: 1, g: 0.76771796, b: 0.7490196, a: 1}
-        key2: {r: 0.97871006, g: 1, b: 0.76862746, a: 0}
+        key2: {r: 0.8345753, g: 0.8490566, b: 0.67817724, a: 0}
         key3: {r: 0.51157695, g: 0.8358798, b: 0.9922768, a: 0}
         key4: {r: 0.5019608, g: 0.8339869, b: 1, a: 0}
         key5: {r: 0.62299997, g: 0.55916804, b: 0.25022134, a: 0}
@@ -1242,6 +1195,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 7
         m_NumAlphaKeys: 2
       nightTopColorOverTime:
@@ -1271,6 +1225,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 3
         m_NumAlphaKeys: 2
       nightMidColorOverTime:
@@ -1300,12 +1255,13 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 6
         m_NumAlphaKeys: 2
       ambientColour:
         serializedVersion: 2
-        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 1}
-        key1: {r: 0.4269313, g: 0.6569833, b: 0.7735849, a: 1}
+        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0.60784316}
+        key1: {r: 0.4269313, g: 0.6569833, b: 0.7735849, a: 0.60784316}
         key2: {r: 0.40530434, g: 0.8015658, b: 0.8679245, a: 0}
         key3: {r: 0.4161402, g: 0.6363109, b: 0.7601112, a: 0}
         key4: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0}
@@ -1329,6 +1285,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       fogColour:
@@ -1358,12 +1315,13 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 4
         m_NumAlphaKeys: 3
       fogToDayColor: 0.5
   - season: Spring
-    tempRange: {x: 0, y: 28}
-    chanceOfRainRange: {x: 0, y: 80}
+    tempRange: {x: -5, y: 28}
+    rainRange: {x: 0, y: 75}
     hottestTimeRange: {x: 13, y: 17}
     coldestMorningTimeRange: {x: 1, y: 3}
     coldestNightTimeRange: {x: 21, y: 24}
@@ -1419,7 +1377,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 0.5
-          value: 5
+          value: 1.25
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -1465,13 +1423,14 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       dayMidColorOverTime:
         serializedVersion: 2
         key0: {r: 0.9137255, g: 0.4862745, b: 0.4117647, a: 1}
         key1: {r: 1, g: 0.76771796, b: 0.7490196, a: 1}
-        key2: {r: 0.97871006, g: 1, b: 0.76862746, a: 0}
+        key2: {r: 0.8780745, g: 0.8962264, b: 0.6820339, a: 0}
         key3: {r: 0.51157695, g: 0.8358798, b: 0.9922768, a: 0}
         key4: {r: 0.5019608, g: 0.8339869, b: 1, a: 0}
         key5: {r: 0.62299997, g: 0.55916804, b: 0.25022134, a: 0}
@@ -1494,6 +1453,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 7
         m_NumAlphaKeys: 2
       nightTopColorOverTime:
@@ -1523,6 +1483,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 3
         m_NumAlphaKeys: 2
       nightMidColorOverTime:
@@ -1552,12 +1513,13 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 6
         m_NumAlphaKeys: 2
       ambientColour:
         serializedVersion: 2
-        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 1}
-        key1: {r: 0.7616687, g: 0.77254903, b: 0.42745098, a: 1}
+        key0: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0.60784316}
+        key1: {r: 0.7616687, g: 0.77254903, b: 0.42745098, a: 0.60784316}
         key2: {r: 0.8015, g: 0.4039216, b: 0.8666667, a: 0}
         key3: {r: 0.7607843, g: 0.6310883, b: 0.41568628, a: 0}
         key4: {r: 0.18562084, g: 0.109803915, b: 0.5647059, a: 0}
@@ -1581,6 +1543,7 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       fogColour:
@@ -1610,56 +1573,74 @@ MonoBehaviour:
         atime6: 0
         atime7: 0
         m_Mode: 0
+        m_ColorSpace: -1
         m_NumColorKeys: 4
         m_NumAlphaKeys: 3
       fogToDayColor: 0.5
   weatherDataPresets:
   - weatherCondition: Clear
     tempRange: {x: -100, y: 30}
-    chanceOfRainRange: {x: 0, y: 33}
+    rainRange: {x: 0, y: 33}
     isRaining: 0
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 4.5, y: 5}
+    cloudAlphaRange: {x: 0, y: 15}
     fogStrength: 0.001
     wetness: 0
     snowiness: 0
     weatherParticles: []
     clips:
-    - {fileID: 8300000, guid: 0652e26d183e21344af5cb68583e510f, type: 3}
+    - {fileID: 8300000, guid: 598546f313b673242b1450968acd89ad, type: 3}
     pitch: 1
     volume: 0.3
   - weatherCondition: Cloudy
     tempRange: {x: -100, y: 30}
-    chanceOfRainRange: {x: 33, y: 55}
+    rainRange: {x: 33, y: 66}
     isRaining: 0
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 2.5, y: 3.5}
+    cloudAlphaRange: {x: 0, y: 25}
     fogStrength: 0.005
     wetness: 0
     snowiness: 0
     weatherParticles: []
     clips:
-    - {fileID: 8300000, guid: 0652e26d183e21344af5cb68583e510f, type: 3}
     - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
+    - {fileID: 8300000, guid: 598546f313b673242b1450968acd89ad, type: 3}
     pitch: 1
     volume: 0.5
   - weatherCondition: Overcast
     tempRange: {x: -100, y: 30}
-    chanceOfRainRange: {x: 66, y: 100}
+    rainRange: {x: 66, y: 100}
     isRaining: 0
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 0.5, y: 1.5}
+    cloudAlphaRange: {x: 0, y: 25}
     fogStrength: 0.0075
     wetness: 0
     snowiness: 0
     weatherParticles: []
     clips:
-    - {fileID: 8300000, guid: 0652e26d183e21344af5cb68583e510f, type: 3}
     - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
+    - {fileID: 8300000, guid: 598546f313b673242b1450968acd89ad, type: 3}
     pitch: 1
     volume: 0.6
   - weatherCondition: Sprinkling
     tempRange: {x: 0, y: 100}
-    chanceOfRainRange: {x: 0, y: 33}
+    rainRange: {x: 0, y: 30}
     isRaining: 1
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 3, y: 4}
+    cloudAlphaRange: {x: 0, y: 15}
     fogStrength: 0.002
     wetness: 1
     snowiness: 0
@@ -1673,9 +1654,14 @@ MonoBehaviour:
     volume: 0.3
   - weatherCondition: Raining
     tempRange: {x: 0, y: 100}
-    chanceOfRainRange: {x: 33, y: 66}
+    rainRange: {x: 30, y: 60}
     isRaining: 1
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 2.5, y: 3.5}
+    cloudAlphaRange: {x: 0, y: 0}
     fogStrength: 0.0075
     wetness: 3
     snowiness: 0
@@ -1689,9 +1675,14 @@ MonoBehaviour:
     volume: 0.6
   - weatherCondition: Storming
     tempRange: {x: 0, y: 100}
-    chanceOfRainRange: {x: 66, y: 100}
+    rainRange: {x: 60, y: 100}
     isRaining: 1
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 0.5, y: 1.5}
+    cloudAlphaRange: {x: 5, y: 25}
     fogStrength: 0.01
     wetness: 5
     snowiness: 0
@@ -1708,33 +1699,42 @@ MonoBehaviour:
     volume: 1
   - weatherCondition: Light Snowfall
     tempRange: {x: -100, y: 0}
-    chanceOfRainRange: {x: 0, y: 33}
+    rainRange: {x: 0, y: 30}
     isRaining: 1
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 3, y: 4}
+    cloudAlphaRange: {x: 0, y: 25}
     fogStrength: 0.01
     wetness: 0
-    snowiness: 0.3
+    snowiness: 0.2
     weatherParticles:
     - particleSystem: {fileID: 0}
-      particleAmount: 200
-      noiseStrength: 0.5
+      particleAmount: 500
+      noiseStrength: 1
     clips:
     - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
-    - {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
+    - {fileID: 8300000, guid: 598546f313b673242b1450968acd89ad, type: 3}
     pitch: 1
     volume: 0.2
   - weatherCondition: Heavy Snowfall
     tempRange: {x: -100, y: 0}
-    chanceOfRainRange: {x: 33, y: 66}
+    rainRange: {x: 30, y: 60}
     isRaining: 1
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 2.5, y: 3.5}
-    fogStrength: 0.05
+    cloudAlphaRange: {x: 5, y: 25}
+    fogStrength: 0.03
     wetness: 0
     snowiness: 0.6
     weatherParticles:
     - particleSystem: {fileID: 0}
-      particleAmount: 700
-      noiseStrength: 2
+      particleAmount: 2000
+      noiseStrength: 3
     clips:
     - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
     - {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
@@ -1742,25 +1742,33 @@ MonoBehaviour:
     volume: 0.5
   - weatherCondition: Snowstorm
     tempRange: {x: -100, y: 0}
-    chanceOfRainRange: {x: 66, y: 100}
+    rainRange: {x: 60, y: 100}
     isRaining: 1
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 0.5, y: 1.5}
-    fogStrength: 0.1
+    cloudAlphaRange: {x: 10, y: 25}
+    fogStrength: 0.05
     wetness: 0
     snowiness: 1
     weatherParticles:
     - particleSystem: {fileID: 0}
-      particleAmount: 1500
-      noiseStrength: 5
+      particleAmount: 5000
+      noiseStrength: 7
     clips:
     - {fileID: 8300000, guid: 0f030e3e27811534c8d8f170419ac0cb, type: 3}
     pitch: 1
     volume: 1
   - weatherCondition: Scorching - Clear
     tempRange: {x: 30, y: 100}
-    chanceOfRainRange: {x: 0, y: 33}
+    rainRange: {x: 0, y: 30}
     isRaining: 0
+    activeClouds:
+    - {fileID: 0}
     cloudPowerRange: {x: 4.5, y: 5}
+    cloudAlphaRange: {x: 0, y: 15}
     fogStrength: 0.001
     wetness: 0
     snowiness: 0
@@ -1769,15 +1777,19 @@ MonoBehaviour:
       particleAmount: 10
       noiseStrength: 0
     clips:
-    - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
     - {fileID: 8300000, guid: 0652e26d183e21344af5cb68583e510f, type: 3}
+    - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
     pitch: 1
     volume: 0.2
   - weatherCondition: Scorching - Cloudy
     tempRange: {x: 30, y: 100}
-    chanceOfRainRange: {x: 33, y: 66}
+    rainRange: {x: 30, y: 60}
     isRaining: 0
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 2.5, y: 3.5}
+    cloudAlphaRange: {x: 0, y: 20}
     fogStrength: 0.001
     wetness: 0
     snowiness: 0
@@ -1792,9 +1804,14 @@ MonoBehaviour:
     volume: 0.4
   - weatherCondition: Scorching - Overcast
     tempRange: {x: 30, y: 100}
-    chanceOfRainRange: {x: 66, y: 100}
+    rainRange: {x: 60, y: 100}
     isRaining: 0
+    activeClouds:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     cloudPowerRange: {x: 0.5, y: 1.5}
+    cloudAlphaRange: {x: 5, y: 25}
     fogStrength: 0.001
     wetness: 0
     snowiness: 0
@@ -1803,12 +1820,28 @@ MonoBehaviour:
       particleAmount: 10
       noiseStrength: 0
     clips:
-    - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
     - {fileID: 8300000, guid: 0652e26d183e21344af5cb68583e510f, type: 3}
+    - {fileID: 8300000, guid: bf5683e2c57093545b806a3f235f612c, type: 3}
     pitch: 1
     volume: 0.6
-  cloudRenderer: {fileID: 0}
+  cloudRenderer:
+  - cloudRenderer: {fileID: 0}
+    cloudPower: 0
+    cloudAlpha: 0
+    baseAlpha: 0
+  - cloudRenderer: {fileID: 0}
+    cloudPower: 0
+    cloudAlpha: 0
+    baseAlpha: 0
+  - cloudRenderer: {fileID: 0}
+    cloudPower: 0
+    cloudAlpha: 0
+    baseAlpha: 0
   weatherAudio: {fileID: 0}
+  toggleTempUI: 1
   tempText: {fileID: 0}
-  chanceOfRainText: {fileID: 0}
+  toggleRainUI: 1
+  rainText: {fileID: 0}
+  toggleWeatherUI: 1
   weatherConditionText: {fileID: 0}
+  showDebugLogs: 0

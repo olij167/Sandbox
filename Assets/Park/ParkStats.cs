@@ -80,7 +80,7 @@ public class ParkStats : MonoBehaviour
 
     public void TrackObject(GameObject trackedObject)
     {
-        Debug.Log("tracking " + trackedObject.name);
+        //Debug.Log("tracking " + trackedObject.name);
         for (int i = 0; i < currentTrackedObjects.Count; i++)
         {
             //if (currentTrackedObjects[i].trackedObject == null)
@@ -161,7 +161,7 @@ public class ParkStats : MonoBehaviour
 
     public void CheckRelatedUnlocks(GameObject newTrackedObj) // only check the status of unlockable objects which require the newly tracked object
     {
-        Debug.Log("Checking related unlocks for " + newTrackedObj.name);
+        //Debug.Log("Checking related unlocks for " + newTrackedObj.name);
         for (int i = 0; i < unlockableObjects.Count; i++) // for each unlockable
         {
             if (unlockableObjects[i].requirements != null && unlockableObjects[i].requirements.Count > 0)
@@ -254,7 +254,7 @@ public class ParkStats : MonoBehaviour
                     else
                     {
                         requirement.requiredAmountMet = false;
-                        Debug.Log(unlockableName + " requires more " + currentTrackedObjects[i].elementName + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
+                       // Debug.Log(unlockableName + " requires more " + currentTrackedObjects[i].elementName + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
                         return false; // the requirements arent met
                     }
                 }
@@ -269,7 +269,7 @@ public class ParkStats : MonoBehaviour
                     {
                         requirement.requiredAmountMet = false;
 
-                        Debug.Log(unlockableName + " requires less " + requirement.requiredObject.name + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
+                       // Debug.Log(unlockableName + " requires less " + requirement.requiredObject.name + " to unlock ~ " + "[" + currentTrackedObjects[i].objectInstances.Count + "/" + requirement.requiredAmount + "]");
                         return false; // the requirements arent met
                     }
                 }
@@ -323,7 +323,7 @@ public class ParkStats : MonoBehaviour
             else
             {
                 requirement.requiredAmountMet = false;
-                Debug.Log(requirement.groupName + " requires more objects to unlock ~ " + "[" + requirement.cumulativeCount + "/" + requirement.requiredAmount + "]");
+                //Debug.Log(requirement.groupName + " requires more objects to unlock ~ " + "[" + requirement.cumulativeCount + "/" + requirement.requiredAmount + "]");
                 return false; // the requirements arent met
             }
         }
@@ -337,7 +337,7 @@ public class ParkStats : MonoBehaviour
             {
                 requirement.requiredAmountMet = false;
 
-                Debug.Log(requirement.groupName + " requires less objects to unlock ~ " + "[" + requirement.cumulativeCount + "/" + requirement.requiredAmount + "]");
+               // Debug.Log(requirement.groupName + " requires less objects to unlock ~ " + "[" + requirement.cumulativeCount + "/" + requirement.requiredAmount + "]");
                 return false; // the requirements arent met
             }
         }

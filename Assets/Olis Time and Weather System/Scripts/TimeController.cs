@@ -320,8 +320,18 @@ namespace TimeWeather
                             else
                                 timeString = timeHours.ToString("00") + ":" + timeMinutes.ToString("00");
 
-                            if (timeText != null)
-                                timeText.text = timeString + " am";
+                            if (timeString.Contains(" pm"))
+                            {
+                                while (timeString.EndsWith(" pm"))
+                                {
+                                    timeString = timeString.Substring(0, timeString.Length - " pm".Length);
+                                }
+                            }
+
+                            if (!timeString.Contains(" am"))
+                            {
+                                timeString += " am";
+                            }
                         }
                         else if (timeOfDay > 12 && timeOfDay < 13)
                         {
@@ -330,8 +340,18 @@ namespace TimeWeather
                             else
                                 timeString = timeHours.ToString("00") + ":" + timeMinutes.ToString("00");
 
-                            if (timeText != null)
-                                timeText.text = timeString + " pm";
+                            if (timeString.Contains(" am"))
+                            {
+                                while (timeString.EndsWith(" am"))
+                                {
+                                    timeString = timeString.Substring(0, timeString.Length - " am".Length);
+                                }
+                            }
+
+                            if (!timeString.Contains(" pm"))
+                            {
+                                timeString += " pm";
+                            }
                         }
                         else
                         {
@@ -340,15 +360,20 @@ namespace TimeWeather
                             else
                                 timeString = (timeHours - 12).ToString("00") + ":" + timeMinutes.ToString("00");
 
-                            if (timeText != null)
-                                timeText.text = timeString + " pm";
-
-
-                            if (timeOfDay >= 23.9f)
+                            if (timeString.Contains(" am"))
                             {
-                                isNewDay = true;
-                                //timeOfDaySlider.value = 0f;
+                                while (timeString.EndsWith(" am"))
+                                {
+                                    timeString = timeString.Substring(0, timeString.Length - " am".Length);
+                                }
                             }
+
+                            if (!timeString.Contains(" pm"))
+                            {
+                                timeString += " pm";
+                            }
+
+
                         }
                     }
                     else
@@ -361,6 +386,13 @@ namespace TimeWeather
                         if (timeText != null)
                             timeText.text = timeString;
                     }
+                }
+
+                if (timeOfDay >= 23.99f)
+                {
+                    isNewDay = true;
+                    timeOfDay = 0;
+                    //timeOfDaySlider.value = 0f;
                 }
 
                 if (isNewDay && timeOfDay < 1f)

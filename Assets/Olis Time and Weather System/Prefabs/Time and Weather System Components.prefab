@@ -127,10 +127,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dense CloudMesh
       objectReference: {fileID: 0}
+    - target: {fileID: 760191666470174338, guid: 4efab63962e24a748a3775c564e2b5f8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
         type: 3}
       propertyPath: m_Name
       value: Dense Cloud Plane
+      objectReference: {fileID: 0}
+    - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
         type: 3}
@@ -252,10 +262,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sparse CloudMesh
       objectReference: {fileID: 0}
+    - target: {fileID: 760191666470174338, guid: 4efab63962e24a748a3775c564e2b5f8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
         type: 3}
       propertyPath: m_Name
       value: Sparse Cloud Plane
+      objectReference: {fileID: 0}
+    - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
         type: 3}
@@ -3349,12 +3369,17 @@ PrefabInstance:
     - target: {fileID: 760191666470174338, guid: 4efab63962e24a748a3775c564e2b5f8,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
         type: 3}
       propertyPath: m_Name
       value: Cloud Plane
+      objectReference: {fileID: 0}
+    - target: {fileID: 4528205919334964388, guid: 4efab63962e24a748a3775c564e2b5f8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8743452463889552044, guid: 4efab63962e24a748a3775c564e2b5f8,
         type: 3}

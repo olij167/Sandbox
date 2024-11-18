@@ -163,12 +163,12 @@ public class SpawnObjects : MonoBehaviour
 
         if (count < spawnNumPerPrefab)
         {
-            Debug.Log("Can Spawn " + prefab.name + ". [" + count +"/" + spawnNumPerPrefab + "]");
+           // Debug.Log("Can Spawn " + prefab.name + ". [" + count +"/" + spawnNumPerPrefab + "]");
             return true;
         }
         else
         {
-            Debug.Log(prefab.name + " spawn limit reached. [" + count + "/" + spawnNumPerPrefab + "]");
+           // Debug.Log(prefab.name + " spawn limit reached. [" + count + "/" + spawnNumPerPrefab + "]");
             return false;
         }
 

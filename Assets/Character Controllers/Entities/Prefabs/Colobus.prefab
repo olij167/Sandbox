@@ -413,6 +413,16 @@ MonoBehaviour:
     modifiedValue: 0
     baseValue: 0.2
     modifiers: []
+  lootRange: {x: 1, y: 3}
+  lootDrops:
+  - loot: {fileID: 360447425741735862, guid: 4aac05bb6ff5b6b4097b81f0841eced0, type: 3}
+    rarity: 100
+  - loot: {fileID: 1855645756742582301, guid: e3213e73d8bf8144b8b6b9566dc3f890, type: 3}
+    rarity: 50
+  - loot: {fileID: 228206033241381358, guid: 0c54dc05c8c1cc84499d797303dc0d24, type: 3}
+    rarity: 50
+  - loot: {fileID: 2704561806897300530, guid: 48ee29704bd411d40bd9c83132bc52d5, type: 3}
+    rarity: 50
   experienceItem: {fileID: 969995495694254771, guid: 5da0f558efa612948bf4d612b73db09f,
     type: 3}
   isDead: 0
