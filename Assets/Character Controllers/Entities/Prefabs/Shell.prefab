@@ -391,6 +391,7 @@ MonoBehaviour:
     m_Bits: 1126
   followBehind: 0
   followDistance: 1
+  affection: 0
   currentFocus: 0
   target:
     interestingObject: {fileID: 0}
@@ -422,6 +423,7 @@ MonoBehaviour:
       type: 3}
     healthRecovery: 40
     eatingTime: 5
+  foodSourceList: []
   pointsOfInterest:
   - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
       type: 3}
@@ -467,7 +469,9 @@ MonoBehaviour:
     priority: 0
     focusType: 0
   homeType: 0
-  canCreateHome: 0
+  canCreateHome: 1
+  homePrefab: {fileID: 5439233912920199269, guid: a8304d3b477731446aa78f4a6b6bb3e3,
+    type: 3}
   spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
@@ -577,7 +581,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74922a88eb0dfb846aa3048cd8c18c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 6488547191216396015}
+  entityMeshes:
+  - {fileID: 9154985659299587349}
+  originalColour: {r: 0, g: 0, b: 0, a: 0}
+  damageColour: {r: 0.49056602, g: 0, b: 0, a: 0}
+  healthUISmoothing: 0.5
   nameTag: {fileID: 6488547190499376644}
   sleepParticles: {fileID: 1402487948381732657}
   excitedParticles: {fileID: 2084623981221486410}
@@ -1062,7 +1070,7 @@ RectTransform:
   m_Father: {fileID: 6488547190988238738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1156,7 +1164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6488547191216395536
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1959,6 +1967,12 @@ PrefabInstance:
 --- !u!4 &9150177726285728815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4544219117696442, guid: e2aafa8770d34a9591b41bedf4e318ba,
+    type: 3}
+  m_PrefabInstance: {fileID: 9145635297633597845}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &9154985659299587349 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 137034519132871808, guid: e2aafa8770d34a9591b41bedf4e318ba,
     type: 3}
   m_PrefabInstance: {fileID: 9145635297633597845}
   m_PrefabAsset: {fileID: 0}

@@ -25,7 +25,7 @@ public class PlantController : MonoBehaviour
     public bool isDead;
     private bool destroyStarted;
 
-    public bool destroyWhenNotPlanted;
+    public bool destroyWhenNotPlanted = true;
     public float destroyDelay = 10f;
 
     public PlantRequirements requirements;
@@ -208,6 +208,18 @@ public class PlantController : MonoBehaviour
             }
 
             takenProducePositionList = new List<int>();
+        }
+
+    }
+
+    private void Start()
+    {
+
+        if (transform.root.gameObject.name.Contains("Player"))
+        {
+            Debug.Log("Plant is just a visual");
+            planted = false;
+            destroyWhenNotPlanted = false;
         }
     }
 

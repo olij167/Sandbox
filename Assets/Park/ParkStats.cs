@@ -71,7 +71,7 @@ public class ParkStats : MonoBehaviour
 
     private void Start()
     {
-        spawnObjects = GetComponent<SpawnObjects>();
+        //spawnObjects = GetComponent<SpawnObjects>();
 
         CheckAllUnlocks();
 
@@ -359,8 +359,75 @@ public class ParkStats : MonoBehaviour
 
             popUpText.SetAndDisplayPopUp(unlockable.unlockableObject.name + " has appeared in the park");
 
-            spawnObjects.prefabs.Add(unlockable.unlockableObject);
+            //spawnObjects.prefabs.Add(unlockable.unlockableObject);
+
+            GameObject spawnerObj = new GameObject(unlockable.unlockableName + " Spawner");
+            SpawnObjects spawner = spawnerObj.AddComponent<SpawnObjects>();
+
+            spawner.transform.parent = transform;
+            spawner.transform.position = new Vector3(0, 15, 0);
+            spawner.spawnInRadius = true;
+            spawner.spawnNumPerPrefab = 1;
+            spawner.prefabs = new List<GameObject> { unlockable.unlockableObject };
+            spawner.spawnedObjects = new List<GameObject> ();
+            spawner.minYPos = 10f;
+
+            bool pointSet = false;
+
+            if (!pointSet)
+            {
+                for (int i = 0; i < currentTrackedObjects.Count; i++)
+                {
+                    if (!pointSet)
+                    {
+                        for (int j = 0; j < unlockable.requirements.Count; j++)
+                        {
+                            if (!pointSet)
+                            {
+                                if (currentTrackedObjects[i].elementName.Contains(unlockable.requirements[j].requiredObject.name))
+                                {
+                                    spawner.spawnPoint = currentTrackedObjects[i].objectInstances[Random.Range(0, currentTrackedObjects[i].objectInstances.Count)].transform;
+
+                                    pointSet = true;
+                                    break;
+                                }
+                            }
+                            else break;
+
+                        }
+                    }
+                    else break;
+
+                    for (int j = 0; j < unlockable.groupRequirements.Count; j++)
+                    {
+                        if (!pointSet)
+                        {
+                            for (int k = 0; k < unlockable.groupRequirements[j].requiredObjectsGroup.Count; k++)
+                            {
+                                if (!pointSet)
+                                {
+                                    if (currentTrackedObjects[i].elementName.Contains(unlockable.groupRequirements[j].requiredObjectsGroup[k].name))
+                                    {
+                                        spawner.spawnPoint = currentTrackedObjects[i].objectInstances[Random.Range(0, currentTrackedObjects[i].objectInstances.Count)].transform;
+
+                                        pointSet = true;
+                                        break;
+                                    }
+                                }
+                                else break;
+                            }
+                        }
+                        else break;
+                    }
+                }
+            }
+
+            spawner.spawningActive = true;
+
+
             unlockable.isUnlocked = true;
+
+
         }
     }
 
@@ -370,7 +437,15 @@ public class ParkStats : MonoBehaviour
         {
             unlockable.isUnlocked = false;
 
-            unlockableObjects.Remove(unlockable);
+            //unlockableObjects.Remove(unlockable);
+            foreach (Transform c in transform)
+            {
+                if (c.GetComponent<SpawnObjects>() != null && c.GetComponent<SpawnObjects>().prefabs.Contains(unlockable.unlockableObject))
+                {
+                    Destroy(c.gameObject);
+                }
+            }
+
             spawnObjects.prefabs.Remove(unlockable.unlockableObject);
 
             popUpText.SetAndDisplayPopUp(unlockable.unlockableObject.name + " has disappeared from the park");

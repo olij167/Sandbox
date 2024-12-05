@@ -9,7 +9,10 @@ public class EntityUI : MonoBehaviour
     private EntityController entityController;
     private EntityStats entityStats;
 
-    public Slider healthBar;
+    //public Slider healthBar;
+    public List<SkinnedMeshRenderer> entityMeshes;
+    public Color originalColour, damageColour;
+    public float healthUISmoothing = 0.5f;
 
     public TextMeshProUGUI nameTag;
 
@@ -22,17 +25,21 @@ public class EntityUI : MonoBehaviour
 
     private void Awake()
     {
+        originalColour = entityMeshes[0].material.color;
         entityController = GetComponent<EntityController>();
         entityStats = GetComponent<EntityStats>();
 
-        healthBar.maxValue = entityStats.maxHealth.GetValue();
+        //healthBar.maxValue = entityStats.maxHealth.GetValue();
 
         nameTag.text = entityController.entityInfo.entityName;
     }
 
     private void Update()
     {
-        healthBar.value = Mathf.Lerp(healthBar.value, entityStats.currentHealth, Time.deltaTime * 0.5f);
+        //if (healthBar.value != entityStats.currentHealth)
+        //    healthBar.value = Mathf.Lerp(healthBar.value, entityStats.currentHealth, Time.deltaTime * healthUISmoothing);
+        foreach(SkinnedMeshRenderer meshRenderer in entityMeshes)
+            meshRenderer.material.color = Color.Lerp(damageColour, originalColour, entityStats.currentHealth / entityStats.maxHealth.GetValue());
 
         if (entityController.isAsleep) // sleep particles
         {

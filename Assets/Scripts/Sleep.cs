@@ -84,6 +84,8 @@ public class Sleep : MonoBehaviour
             float timeUntilNewDay = 23.99f - timeController.timeOfDay;
             timeController.timeOfDay += timeUntilNewDay;
 
+           
+
             yield return new WaitUntil(() => timeController.currentDay != today);
 
             Debug.Log("New Day, continue progressing time");
@@ -94,8 +96,32 @@ public class Sleep : MonoBehaviour
             }
 
             Debug.Log("Time to wake up");
-            yield return null;
         }
+
+        foreach (EntityController e in FindObjectsOfType<EntityController>())
+        {
+            e.entityInfo.age += sleepDuration;
+        }
+
+        foreach (PlantController p in FindObjectsOfType<PlantController>())
+        {
+            p.age += sleepDuration;
+        }
+        
+        foreach (ProduceController p in FindObjectsOfType<ProduceController>())
+        {
+            p.age += sleepDuration;
+        }
+
+        foreach (ProduceInInventory p in FindObjectsOfType<ProduceInInventory>())
+        {
+            for (int i = 0; i < p.produceAgesInStack.Count; i++)
+            {
+                p.produceAgesInStack[i] += sleepDuration;
+            }
+        }
+
+
         //fade back
     }
 }

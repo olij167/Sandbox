@@ -46,16 +46,16 @@ public class GridXZ<TGridObject> {
             }
         }
 
-        bool showDebug = false;
+        bool showDebug = true;
 
         if (showDebug) {
-            TextMesh[,] debugTextArray = new TextMesh[width, height];
+            //TextMesh[,] debugTextArray = new TextMesh[width, height];
 
             for (int x = 0; x < gridArray.GetLength(0); x++) {
                 for (int z = 0; z < gridArray.GetLength(1); z++) {
-                    debugTextArray[x, z] = WorldText.CreateWorldText(gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, 25, Color.yellow, TextAnchor.MiddleCenter, TextAlignment.Center);
-                    debugTextArray[x, z].transform.localScale = Vector3.one * .13f;
-                    debugTextArray[x, z].transform.eulerAngles = new Vector3(90, 0, 0);
+                    //debugTextArray[x, z] = WorldText.CreateWorldText(gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, 25, Color.yellow, TextAnchor.MiddleCenter, TextAlignment.Center);
+                    //debugTextArray[x, z].transform.localScale = Vector3.one * .13f;
+                    //debugTextArray[x, z].transform.eulerAngles = new Vector3(90, 0, 0);
                     Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.yellow, 100f);
                     Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x + 1, z), Color.yellow, 100f);
                 }
@@ -64,7 +64,7 @@ public class GridXZ<TGridObject> {
             Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.yellow, 100f);
 
             OnGridObjectChanged += (object sender, OnGridObjectChangedEventArgs eventArgs) => {
-                debugTextArray[eventArgs.x, eventArgs.z].text = gridArray[eventArgs.x, eventArgs.z]?.ToString();
+                //debugTextArray[eventArgs.x, eventArgs.z].text = gridArray[eventArgs.x, eventArgs.z]?.ToString();
             };
         }
     }
@@ -91,11 +91,11 @@ public class GridXZ<TGridObject> {
     //    return new Vector3(x, 0, z) * cellSize +
     //}
 
-    public Vector3 GetRandomPosition()
+    public Vector3 GetRandomPosition(float y)
     {
         int randX = UnityEngine.Random.Range(0, width);
         int randZ = UnityEngine.Random.Range(0, height);
-        return new Vector3(randX, 0, randZ) * cellSize;
+        return GetWorldPosition (randX, randZ);
     }
 
     public void GetXZ(Vector3 worldPosition, out int x, out int z) {

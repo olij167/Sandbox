@@ -176,6 +176,7 @@ MonoBehaviour:
     m_Bits: 1126
   followBehind: 0
   followDistance: 1
+  affection: 0
   currentFocus: 0
   target:
     interestingObject: {fileID: 0}
@@ -231,6 +232,7 @@ MonoBehaviour:
       type: 3}
     healthRecovery: 5
     eatingTime: 1
+  foodSourceList: []
   pointsOfInterest:
   - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
       type: 3}
@@ -324,7 +326,9 @@ MonoBehaviour:
     priority: 0
     focusType: 0
   homeType: 5
-  canCreateHome: 0
+  canCreateHome: 1
+  homePrefab: {fileID: 5873841810435530662, guid: fe0bd9143382f0c4abf8495442c9146c,
+    type: 3}
   spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
@@ -455,7 +459,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74922a88eb0dfb846aa3048cd8c18c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 724301088952345488}
+  entityMeshes:
+  - {fileID: 698031671488346769}
+  - {fileID: 175187087058608710}
+  - {fileID: 8746777740230604098}
+  - {fileID: 7418169054701464293}
+  originalColour: {r: 0, g: 0, b: 0, a: 0}
+  damageColour: {r: 0.49056602, g: 0, b: 0, a: 0}
+  healthUISmoothing: 0.5
   nameTag: {fileID: 1903763728063303863}
   sleepParticles: {fileID: 7911680484084021731}
   excitedParticles: {fileID: 8422529910713578794}
@@ -604,7 +615,7 @@ RectTransform:
   m_Father: {fileID: 412940150341286796}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -662,7 +673,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6613672865510786570
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1350,17 +1361,17 @@ PrefabInstance:
     - target: {fileID: 6554921205446910608, guid: 395a41a60f8cd0a45b4d00b92225d2c1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.041
       objectReference: {fileID: 0}
     - target: {fileID: 6554921205446910608, guid: 395a41a60f8cd0a45b4d00b92225d2c1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.929
       objectReference: {fileID: 0}
     - target: {fileID: 6554921205446910608, guid: 395a41a60f8cd0a45b4d00b92225d2c1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.39
       objectReference: {fileID: 0}
     - target: {fileID: 6554921205446910608, guid: 395a41a60f8cd0a45b4d00b92225d2c1,
         type: 3}
@@ -1402,11 +1413,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Happy Particles
       objectReference: {fileID: 0}
-    - target: {fileID: 7258382046819477590, guid: 395a41a60f8cd0a45b4d00b92225d2c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1437,25 +1443,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Energy Particles
       objectReference: {fileID: 0}
-    - target: {fileID: 4647369479135369554, guid: 82ca5fd7390dc74499f3215adb27ad40,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6228638994193464806, guid: 82ca5fd7390dc74499f3215adb27ad40,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.041
       objectReference: {fileID: 0}
     - target: {fileID: 6228638994193464806, guid: 82ca5fd7390dc74499f3215adb27ad40,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.929
       objectReference: {fileID: 0}
     - target: {fileID: 6228638994193464806, guid: 82ca5fd7390dc74499f3215adb27ad40,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.39
       objectReference: {fileID: 0}
     - target: {fileID: 6228638994193464806, guid: 82ca5fd7390dc74499f3215adb27ad40,
         type: 3}
@@ -1583,9 +1584,33 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5129387731362449165}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &175187087058608710 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4990372448307651915, guid: 84b7c8441f160174fa5c6f94cf397f0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 5129387731362449165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &698031671488346769 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5656757442522119580, guid: 84b7c8441f160174fa5c6f94cf397f0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 5129387731362449165}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &3766133901034323196 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8317233869622344689, guid: 84b7c8441f160174fa5c6f94cf397f0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 5129387731362449165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &7418169054701464293 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2440281965448769000, guid: 84b7c8441f160174fa5c6f94cf397f0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 5129387731362449165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8746777740230604098 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4489511534093283919, guid: 84b7c8441f160174fa5c6f94cf397f0a,
     type: 3}
   m_PrefabInstance: {fileID: 5129387731362449165}
   m_PrefabAsset: {fileID: 0}
@@ -1600,17 +1625,17 @@ PrefabInstance:
     - target: {fileID: 1268600249757140795, guid: ea979d057ddf33a4abec6cf777f6eb93,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.041
       objectReference: {fileID: 0}
     - target: {fileID: 1268600249757140795, guid: ea979d057ddf33a4abec6cf777f6eb93,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.929
       objectReference: {fileID: 0}
     - target: {fileID: 1268600249757140795, guid: ea979d057ddf33a4abec6cf777f6eb93,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.39
       objectReference: {fileID: 0}
     - target: {fileID: 1268600249757140795, guid: ea979d057ddf33a4abec6cf777f6eb93,
         type: 3}
@@ -1652,11 +1677,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Curious Particles
       objectReference: {fileID: 0}
-    - target: {fileID: 3332798440885914663, guid: ea979d057ddf33a4abec6cf777f6eb93,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1685,17 +1705,17 @@ PrefabInstance:
     - target: {fileID: 1773951682063276286, guid: e920f30e9b142b948875409b1ecfee8d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.041
       objectReference: {fileID: 0}
     - target: {fileID: 1773951682063276286, guid: e920f30e9b142b948875409b1ecfee8d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.929
       objectReference: {fileID: 0}
     - target: {fileID: 1773951682063276286, guid: e920f30e9b142b948875409b1ecfee8d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.39
       objectReference: {fileID: 0}
     - target: {fileID: 1773951682063276286, guid: e920f30e9b142b948875409b1ecfee8d,
         type: 3}
@@ -1737,11 +1757,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Love Particles
       objectReference: {fileID: 0}
-    - target: {fileID: 2747264322463186157, guid: e920f30e9b142b948875409b1ecfee8d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1770,17 +1785,17 @@ PrefabInstance:
     - target: {fileID: 1176785182203818978, guid: 13eab5dd0462763439146e78ff2f8eb1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.041
       objectReference: {fileID: 0}
     - target: {fileID: 1176785182203818978, guid: 13eab5dd0462763439146e78ff2f8eb1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.929
       objectReference: {fileID: 0}
     - target: {fileID: 1176785182203818978, guid: 13eab5dd0462763439146e78ff2f8eb1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.39
       objectReference: {fileID: 0}
     - target: {fileID: 1176785182203818978, guid: 13eab5dd0462763439146e78ff2f8eb1,
         type: 3}

@@ -548,7 +548,7 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public void AddItemToInventory(InventoryItem item, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots, GameObject itemInWorld = null, ProduceController produceController = null)
+    public void AddItemToInventory(InventoryItem item, List<InventoryUIItem> inventory, ItemSlot[] inventorySlots, GameObject itemInWorld = null, ProduceController produceController = null, bool dontDestroyItem = false)
     {
         Debug.Log("Adding " + item.itemName + " to inventory");
         if (player.stats.weight + item.weight <= player.stats.maxWeight.GetValue())
@@ -654,7 +654,7 @@ public class PlayerInventory : MonoBehaviour
                             else Debug.Log(slotsWithItem[i].item.itemName + " isn't produce");
 
 
-                            if (itemInWorld != null && itemInWorld.GetComponent<ItemInWorld>())
+                            if (itemInWorld != null && itemInWorld.GetComponent<ItemInWorld>() && !dontDestroyItem)
                             {
                                 Destroy(itemInWorld);
 

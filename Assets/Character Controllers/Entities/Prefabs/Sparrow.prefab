@@ -299,6 +299,7 @@ MonoBehaviour:
     m_Bits: 1126
   followBehind: 0
   followDistance: 1
+  affection: 0
   currentFocus: 0
   target:
     interestingObject: {fileID: 0}
@@ -318,6 +319,7 @@ MonoBehaviour:
       type: 3}
     healthRecovery: 100
     eatingTime: 10
+  foodSourceList: []
   pointsOfInterest:
   - interestingObject: {fileID: 1379634594792329122, guid: dbddf0a1989d95e4f841b47d1da2ba89,
       type: 3}
@@ -355,7 +357,9 @@ MonoBehaviour:
     priority: 0
     focusType: 0
   homeType: 3
-  canCreateHome: 0
+  canCreateHome: 1
+  homePrefab: {fileID: 2448107185265676210, guid: aa38f73dbaa5cb94b8ad2360a0a41bf6,
+    type: 3}
   spawnedByHome: 0
   isAttacking: 0
   isPaused: 0
@@ -480,7 +484,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74922a88eb0dfb846aa3048cd8c18c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 1506951827147005941}
+  entityMeshes:
+  - {fileID: 1894963817592021249}
+  - {fileID: 1894963817429049927}
+  - {fileID: 1894963816567568778}
+  - {fileID: 1894963816938984785}
+  originalColour: {r: 0, g: 0, b: 0, a: 0}
+  damageColour: {r: 0.49056602, g: 0, b: 0, a: 0}
+  healthUISmoothing: 0.5
   nameTag: {fileID: 855370858498532931}
   sleepParticles: {fileID: 7730877907148046095}
   excitedParticles: {fileID: 4394819604849240309}
@@ -1025,7 +1036,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5526728777614754650
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1168,7 +1179,7 @@ RectTransform:
   m_Father: {fileID: 3113669773420974054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1559,6 +1570,30 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad4137f595ec8e2449cacca9df7d3735, type: 3}
+--- !u!137 &1894963816567568778 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6788538756691347373, guid: ad4137f595ec8e2449cacca9df7d3735,
+    type: 3}
+  m_PrefabInstance: {fileID: 4934255814198509095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1894963816938984785 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6788538756395232118, guid: ad4137f595ec8e2449cacca9df7d3735,
+    type: 3}
+  m_PrefabInstance: {fileID: 4934255814198509095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1894963817429049927 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6788538757959556192, guid: ad4137f595ec8e2449cacca9df7d3735,
+    type: 3}
+  m_PrefabInstance: {fileID: 4934255814198509095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1894963817592021249 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6788538757856321318, guid: ad4137f595ec8e2449cacca9df7d3735,
+    type: 3}
+  m_PrefabInstance: {fileID: 4934255814198509095}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &1894963818107018864 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 6788538757290762327, guid: ad4137f595ec8e2449cacca9df7d3735,

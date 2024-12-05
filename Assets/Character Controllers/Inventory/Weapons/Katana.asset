@@ -43,5 +43,5 @@ MonoBehaviour:
   armourModifier: 0
   attackDamageModifier: 25
   passiveDamageModifier: 9
-  knockBackModifier: 500
+  knockBackModifier: 10
   attackSpeedModifier: 0.2

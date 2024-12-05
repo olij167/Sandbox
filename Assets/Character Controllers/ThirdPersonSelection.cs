@@ -14,6 +14,8 @@ public class ThirdPersonSelection : MonoBehaviour
     public List<SelectedObjectType> interactions;
 
     public bool keyDown = false;
+    public bool leftMouseDown = false;
+
     public float inputTimer = 0;
 
     public GameObject selectedObject;
@@ -29,7 +31,7 @@ public class ThirdPersonSelection : MonoBehaviour
     [System.Serializable]
     public enum SelectedObjectType
     {
-        Item, Plant, Emote, Ability, Chest, Car, Chair, FloatingVehicle, SceneTransition, Door, Shop, Sleep
+        Item, Plant, Emote, Ability, Chest, Car, Chair, FloatingVehicle, SceneTransition, Door, Shop, Sleep, Rope, Entity
     }
 
     //[SerializeField] private bool isItem;
@@ -59,6 +61,8 @@ public class ThirdPersonSelection : MonoBehaviour
     [HideInInspector] public bool isDoorInteracted;
     [HideInInspector] public bool isShopInteracted;
     [HideInInspector] public bool isSleepInteracted;
+    [HideInInspector] public bool isRopeInteracted;
+    [HideInInspector] public bool isEntityInteracted;
 
 
     public TextMeshProUGUI interactPrompt1Text;
@@ -109,7 +113,8 @@ public class ThirdPersonSelection : MonoBehaviour
 
                 if (selectedObjects[firstInteractableIndex].GetComponent<Interactable>() || selectedObjects[firstInteractableIndex].transform.CompareTag("Climbable"))
                 {
-                    if (selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>())
+
+                    if (selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>() && (inventorySystem.selectedInventoryItem == null || selectedObjects[firstInteractableIndex] != inventorySystem.selectedInventoryItem.physicalItem))
                     {
                         //isItem = true;
                         if (selectedObjects[firstInteractableIndex].GetComponent<ProduceController>() && selectedObjects[firstInteractableIndex].GetComponent<ProduceController>().stillPlanted)
@@ -131,10 +136,43 @@ public class ThirdPersonSelection : MonoBehaviour
                         if (interactions.Contains(SelectedObjectType.Plant))
                         {
                             if (selectedObjects[firstInteractableIndex].GetComponent<ProduceController>().produceQuality != ProduceQuality.Growing)
-                                interactPrompt1Text.text = "[" + input1 + "] Harvest " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                            {
+                                for (int i = 0; i < interactions.Count; i++)
+                                {
+                                    if (interactions[i] == SelectedObjectType.Plant)
+                                        switch (i + 1)
+                                        {
+                                            case 1:
+                                                interactPrompt1Text.text = "[" + input1 + "] Harvest " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                                                break;
+                                            case 2:
+                                                interactPrompt2Text.text = "[" + input2 + "] Harvest " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                                                break;
+                                            case 3:
+                                                interactPrompt3Text.text = "[" + input3 + "] Harvest " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                                                break;
+                                        }
+                                }
+                            }
                             else
                             {
-                                interactPrompt1Text.text = selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName + " isn't ready to harvest yet";
+                                //interactPrompt1Text.text = selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName + " isn't ready to harvest yet";
+                                for (int i = 0; i < interactions.Count; i++)
+                                {
+                                    if (interactions[i] == SelectedObjectType.Plant)
+                                        switch (i + 1)
+                                        {
+                                            case 1:
+                                                interactPrompt1Text.text = selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName + " isn't ready to harvest yet";
+                                                break;
+                                            case 2:
+                                                interactPrompt2Text.text = selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName + " isn't ready to harvest yet";
+                                                break;
+                                            case 3:
+                                                interactPrompt3Text.text = selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName + " isn't ready to harvest yet";
+                                                break;
+                                        }
+                                }
 
                                 if (interactions.Contains(SelectedObjectType.Item)) interactions.Remove(SelectedObjectType.Item);
 
@@ -144,7 +182,22 @@ public class ThirdPersonSelection : MonoBehaviour
                         }
                         else
                         {
-                            interactPrompt1Text.text = "[" + input1 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                            for (int i = 0; i < interactions.Count; i++)
+                            {
+                                if (interactions[i] == SelectedObjectType.Item)
+                                    switch (i + 1)
+                                    {
+                                        case 1:
+                                            interactPrompt1Text.text = "[" + input1 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                                            break;
+                                        case 2:
+                                            interactPrompt2Text.text = "[" + input2 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                                            break;
+                                        case 3:
+                                            interactPrompt3Text.text = "[" + input3 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<ItemInWorld>().item.itemName;
+                                            break;
+                                    }
+                            }
                         }
                     }
                     else if (interactions.Contains(SelectedObjectType.Item)) interactions.Remove(SelectedObjectType.Item);
@@ -153,19 +206,51 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[firstInteractableIndex].GetComponent<EmoteInWorld>())
                     {
                         //isEmote = true;
-                            if (!interactions.Contains(SelectedObjectType.Emote))
+                        if (!interactions.Contains(SelectedObjectType.Emote))
                             interactions.Add(SelectedObjectType.Emote);
 
-                        interactPrompt1Text.text = "[" + input1 +  "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<EmoteInWorld>().emote.itemName + " Emote";
+                        for (int i = 0; i < interactions.Count; i++)
+                        {
+                            if (interactions[i] == SelectedObjectType.Emote)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        interactPrompt1Text.text = "[" + input1 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<EmoteInWorld>().emote.itemName + " Emote";
+                                        break;
+                                    case 2:
+                                        interactPrompt2Text.text = "[" + input2 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<EmoteInWorld>().emote.itemName + " Emote";
+                                        break;
+                                    case 3:
+                                        interactPrompt3Text.text = "[" + input3 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<EmoteInWorld>().emote.itemName + " Emote";
+                                        break;
+                                }
+                        }
                     }
                     else if (interactions.Contains(SelectedObjectType.Emote)) interactions.Remove(SelectedObjectType.Emote);
 
                     if (selectedObjects[firstInteractableIndex].GetComponent<AbilityInWorld>())
                     {
                         //isAbility = true;
-                            if (!interactions.Contains(SelectedObjectType.Ability))
+                        if (!interactions.Contains(SelectedObjectType.Ability))
                             interactions.Add(SelectedObjectType.Ability);
-                        interactPrompt1Text.text = "[" + input1 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<AbilityInWorld>().ability.itemName + " Ability";
+
+                        for (int i = 0; i < interactions.Count; i++)
+                        {
+                            if (interactions[i] == SelectedObjectType.Ability)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        interactPrompt1Text.text = "[" + input1 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<AbilityInWorld>().ability.itemName + " Ability";
+                                        break;
+                                    case 2:
+                                        interactPrompt2Text.text = "[" + input2 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<AbilityInWorld>().ability.itemName + " Ability";
+                                        break;
+                                    case 3:
+                                        interactPrompt3Text.text = "[" + input3 + "] Collect " + selectedObjects[firstInteractableIndex].GetComponent<AbilityInWorld>().ability.itemName + " Ability";
+                                        break;
+                                }
+
+                        }
                     }
                     else if (interactions.Contains(SelectedObjectType.Ability)) interactions.Remove(SelectedObjectType.Ability);
 
@@ -173,29 +258,33 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>())
                     {
                         //isChest = true;
-                            if (!interactions.Contains(SelectedObjectType.Chest))
+                        if (!interactions.Contains(SelectedObjectType.Chest))
                             interactions.Add(SelectedObjectType.Chest);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>().chestPanel.activeSelf)
-                                    interactPrompt1Text.text = "[" + input1 + "] Open Chest";
-                                else
-                                    interactPrompt1Text.text = "[" + input1 + "] Close Chest";
-                                break;
-                            case 2:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>().chestPanel.activeSelf)
-                                    interactPrompt2Text.text = "[" + input2 + "] Open Chest";
-                                else
-                                    interactPrompt2Text.text = "[" + input2 + "] Close Chest";
-                                break;
-                            case 3:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>().chestPanel.activeSelf)
-                                    interactPrompt3Text.text = "[" + input3 + "] Open Chest";
-                                else
-                                    interactPrompt3Text.text = "[" + input3 + "] Close Chest";
-                                break;
+                            if (interactions[i] == SelectedObjectType.Chest)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>().chestPanel.activeSelf)
+                                            interactPrompt1Text.text = "[" + input1 + "] Open Chest";
+                                        else
+                                            interactPrompt1Text.text = "[" + input1 + "] Close Chest";
+                                        break;
+                                    case 2:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>().chestPanel.activeSelf)
+                                            interactPrompt2Text.text = "[" + input2 + "] Open Chest";
+                                        else
+                                            interactPrompt2Text.text = "[" + input2 + "] Close Chest";
+                                        break;
+                                    case 3:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ChestInventory>().chestPanel.activeSelf)
+                                            interactPrompt3Text.text = "[" + input3 + "] Open Chest";
+                                        else
+                                            interactPrompt3Text.text = "[" + input3 + "] Close Chest";
+                                        break;
+                                }
                         }
                     }
                     else if (interactions.Contains(SelectedObjectType.Chest)) interactions.Remove(SelectedObjectType.Chest);
@@ -203,29 +292,33 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>())
                     {
                         //isCar = true;
-                            if (!interactions.Contains(SelectedObjectType.Car))
+                        if (!interactions.Contains(SelectedObjectType.Car))
                             interactions.Add(SelectedObjectType.Car);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>().beingDriven)
-                                    interactPrompt1Text.text = "[" + input1 + "] Enter Vehicle";
-                                else
-                                    interactPrompt1Text.text = "[" + input1 + "] Exit Vehicle";
-                                break;
-                            case 2:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>().beingDriven)
-                                    interactPrompt2Text.text = "[" + input2 + "] Enter Vehicle";
-                                else
-                                    interactPrompt2Text.text = "[" + input2 + "] Exit Vehicle";
-                                break;
-                            case 3:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>().beingDriven)
-                                    interactPrompt3Text.text = "[" + input3 + "] Enter Vehicle";
-                                else
-                                    interactPrompt3Text.text = "[" + input3 + "] Exit Vehicle";
-                                break;
+                            if (interactions[i] == SelectedObjectType.Car)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>().beingDriven)
+                                            interactPrompt1Text.text = "[" + input1 + "] Enter Vehicle";
+                                        else
+                                            interactPrompt1Text.text = "[" + input1 + "] Exit Vehicle";
+                                        break;
+                                    case 2:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>().beingDriven)
+                                            interactPrompt2Text.text = "[" + input2 + "] Enter Vehicle";
+                                        else
+                                            interactPrompt2Text.text = "[" + input2 + "] Exit Vehicle";
+                                        break;
+                                    case 3:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<WheelDrive>().beingDriven)
+                                            interactPrompt3Text.text = "[" + input3 + "] Enter Vehicle";
+                                        else
+                                            interactPrompt3Text.text = "[" + input3 + "] Exit Vehicle";
+                                        break;
+                                }
                         }
                     }
                     else if (interactions.Contains(SelectedObjectType.Car)) interactions.Remove(SelectedObjectType.Car);
@@ -233,60 +326,67 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[firstInteractableIndex].GetComponent<Chair>())
                     {
                         //isChair = true;
-                            if (!interactions.Contains(SelectedObjectType.Chair))
+                        if (!interactions.Contains(SelectedObjectType.Chair))
                             interactions.Add(SelectedObjectType.Chair);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                if (!selectedObjects[0].GetComponent<Chair>().isSitting)
-                                    interactPrompt1Text.text = "[" + input1 + "] Sit Down";
-                                else
-                                    interactPrompt1Text.text = "[" + input1 + "] Stand Up";
-                                break;
-                            case 2:
-                                if (!selectedObjects[0].GetComponent<Chair>().isSitting)
-                                    interactPrompt2Text.text = "[" + input2 + "] Sit Down";
-                                else
-                                    interactPrompt2Text.text = "[" + input2 + "] Stand Up";
-                                break;
-                            case 3:
-                                if (!selectedObjects[0].GetComponent<Chair>().isSitting)
-                                    interactPrompt3Text.text = "[" + input3 + "] Sit Down";
-                                else
-                                    interactPrompt3Text.text = "[" + input3 + "] Stand Up";
-                                break;
+                            if (interactions[i] == SelectedObjectType.Chair)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        if (!selectedObjects[0].GetComponent<Chair>().isSitting)
+                                            interactPrompt1Text.text = "[" + input1 + "] Sit Down";
+                                        else
+                                            interactPrompt1Text.text = "[" + input1 + "] Stand Up";
+                                        break;
+                                    case 2:
+                                        if (!selectedObjects[0].GetComponent<Chair>().isSitting)
+                                            interactPrompt2Text.text = "[" + input2 + "] Sit Down";
+                                        else
+                                            interactPrompt2Text.text = "[" + input2 + "] Stand Up";
+                                        break;
+                                    case 3:
+                                        if (!selectedObjects[0].GetComponent<Chair>().isSitting)
+                                            interactPrompt3Text.text = "[" + input3 + "] Sit Down";
+                                        else
+                                            interactPrompt3Text.text = "[" + input3 + "] Stand Up";
+                                        break;
+                                }
                         }
-
                     }
                     else if (interactions.Contains(SelectedObjectType.Chair)) interactions.Remove(SelectedObjectType.Chair);
 
                     if (selectedObjects[0].GetComponent<FloatingVehicle>())
                     {
                         //isFloatingVehicle = true;
-                            if (!interactions.Contains(SelectedObjectType.FloatingVehicle))
+                        if (!interactions.Contains(SelectedObjectType.FloatingVehicle))
                             interactions.Add(SelectedObjectType.FloatingVehicle);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<FloatingVehicle>().beingDriven)
-                                    interactPrompt1Text.text = "[" + input1 + "] Enter Vehicle";
-                                else
-                                    interactPrompt1Text.text = "[" + input1 + "] Exit Vehicle";
-                                break;
-                            case 2:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<FloatingVehicle>().beingDriven)
-                                    interactPrompt2Text.text = "[" + input2 + "] Enter Vehicle";
-                                else
-                                    interactPrompt2Text.text = "[" + input2 + "] Exit Vehicle";
-                                break;
-                            case 3:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<FloatingVehicle>().beingDriven)
-                                    interactPrompt3Text.text = "[" + input3 + "] Enter Vehicle";
-                                else
-                                    interactPrompt3Text.text = "[" + input3 + "] Exit Vehicle";
-                                break;
+                            if (interactions[i] == SelectedObjectType.FloatingVehicle)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<FloatingVehicle>().beingDriven)
+                                            interactPrompt1Text.text = "[" + input1 + "] Enter Vehicle";
+                                        else
+                                            interactPrompt1Text.text = "[" + input1 + "] Exit Vehicle";
+                                        break;
+                                    case 2:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<FloatingVehicle>().beingDriven)
+                                            interactPrompt2Text.text = "[" + input2 + "] Enter Vehicle";
+                                        else
+                                            interactPrompt2Text.text = "[" + input2 + "] Exit Vehicle";
+                                        break;
+                                    case 3:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<FloatingVehicle>().beingDriven)
+                                            interactPrompt3Text.text = "[" + input3 + "] Enter Vehicle";
+                                        else
+                                            interactPrompt3Text.text = "[" + input3 + "] Exit Vehicle";
+                                        break;
+                                }
                         }
                     }
                     else if (interactions.Contains(SelectedObjectType.FloatingVehicle)) interactions.Remove(SelectedObjectType.FloatingVehicle);
@@ -294,23 +394,24 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[0].GetComponent<SceneLoader>())
                     {
                         //isSceneTransition = true;
-                            if (!interactions.Contains(SelectedObjectType.SceneTransition))
+                        if (!interactions.Contains(SelectedObjectType.SceneTransition))
                             interactions.Add(SelectedObjectType.SceneTransition);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                interactPrompt1Text.text = "[" + input1 + "] Enter " + selectedObjects[0].GetComponent<SceneLoader>().sceneToLoad;
-
-                                break;
-                            case 2:
-                                interactPrompt2Text.text = "[" + input2 + "] Enter " + selectedObjects[0].GetComponent<SceneLoader>().sceneToLoad;
-
-                                break;
-                            case 3:
-                                interactPrompt3Text.text = "[" + input3 + "] Enter " + selectedObjects[0].GetComponent<SceneLoader>().sceneToLoad;
-
-                                break;
+                            if (interactions[i] == SelectedObjectType.SceneTransition)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        interactPrompt1Text.text = "[" + input1 + "] Enter " + selectedObjects[0].GetComponent<SceneLoader>().sceneToLoad;
+                                        break;
+                                    case 2:
+                                        interactPrompt2Text.text = "[" + input2 + "] Enter " + selectedObjects[0].GetComponent<SceneLoader>().sceneToLoad;
+                                        break;
+                                    case 3:
+                                        interactPrompt3Text.text = "[" + input3 + "] Enter " + selectedObjects[0].GetComponent<SceneLoader>().sceneToLoad;
+                                        break;
+                                }
                         }
                     }
                     else if (interactions.Contains(SelectedObjectType.SceneTransition)) interactions.Remove(SelectedObjectType.SceneTransition);
@@ -318,29 +419,33 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[0].GetComponent<ToggleDoor>())
                     {
                         //isDoor = true;
-                            if (!interactions.Contains(SelectedObjectType.Door))
+                        if (!interactions.Contains(SelectedObjectType.Door))
                             interactions.Add(SelectedObjectType.Door);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ToggleDoor>().isOpen)
-                                    interactPrompt1Text.text = "[" + input1 + "] Open Door";
-                                else
-                                    interactPrompt1Text.text = "[" + input1 + "] Close Door";
-                                break;
-                            case 2:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ToggleDoor>().isOpen)
-                                    interactPrompt2Text.text = "[" + input2 + "] Open Door";
-                                else
-                                    interactPrompt2Text.text = "[" + input2 + "] Close Door";
-                                break;
-                            case 3:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ToggleDoor>().isOpen)
-                                    interactPrompt3Text.text = "[" + input3 + "] Open Door";
-                                else
-                                    interactPrompt3Text.text = "[" + input3 + "] Close Door";
-                                break;
+                            if (interactions[i] == SelectedObjectType.Door)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ToggleDoor>().isOpen)
+                                            interactPrompt1Text.text = "[" + input1 + "] Open Door";
+                                        else
+                                            interactPrompt1Text.text = "[" + input1 + "] Close Door";
+                                        break;
+                                    case 2:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ToggleDoor>().isOpen)
+                                            interactPrompt2Text.text = "[" + input2 + "] Open Door";
+                                        else
+                                            interactPrompt2Text.text = "[" + input2 + "] Close Door";
+                                        break;
+                                    case 3:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ToggleDoor>().isOpen)
+                                            interactPrompt3Text.text = "[" + input3 + "] Open Door";
+                                        else
+                                            interactPrompt3Text.text = "[" + input3 + "] Close Door";
+                                        break;
+                                }
                         }
 
                     }
@@ -349,79 +454,142 @@ public class ThirdPersonSelection : MonoBehaviour
                     if (selectedObjects[0].GetComponent<ShopInventory>())
                     {
                         //isShop = true;
-                            if (!interactions.Contains(SelectedObjectType.Shop))
+                        if (!interactions.Contains(SelectedObjectType.Shop))
                             interactions.Add(SelectedObjectType.Shop);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)
-                                    interactPrompt1Text.text = "[" + input1 + "] Open Shop";
-                                else
-                                    interactPrompt1Text.text = "[" + input1 + "] Close Shop";
-                                break;
-                            case 2:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)
-                                    interactPrompt2Text.text = "[" + input2 + "] Open Shop";
-                                else
-                                    interactPrompt2Text.text = "[" + input2 + "] Close Shop";
-                                break;
-                            case 3:
-                                if (!selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)
-                                    interactPrompt3Text.text = "[" + input3 + "] Open Shop";
-                                else
-                                    interactPrompt3Text.text = "[" + input3 + "] Close Shop";
-                                break;
+                            if (interactions[i] == SelectedObjectType.Shop)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)
+                                            interactPrompt1Text.text = "[" + input1 + "] Open Shop";
+                                        else
+                                            interactPrompt1Text.text = "[" + input1 + "] Close Shop";
+                                        break;
+                                    case 2:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)
+                                            interactPrompt2Text.text = "[" + input2 + "] Open Shop";
+                                        else
+                                            interactPrompt2Text.text = "[" + input2 + "] Close Shop";
+                                        break;
+                                    case 3:
+                                        if (!selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.activeSelf || !selectedObjects[firstInteractableIndex].GetComponent<ShopInventory>().shopPanel.transform.parent.gameObject.activeSelf)
+                                            interactPrompt3Text.text = "[" + input3 + "] Open Shop";
+                                        else
+                                            interactPrompt3Text.text = "[" + input3 + "] Close Shop";
+                                        break;
+                                }
                         }
-
                     }
                     else if (interactions.Contains(SelectedObjectType.Shop)) interactions.Remove(SelectedObjectType.Shop);
 
                     if (selectedObjects[0].GetComponent<SleepObject>())
                     {
                         //isSleep = true;
-                            if (!interactions.Contains(SelectedObjectType.Sleep))
+                        if (!interactions.Contains(SelectedObjectType.Sleep))
                             interactions.Add(SelectedObjectType.Sleep);
 
-                        switch (interactions.Count)
+                        for (int i = 0; i < interactions.Count; i++)
                         {
-                            case 1:
-                                interactPrompt1Text.text = "[" + input1 + "] Sleep in " + selectedObjects[0].name;
-
-                                break;
-                            case 2:
-                                interactPrompt2Text.text = "[" + input2 + "] Sleep in " + selectedObjects[0].name;
-
-                                break;
-                            case 3:
-                                interactPrompt3Text.text = "[" + input3 + "] Sleep in " + selectedObjects[0].name;
-
-                                break;
+                            if (interactions[i] == SelectedObjectType.Sleep)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        interactPrompt1Text.text = "[" + input1 + "] Sleep in " + selectedObjects[0].name;
+                                        break;
+                                    case 2:
+                                        interactPrompt2Text.text = "[" + input2 + "] Sleep in " + selectedObjects[0].name;
+                                        break;
+                                    case 3:
+                                        interactPrompt3Text.text = "[" + input3 + "] Sleep in " + selectedObjects[0].name;
+                                        break;
+                                }
                         }
-
                     }
                     else if (interactions.Contains(SelectedObjectType.Sleep)) interactions.Remove(SelectedObjectType.Sleep);
-                }
 
-                if (Input.GetKeyDown(input1))
-                    keyDown = true;
-
-                if (keyDown)
-                {
-                    inputTimer += Time.deltaTime;
-                    if (inputTimer > 1f)
+                    if (selectedObjects[0].GetComponent<EntityController>())
                     {
-                        //put in here for held inputs
+                        if (!interactions.Contains(SelectedObjectType.Entity))
+                            interactions.Add(SelectedObjectType.Entity);
 
-                        inputTimer = 0f;
-                        keyDown = false;
+
+                    }
+                    else if (interactions.Contains(SelectedObjectType.Entity)) interactions.Remove(SelectedObjectType.Entity);
+
+                    if (selectedObjects[0].GetComponent<RopeEnd>() || selectedObjects[0].GetComponentInChildren<RopeEnd>())
+                    {
+                        //isSleep = true;
+                        if (!interactions.Contains(SelectedObjectType.Rope))
+                            interactions.Add(SelectedObjectType.Rope);
+
+                        for (int i = 0; i < interactions.Count; i++)
+                        {
+                            if (interactions[i] == SelectedObjectType.Rope)
+                                switch (i + 1)
+                                {
+                                    case 1:
+                                        interactPrompt1Text.text = "[LMB] Collect Rope";
+                                        break;
+                                    case 2:
+                                        interactPrompt2Text.text = "[LMB] Collect Rope";
+                                        break;
+                                    case 3:
+                                        interactPrompt3Text.text = "[LMB] Collect Rope";
+                                        break;
+                                }
+                        }
+                    }
+                    else if (interactions.Contains(SelectedObjectType.Rope)) interactions.Remove(SelectedObjectType.Rope);
+
+
+                    if (!selectedObjects[0].GetComponent<RopeEnd>() && !selectedObjects[0].GetComponentInChildren<RopeEnd>() && inventorySystem.selectedInventoryItem != null && inventorySystem.selectedInventoryItem.item.itemName.Contains("Rope"))
+                    {
+                        //if (interactions.Contains(SelectedObjectType.Rope)) interactions.Remove(SelectedObjectType.Rope);
+                        //Debug.Log("Can tie rope here, interaction text num = " + (interactions.Count + 1).ToString());
+                        switch (interactions.Count + 1)
+                        {
+                            case 1:
+                                interactPrompt1Text.text = "[LMB] Tie Rope";
+                                break;
+                            case 2:
+                                interactPrompt2Text.text = "[LMB] Tie Rope";
+                                break;
+                            case 3:
+                                interactPrompt3Text.text = "[LMB] Tie Rope";
+                                break;
+                        }
                     }
                 }
-                else if (inputTimer > 0)
-                {
 
-                    inputTimer = 0f;
-                }
+              
+
+               
+
+
+                //BELOW IS THE SCRIPT FOR HELD BUTTON INPUTS - TO BE IMPLEMENTED FULLY
+
+                //if (Input.GetKeyDown(input1))
+                //    keyDown = true;
+
+                //if (keyDown)
+                //{
+                //    inputTimer += Time.deltaTime;
+                //    if (inputTimer > 1f)
+                //    {
+                //        //put in here for held inputs
+
+                //        inputTimer = 0f;
+                //        keyDown = false;
+                //    }
+                //}
+                //else if (inputTimer > 0)
+                //{
+
+                //    inputTimer = 0f;
+                //}
 
 
                 if (Input.GetKeyDown(input1) && interactions.Count > 0)
@@ -438,6 +606,18 @@ public class ThirdPersonSelection : MonoBehaviour
                 {
                     TriggerInteraction(2);
 
+                }
+
+                if (Input.GetMouseButtonDown(0) && interactions.Contains(SelectedObjectType.Rope))
+                {
+                    for (int i = 0; i < interactions.Count; i++)
+                    {
+                        if (interactions[i] == SelectedObjectType.Rope)
+                        {
+                            TriggerInteraction(i);
+                            break;
+                        }
+                    }
                 }
 
                 if (selectedObjects[firstInteractableIndex] != null)
@@ -466,7 +646,7 @@ public class ThirdPersonSelection : MonoBehaviour
 
         }
 
-        if (selectedObject == null || selectedObject.CompareTag("Climbable"))
+        if ((selectedObject == null || selectedObject.CompareTag("Climbable"))) //&& (inventorySystem.selectedInventoryItem == null || !inventorySystem.selectedInventoryItem.item.itemName.Contains("Rope"))
         {
             interactPrompt1Text.text = "";
             interactPrompt2Text.text = "";
@@ -476,13 +656,28 @@ public class ThirdPersonSelection : MonoBehaviour
 
         }
 
-        if (interactions.Count < 3)
-            interactPrompt3Text.text = "";
-        if (interactions.Count < 2)
-            interactPrompt2Text.text = "";
-        if (interactions.Count < 1)
-            interactPrompt1Text.text = "";
-
+        if (inventorySystem.selectedInventoryItem == null || !inventorySystem.selectedInventoryItem.item.itemName.Contains("Rope"))
+        {
+            if (interactions.Count < 3)
+                interactPrompt3Text.text = "";
+            if (interactions.Count < 2)
+                interactPrompt2Text.text = "";
+            if (interactions.Count < 1)
+                interactPrompt1Text.text = "";
+        }
+        else if (inventorySystem.selectedInventoryItem != null && inventorySystem.selectedInventoryItem.item.itemName.Contains("Rope"))
+        {
+            if (interactions.Count == 1)
+            {
+                interactPrompt3Text.text = "";
+            }
+            else if (interactions.Count < 1)
+            {
+                interactPrompt3Text.text = "";
+                interactPrompt2Text.text = "";
+                interactPrompt1Text.text = "";
+            }
+        }
     }
 
     public void TriggerInteraction(int i)
@@ -583,6 +778,36 @@ public class ThirdPersonSelection : MonoBehaviour
             isSleepInteracted = true;
 
             selectedObject.GetComponent<SleepObject>().sleep.ToggleSleepPanel();
+        }
+
+     
+
+        if (interactions[i] == SelectedObjectType.Rope && (selectedObject.GetComponent<RopeEnd>() || selectedObject.GetComponentInChildren<RopeEnd>()))
+        {
+
+            if (selectedObject.GetComponent<RopeEnd>())
+            {
+
+                    selectedObject.GetComponent<RopeEnd>().ropeItem.CollectRopeEnd(selectedObject.GetComponent<RopeEnd>());
+                    isRopeInteracted = true;
+
+            }
+            else if (selectedObject.GetComponentInChildren<RopeEnd>())
+            {
+
+
+                    selectedObject.GetComponentInChildren<RopeEnd>().ropeItem.CollectRopeEnd(selectedObject.GetComponentInChildren<RopeEnd>());
+                    isRopeInteracted = true;
+               
+
+            }
+        }
+
+        if (interactions[i] == SelectedObjectType.Entity && selectedObject.GetComponent<EntityController>())
+        {
+            isEntityInteracted = true;
+
+            //Add entity interaction logic here
         }
 
         StartCoroutine(DelaySettingFalseVariables());
@@ -766,6 +991,18 @@ public class ThirdPersonSelection : MonoBehaviour
             yield return new WaitForSeconds(delayTime);
 
             isSleepInteracted = false;
+        }
+        if (isRopeInteracted)
+        {
+            yield return new WaitForSeconds(delayTime);
+
+            isRopeInteracted = false;
+        } 
+        if (isEntityInteracted)
+        {
+            yield return new WaitForSeconds(delayTime);
+
+            isEntityInteracted = false;
         }
     }
 }

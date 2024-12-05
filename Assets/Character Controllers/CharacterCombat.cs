@@ -93,42 +93,44 @@ public class CharacterCombat : MonoBehaviour
             Vector3 head = target.transform.position - transform.position;
             Vector3 dir = head / head.magnitude;
 
-            if (target.GetComponent<Rigidbody>())
+        if (target.GetComponent<Rigidbody>())
+        {
+            Rigidbody targetRB = target.GetComponent<Rigidbody>();
+            //Rigidbody targetRB = targetRB.GetComponent<Rigidbody>();
+
+            if (targetRB.GetComponent<EntityController>())
             {
-                Rigidbody targetRB = target.GetComponent<Rigidbody>();
-                //Rigidbody targetRB = targetRB.GetComponent<Rigidbody>();
+                EntityController enemy = targetRB.GetComponent<EntityController>();
 
-                if (targetRB.GetComponent<EntityController>())
-                {
-                    EntityController enemy = targetRB.GetComponent<EntityController>();
+                enemy.isPaused = true;
 
-                    enemy.isPaused = true;
+                enemy.animator.SetBool("TakeDamage", true);
 
-                    enemy.animator.SetBool("TakeDamage", true);
-
-                    targetRB.isKinematic = false;
-                Debug.Log(targetRB.gameObject.name + " is no longer kinematic");
+                //targetRB.isKinematic = false;
+                //Debug.Log(targetRB.gameObject.name + " is no longer kinematic");
 
 
 
             }
 
             if (!isPassive)
-                {
-                    targetRB.AddForce(dir * myStats.knockBack.GetValue(), ForceMode.Impulse);
-                    //Debug.Log("Applying " + myStats.knockBack.GetValue() + " Attack Knockback to " + targetRB.gameObject.name);
-                }
-                else
-                {
-                    targetRB.AddForce(dir * myStats.knockBack.GetValue() / 2f, ForceMode.Impulse);
-                    //Debug.Log("Applying " + myStats.knockBack.GetValue() / 2f + " Passive Knockback to " + targetRB.gameObject.name);
-                }
-                //yield return null;
+            {
+                targetRB.AddForce(dir * myStats.knockBack.GetValue(), ForceMode.Impulse);
+                //Debug.Log("Applying " + myStats.knockBack.GetValue() + " Attack Knockback to " + targetRB.gameObject.name);
+            }
+            else
+            {
+                targetRB.AddForce(dir * (myStats.knockBack.GetValue() * 0.25f), ForceMode.Impulse);
+                //Debug.Log("Applying " + myStats.knockBack.GetValue() / 2f + " Passive Knockback to " + targetRB.gameObject.name);
+            }
+            //yield return null;
 
-                yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(delay);
 
-            targetRB.isKinematic = true;
-            Debug.Log(targetRB.gameObject.name + " has been made kinematic");
+            targetRB.velocity = Vector3.zero;
+            targetRB.angularVelocity = Vector3.zero;
+            //targetRB.isKinematic = true;
+            //Debug.Log(targetRB.gameObject.name + " has been made kinematic");
 
 
         }

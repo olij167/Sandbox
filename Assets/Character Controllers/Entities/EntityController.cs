@@ -4,8 +4,9 @@ using TimeWeather;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
+using static PlacedObjectTypeSO;
 
-public class EntityController : MonoBehaviour
+public class EntityController : Interactable
 {
     public EntityInfo entityInfo;
 
@@ -38,6 +39,8 @@ public class EntityController : MonoBehaviour
     public bool followBehind;
     public float followDistance = 6f;
 
+    [Range(-1f, 1f)]public float affection = 0f;
+
     public Focus currentFocus;
 
     public PointOfInterest target;
@@ -45,14 +48,25 @@ public class EntityController : MonoBehaviour
     public List<PointOfInterest> detectedObjects;
 
     public List<Food> foodList;
+    public List<GameObject> foodSourceList;
     public List<PointOfInterest> pointsOfInterest;
-
 
     public PointOfInterest home;
     public HomeType homeType;
     public bool canCreateHome;
+    public PlacedObject homePrefab;
+    //public List<GameObject> idealSurroundings;
     public bool spawnedByHome;
 
+   // [field: ReadOnlyField] public HomeToCreate createdHome;
+
+    //[System.Serializable]
+    //public class HomeToCreate
+    //{
+    //    public GameObject homePrefab;
+
+    //    public List <GameObject> idealSurroundings;
+    //}
 
     [Header("States")]
     public bool isAttacking;
@@ -128,11 +142,11 @@ public class EntityController : MonoBehaviour
 
         transform.position = SetDistanceFromGround(transform.position);
 
-        if (GetDistanceFromGround() >= distanceFromGround)
-        {
-            rb.isKinematic = true;
-            Debug.Log(entityInfo.entityName + " has been made kinematic");
-        }
+        //if (GetDistanceFromGround() >= distanceFromGround)
+        //{
+        //    rb.isKinematic = true;
+        //    Debug.Log(entityInfo.entityName + " has been made kinematic");
+        //}
 
         StartCoroutine(DelaySettingHome());
     }
@@ -148,11 +162,34 @@ public class EntityController : MonoBehaviour
 
         if (GetDistanceFromGround() >= distanceFromGround)
         {
-            rb.isKinematic = true;
+            //rb.isKinematic = false;
             agent.enabled = true;
-            Debug.Log(entityInfo.entityName + " has been made kinematic");
+            //Debug.Log(entityInfo.entityName + " has been made not kinematic");
         }
     }
+
+    //public void GenerateHome()
+    //{
+    //    createdHome = new HomeToCreate();
+
+    //    createdHome.homePrefab = homePrefab;
+    //    createdHome.idealSurroundings = new List<GameObject>();
+
+    //    createdHome.idealSurroundings.AddRange(foodSourceList);
+    //    //createdHome.idealSurroundings.AddRange(idealSurroundings);
+
+    //    //int idealObjectCount = 0;
+        
+    //    GridBuildingSystem gBS = FindObjectOfType<GridBuildingSystem>();
+
+    //    //check available grid positions
+    //    // Spawn the home wherever has the highest idealObjectCount
+
+    //    List<GameObject> idealInstances = new List<GameObject>();
+
+       
+
+    //}
 
     private void Update()
     {
@@ -493,15 +530,67 @@ public class EntityController : MonoBehaviour
 
         if (canCreateHome)
         {
-            CreateAHome();
+            StartCoroutine(CreateAHome());
         }
         else Debug.Log(gameObject.name + " couldn't find an available home");
     }
-    public void CreateAHome()
+    public IEnumerator CreateAHome()
     {
-        // (Only for some animals) Build a home in a suitable location if none are found
-        Debug.Log("Creating a home");
+        GridBuildingSystem gBS = FindObjectOfType<GridBuildingSystem>();
 
+        if (gBS != null)
+        {
+
+            // (Only for some animals) Build a home in a suitable location if none are found
+            Debug.Log("Creating a home");
+
+            Vector3 newPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            //int x, z;
+            while (!gBS.grid.GetGridObject(newPos).CanBuild())
+            {
+                newPos = gBS.grid.GetRandomPosition(gBS.transform.position.y);
+
+                yield return new WaitWhile(() => !gBS.grid.GetGridObject(newPos).CanBuild());
+
+            }
+
+            if (gBS.grid.GetGridObject(newPos).CanBuild())
+            {
+                gBS.grid.GetXZ(newPos, out int x, out int z);
+
+                PlacedObject placedObject = PlacedObject.Create(newPos, new Vector2Int(x, z), gBS.dir, homePrefab.refItem, gBS);
+                EntityHome newHome = placedObject.GetComponentInChildren<EntityHome>();
+
+                if (placedObject.GetComponent<Rigidbody>())
+                {
+                    placedObject.GetComponent<Rigidbody>().useGravity = false;
+                    placedObject.GetComponent<Rigidbody>().isKinematic = true;
+                }
+
+                Debug.Log(gBS.grid.GetGridObject(newPos));
+
+                for (int i = 0; i < ParkStats.instance.objectsToTrack.Count; i++)
+                {
+                    if (ParkStats.instance.objectsToTrack[i].name.Contains(this.gameObject.name))
+                    {
+                        newHome.prefabs.Add(ParkStats.instance.objectsToTrack[i]);
+                        break;
+                    }
+                }
+
+                newHome.isVacant = false;
+                newHome.spawningActive = true;
+                newHome.spawnOnTimer = true;
+                newHome.fluctuateSpawnRate = true;
+                newHome.gameObject.name += " - " + entityInfo.entityName;
+                newHome.resident = this;
+                SetHome(newHome.transform, newHome.homePriority);
+
+
+                gBS.grid.GetGridObject(newPos).SetPlacedObject(homePrefab);
+            }
+
+        }
     }
 
     public void ManageStats()
@@ -678,7 +767,7 @@ public class EntityController : MonoBehaviour
 
         if (GetComponent<Rigidbody>())
         {
-            GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<Rigidbody>().isKinematic = false;
         }
 
 

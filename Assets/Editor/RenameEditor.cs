@@ -11,10 +11,10 @@ public class RenameEditor : Editor
     public List<GameObject> renameList = new List<GameObject>();
 
     public string newName;
-    
+
     public string prefix;
     public string suffix;
-    
+
     //>> ADD A METHOD TO ADD / REMOVE ITEM COUNT SUFFIX
 
     public override void OnInspectorGUI()
@@ -190,7 +190,7 @@ public class RenameEditor : Editor
         {
             for (int i = 0; i < renameList.Count; i++)
             {
-                renameList[i].name += " #" + (i+1);
+                renameList[i].name += " #" + (i + 1);
             }
         }
 

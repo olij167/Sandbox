@@ -176,7 +176,7 @@ public class ProduceController : MonoBehaviour
 
     public void Harvest()
     {
-        PlayerInventory inventory = GetComponent<PlayerInventory>();
+        PlayerInventory inventory = FindObjectOfType<PlayerInventory>();
         inventory.AddItemToInventory(GetComponent<ItemInWorld>().item, inventory.inventory, inventory.inventorySlots, gameObject, this);
     }
 
