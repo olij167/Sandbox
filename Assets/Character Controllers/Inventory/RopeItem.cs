@@ -34,7 +34,6 @@ public class RopeItem : ItemAction
     //[SerializeField] private Vector3 swingPoint;
     //private SpringJoint joint;
 
-
     public LayerMask collMask;
 
     public float minCollisionDistance = 0.5f;
@@ -89,14 +88,14 @@ public class RopeItem : ItemAction
 
                 if (anchorPoints.Count <= 0 || (anchorPoints.Count > 0 && anchorPoints[anchorPoints.Count - 1] != selection.selectedObjects[0].transform.position) && anchorPoints[anchorPoints.Count - 1] != higherAnchor) // if there are no anchorpoints or this is not an existing anchorpoint
                 {
-                    AddPosToRope(selection.selectedObjects[0].transform.position);
+                    AddPosToRope(higherAnchor);
 
-                    anchorPoints.Add(selection.selectedObjects[0].transform.position);
+                    anchorPoints.Add(higherAnchor);
 
                     if (anchorPoints.Count >= 2) // if this is the second anchorpoint leave it in the world
                     {
                         isHeld = false;
-                        anchorPoints[anchorPoints.Count - 1] = selection.selectedObjects[0].transform.position;
+                        anchorPoints[anchorPoints.Count - 1] = higherAnchor;
                         inventory.RemoveItemFromInventory(inventoryItem, inventory.inventory);
                         transform.parent = null;
                         ropePositions.Clear();
@@ -109,20 +108,35 @@ public class RopeItem : ItemAction
 
                     if (selection.selectedObjects[0].GetComponent<Rigidbody>() != null) //if the object has a rigidbody, add an object on rope list element
                     {
-                        //Move object with rope based on mass
-                        objectsOnRope.Add(new AnchoredPosition { ropedObject = selection.selectedObjects[0].GetComponent<Rigidbody>() });
+                        bool dontAdd = false;
 
-                        GameObject anchorPointSelection = anchorPoints.Count - 1 == 0 ? new GameObject("Rope Start") : new GameObject("Rope End");
-                        anchorPointSelection.transform.position = anchorPoints[anchorPoints.Count - 1];
-                        RopeEnd ropeEnd = anchorPointSelection.AddComponent<RopeEnd>();
-                        ropeEnd.anchoredPosition = objectsOnRope[objectsOnRope.Count - 1];
-                        ropeEnd.anchorPointIndex = anchorPoints.Count - 1;
-                        ropeEnd.ropeItem = this;
-                        ropeEnds.Add(ropeEnd);
-                        anchorPointSelection.transform.parent = objectsOnRope[objectsOnRope.Count - 1].ropedObject.transform;
+                        if (objectsOnRope.Count > 0)
+                        {
+                            for (int i = 0; i < objectsOnRope.Count; i++)
+                            {
+                                if (objectsOnRope[i].ropedObject == selection.selectedObjects[0].GetComponent<Rigidbody>())
+                                {
+                                   dontAdd = true;
+                                    break;
+                                }
+                            }
+                        }
 
-                        objectsOnRope[objectsOnRope.Count - 1].anchorPosition = selection.selectedObjects[0].transform.position;
+                        if (!dontAdd)
+                        {
+                            objectsOnRope.Add(new AnchoredPosition { ropedObject = selection.selectedObjects[0].GetComponent<Rigidbody>() });
 
+                            GameObject anchorPointSelection = anchorPoints.Count - 1 == 0 ? new GameObject("Rope Start") : new GameObject("Rope End");
+                            anchorPointSelection.transform.position = anchorPoints[anchorPoints.Count - 1];
+                            RopeEnd ropeEnd = anchorPointSelection.AddComponent<RopeEnd>();
+                            ropeEnd.anchoredPosition = objectsOnRope[objectsOnRope.Count - 1];
+                            ropeEnd.anchorPointIndex = anchorPoints.Count - 1;
+                            ropeEnd.ropeItem = this;
+                            ropeEnds.Add(ropeEnd);
+                            anchorPointSelection.transform.parent = objectsOnRope[objectsOnRope.Count - 1].ropedObject.transform;
+
+                            objectsOnRope[objectsOnRope.Count - 1].anchorPosition = selection.selectedObjects[0].transform.position;
+                        }
                     }
 
                 }
@@ -355,7 +369,9 @@ public class RopeItem : ItemAction
             ropePositions.Add(player.position);
             LastSegmentGoToPlayerPos();
         }
-        //objectsOnRope.Remove(ropeEnd.anchoredPosition);
+        objectsOnRope.Remove(ropeEnd.anchoredPosition);
+
+        bool destroyGO = false;
 
         if (!inventory.inventory.Contains(ropeEnd.ropeItem.inventoryItem)) // if the object isn't in the inventory, add it but save any set anchor points
         {
@@ -381,6 +397,13 @@ public class RopeItem : ItemAction
                 inventoryItem.physicalItem = ropeEnd.ropeItem.gameObject;
             }
         }
+        else // if it is then reset it
+        {
+            inventory.RemoveItemFromInventory(inventoryItem, inventory.inventory);
+            destroyGO = true;
+
+            inventory.AddItemToNewInventorySlot(inventoryItem.item, inventory.inventory, inventory.inventorySlots);
+        }
 
         //int anchoredPositionIndex = -1;
 
@@ -394,6 +417,10 @@ public class RopeItem : ItemAction
         //}
 
         Destroy(ropeEnd.gameObject);
+        if (destroyGO)
+        {
+            Destroy(this.gameObject);
+        }
 
         //if (anchoredPositionIndex >= 0)
         //    objectsOnRope.RemoveAt(anchoredPositionIndex);

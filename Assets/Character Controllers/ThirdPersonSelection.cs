@@ -542,12 +542,12 @@ public class ThirdPersonSelection : MonoBehaviour
                                 }
                         }
                     }
-                    else if (interactions.Contains(SelectedObjectType.Rope)) interactions.Remove(SelectedObjectType.Rope);
+                    //else if (interactions.Contains(SelectedObjectType.Rope)) interactions.Remove(SelectedObjectType.Rope);
 
 
-                    if (!selectedObjects[0].GetComponent<RopeEnd>() && !selectedObjects[0].GetComponentInChildren<RopeEnd>() && inventorySystem.selectedInventoryItem != null && inventorySystem.selectedInventoryItem.item.itemName.Contains("Rope"))
+                    else if ( inventorySystem.selectedInventoryItem != null && inventorySystem.selectedInventoryItem.item.itemName.Contains("Rope")) // !selectedObjects[0].GetComponent<RopeEnd>() && !selectedObjects[0].GetComponentInChildren<RopeEnd>() &&
                     {
-                        //if (interactions.Contains(SelectedObjectType.Rope)) interactions.Remove(SelectedObjectType.Rope);
+                        if (interactions.Contains(SelectedObjectType.Rope)) interactions.Remove(SelectedObjectType.Rope);
                         //Debug.Log("Can tie rope here, interaction text num = " + (interactions.Count + 1).ToString());
                         switch (interactions.Count + 1)
                         {
@@ -563,11 +563,6 @@ public class ThirdPersonSelection : MonoBehaviour
                         }
                     }
                 }
-
-              
-
-               
-
 
                 //BELOW IS THE SCRIPT FOR HELD BUTTON INPUTS - TO BE IMPLEMENTED FULLY
 
