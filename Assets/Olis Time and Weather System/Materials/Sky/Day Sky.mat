@@ -119,8 +119,8 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SunIntensity: 0.34932306
-    - _SunScale: 0.27945837
+    - _SunIntensity: 0.4279097
+    - _SunScale: 0.3423277
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -129,9 +129,9 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MoonColor: {r: 1, g: 0.98999995, b: 0.87, a: 1}
-    - _SkyColor1: {r: 0.42566296, g: 0.23971193, b: 0.6355628, a: 1}
-    - _SkyColor2: {r: 0.90298444, g: 0.86997175, b: 0.6957183, a: 1}
-    - _SkyColor3: {r: 0.64054334, g: 0.654092, b: 0.6525966, a: 0.8328821}
+    - _SkyColor1: {r: 0.3291108, g: 0.18745823, b: 0.6070603, a: 1}
+    - _SkyColor2: {r: 0.9922381, g: 0.7424105, b: 0.718694, a: 1}
+    - _SkyColor3: {r: 0.6376643, g: 0.57735956, b: 0.6328219, a: 0.8661412}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SunColor: {r: 1, g: 0.98999995, b: 0.87, a: 1}
   m_BuildTextureStacks: []

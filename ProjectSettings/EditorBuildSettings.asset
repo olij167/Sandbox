@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ParkDemo.unity
     guid: fc0b0a111f2091041aaf6647f498b109
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: f97389487d3bc9c4bb6f4f943e4dab7e
   m_configObjects: {}

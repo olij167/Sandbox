@@ -775,7 +775,7 @@ public class ThirdPersonSelection : MonoBehaviour
             selectedObject.GetComponent<SleepObject>().sleep.ToggleSleepPanel();
         }
 
-     
+
 
         if (interactions[i] == SelectedObjectType.Rope && (selectedObject.GetComponent<RopeEnd>() || selectedObject.GetComponentInChildren<RopeEnd>()))
         {
@@ -783,26 +783,39 @@ public class ThirdPersonSelection : MonoBehaviour
             if (selectedObject.GetComponent<RopeEnd>())
             {
 
-                    selectedObject.GetComponent<RopeEnd>().ropeItem.CollectRopeEnd(selectedObject.GetComponent<RopeEnd>());
-                    isRopeInteracted = true;
+                selectedObject.GetComponent<RopeEnd>().ropeItem.CollectRopeEnd(selectedObject.GetComponent<RopeEnd>());
+                isRopeInteracted = true;
 
             }
             else if (selectedObject.GetComponentInChildren<RopeEnd>())
             {
 
 
-                    selectedObject.GetComponentInChildren<RopeEnd>().ropeItem.CollectRopeEnd(selectedObject.GetComponentInChildren<RopeEnd>());
-                    isRopeInteracted = true;
-               
+                selectedObject.GetComponentInChildren<RopeEnd>().ropeItem.CollectRopeEnd(selectedObject.GetComponentInChildren<RopeEnd>());
+                isRopeInteracted = true;
+
 
             }
         }
 
         if (interactions[i] == SelectedObjectType.Entity && selectedObject.GetComponent<EntityController>())
         {
-            isEntityInteracted = true;
 
             //Add entity interaction logic here
+
+            if (selectedObject.GetComponent<EntityController>().playerCanRide)
+            {
+                //If large animal add ride input
+            }
+
+            //if ()
+            //Check held inventory item
+            // - if none, add pet input
+            // - if item is held, check whether it has an entity-specific interaction and add it's input; i.e Feed animal
+
+
+            isEntityInteracted = true;
+
         }
 
         StartCoroutine(DelaySettingFalseVariables());

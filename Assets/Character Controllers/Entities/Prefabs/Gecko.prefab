@@ -896,6 +896,7 @@ GameObject:
   - component: {fileID: 2530596858662801011}
   - component: {fileID: 4850196509887215170}
   - component: {fileID: -3737225401650670235}
+  - component: {fileID: 2507421413330876149}
   m_Layer: 0
   m_Name: Gecko
   m_TagString: Untagged
@@ -990,6 +991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4362f9e0a3103c448b0087839596b17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 1
   entityInfo:
     entityID: 1
     entityName: Gecko
@@ -1007,6 +1009,7 @@ MonoBehaviour:
     father: {fileID: 0}
     children: []
     siblings: []
+  playerCanRide: 0
   lifeSizeRange: {x: 0, y: 0}
   stats: {fileID: 0}
   eyes: {fileID: 6267059484766404684}
@@ -1019,7 +1022,6 @@ MonoBehaviour:
     m_Bits: 1126
   followBehind: 0
   followDistance: 1
-  affection: 0
   currentFocus: 0
   target:
     interestingObject: {fileID: 0}
@@ -1161,6 +1163,7 @@ MonoBehaviour:
     baseValue: 5
     modifiers: []
   awakeHours: {x: 7, y: 17}
+  affection: 0
   hunger: 100
   maxHunger:
     modifiedValue: 0
@@ -1274,6 +1277,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.75
+--- !u!114 &2507421413330876149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9057722755411291407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a9a99c22d4dd1409bb81d73dbd6c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
+  item: {fileID: 11400000, guid: ccb3ede8da76e954db9b5f0dd0c9a18d, type: 2}
 --- !u!1001 &303398518317137632
 PrefabInstance:
   m_ObjectHideFlags: 0

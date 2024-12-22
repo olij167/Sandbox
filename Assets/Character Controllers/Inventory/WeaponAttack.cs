@@ -50,6 +50,8 @@ public class WeaponAttack : MonoBehaviour
                     if (playerController.isUsingRight)
                     {
                         playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.attackDamage.GetValue(), false);
+                        other.gameObject.GetComponent<EntityStats>().affection -= playerController.stats.attackDamage.GetValue();
+
                         Debug.Log("Right Weapon Attack");
 
                         //if (!hitParticles.isPlaying)
@@ -63,6 +65,8 @@ public class WeaponAttack : MonoBehaviour
                     else
                     {
                         playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.passiveDamage.GetValue(), true);
+                        other.gameObject.GetComponent<EntityStats>().affection -= playerController.stats.passiveDamage.GetValue();
+
                         //Stagger animation
                         Debug.Log("Right Passive Attack");
                         //if (!hitParticles.isPlaying)
@@ -75,6 +79,7 @@ public class WeaponAttack : MonoBehaviour
                     if (playerController.isUsingLeft)
                     {
                         playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.attackDamage.GetValue(), false);
+                        other.gameObject.GetComponent<EntityStats>().affection -= playerController.stats.attackDamage.GetValue();
                         Debug.Log("Left Weapon Attack");
                         //if (!hitParticles.isPlaying)
                         //    hitParticles.Play();
@@ -88,6 +93,7 @@ public class WeaponAttack : MonoBehaviour
                         Debug.Log("Left Passive Attack");
 
                         playerAttack.Attack(other.gameObject.GetComponent<EntityStats>(), playerController.stats.passiveDamage.GetValue(), true);
+                        other.gameObject.GetComponent<EntityStats>().affection -= playerController.stats.passiveDamage.GetValue();
 
                         //if (!hitParticles.isPlaying)
                         //    hitParticles.Play();

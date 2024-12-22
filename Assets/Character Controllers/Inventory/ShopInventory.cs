@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TimeWeather;
 using Unity.VisualScripting;
+using TMPro;
 
 public class ShopInventory : Interactable
 {
@@ -41,6 +42,8 @@ public class ShopInventory : Interactable
     public GameObject buyBackPanel;
     public bool buyBackPanelOpen;
     public Button changePageButton;
+    public string shopName = "Shop";
+    public TextMeshProUGUI shopNameText;
 
     private ThirdPersonCam thirdPersonCam;
     private PlayerController playerController;
@@ -70,10 +73,13 @@ public class ShopInventory : Interactable
         playerInventory = FindObjectOfType<PlayerInventory>();
         timeController = TimeController.instance;
 
+        shopNameText.text = shopName;
 
         if (playerInventory != null)
         {
             shopPanel = playerInventory.shopPanel;
+
+            changePageButton = playerInventory.changePageButton;
 
             inventorySlots = new ItemSlot[shopPanel.transform.childCount];
 

@@ -13,6 +13,8 @@ public class EntityStats : CharacterStats
     public Vector2 awakeHours;
     //public bool isNocturnal;
 
+    [Range(-100f, 100f)] public float affection = 0f;
+
     public float hunger;
     public Stat maxHunger;
     //public Stat hungerIncreaseRate;

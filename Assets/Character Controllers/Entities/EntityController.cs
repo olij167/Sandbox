@@ -9,6 +9,8 @@ using static PlacedObjectTypeSO;
 public class EntityController : Interactable
 {
     public EntityInfo entityInfo;
+    public bool isHeld;
+    public bool playerCanRide;
 
     [field: ReadOnlyField, SerializeField] private Vector2 lifeSizeRange;
     private Vector3 minSize, maxSize;
@@ -38,8 +40,6 @@ public class EntityController : Interactable
 
     public bool followBehind;
     public float followDistance = 6f;
-
-    [Range(-1f, 1f)]public float affection = 0f;
 
     public Focus currentFocus;
 

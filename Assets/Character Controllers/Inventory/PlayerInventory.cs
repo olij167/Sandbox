@@ -41,6 +41,7 @@ public class PlayerInventory : MonoBehaviour
     public GameObject shopPanel;
     public GameObject shopParent;
     public GameObject buyBackPanel;
+    public Button changePageButton;
     public ShopInventory currentShop;
 
     //public GameObject infoPanel;

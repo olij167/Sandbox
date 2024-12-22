@@ -15,6 +15,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6494033740623118347, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
+      propertyPath: shopName
+      value: Plant Shop
+      objectReference: {fileID: 0}
+    - target: {fileID: 6494033740623118347, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
+        type: 3}
       propertyPath: extraItemsToAdd
       value: 5
       objectReference: {fileID: 0}
@@ -36,7 +41,7 @@ PrefabInstance:
     - target: {fileID: 6494033740623118347, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
       propertyPath: constantShopItems.Array.size
-      value: 12
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 6494033740623118347, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
@@ -184,13 +189,13 @@ PrefabInstance:
         type: 3}
       propertyPath: constantShopItems.Array.data[12]
       value: 
-      objectReference: {fileID: 11400000, guid: 21c1397b05af62c469526527ef35489f,
+      objectReference: {fileID: 11400000, guid: e04294949bedba24f8eba8b55617882d,
         type: 2}
     - target: {fileID: 6494033740623118347, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
       propertyPath: constantShopItems.Array.data[13]
       value: 
-      objectReference: {fileID: 11400000, guid: 1c548170e0a0dcf46833d9f14cf57531,
+      objectReference: {fileID: 11400000, guid: dfe0636e262bc2246b4d3de6f6c254a4,
         type: 2}
     - target: {fileID: 6494033740623118347, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
@@ -803,17 +808,17 @@ PrefabInstance:
     - target: {fileID: 7201863195337471227, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 103.59044
+      value: 290.457
       objectReference: {fileID: 0}
     - target: {fileID: 7201863195337471227, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 11.07
+      value: 100.261
       objectReference: {fileID: 0}
     - target: {fileID: 7201863195337471227, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 77.88789
+      value: 257.7829
       objectReference: {fileID: 0}
     - target: {fileID: 7201863195337471227, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
@@ -850,6 +855,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7278823234706491421, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0109edacb5e37614186c8e869217be4f, type: 2}
     - target: {fileID: 8212900331621804454, guid: ae178d52b5c29f341b4b9617fb2fdc5f,
         type: 3}
       propertyPath: m_Name
